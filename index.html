@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#000000">
-<title>ShiftFlow BR3R</title>
+<title>Radar Logístico</title>
 <link rel="manifest" href="manifest.json">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -25,6 +25,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 #sc-login{min-height:100vh;background:radial-gradient(ellipse 140% 55% at 50% 0%,rgba(0,87,184,0.22) 0%,transparent 65%),#0F1117;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
 .login-box{width:100%;max-width:380px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:28px 24px}
 .login-logo{display:flex;flex-direction:column;align-items:center;margin-bottom:28px}
+  .logo-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.logo-app{
+    width:220px;
+    max-width:85%;
+    height:auto;
+    object-fit:contain;
+}
 .login-ico{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#003B7A,#1A7FE8);display:flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 6px 24px rgba(0,87,184,0.4)}
 .login-ico svg{width:32px;height:32px;fill:#fff}
 .login-brand{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:24px;color:#fff;letter-spacing:4px;text-transform:uppercase}
@@ -252,7 +265,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="login-box">
     <div class="login-logo">
       <div class="login-ico"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-      <div class="login-brand">ShiftFlow</div>
+      <div class="login-brand"><title>Radar Logístico</title></div>
       <div class="login-sub">BR3R Expedição</div>
     </div>
     <select id="login-conf" class="login-sel">
@@ -280,7 +293,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <header class="hdr">
   <div class="hdr-left">
     <div class="hdr-ico"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-    <div><div class="hdr-brand">ShiftFlow</div><div class="hdr-sub">BR3R Expedição</div></div>
+    <div><div class="hdr-brand"><title>Radar Logístico</title></div><div class="hdr-sub">BR3R Expedição</div></div>
   </div>
   <div class="hdr-right">
     <div class="hdr-user"><span id="hdr-nome"></span><strong id="hdr-turma"></strong></div>
@@ -761,7 +774,7 @@ const app = {
     const segOK = r.seg === 'nao';
     const qualOK = r.qual === 'nao';
     return [
-      '🔵 *BALL ShiftFlow BR3R*', '',
+      '🔵 *BALL <title>Radar Logístico</title> BR3R*', '',
       '👤 *Conferente:* ' + r.conferente,
       '🔄 *Turma que saiu:* ' + r.turma_sai,
       '↩️ *Turma que entrou:* ' + (r.turma_rec || '—'),
