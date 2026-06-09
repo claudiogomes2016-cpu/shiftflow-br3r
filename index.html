@@ -6,10 +6,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#000000">
-<title>Radar Logístico</title>
+<title>ShiftFlow BR3R</title>
 <link rel="manifest" href="manifest.json">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
 
@@ -25,19 +25,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 #sc-login{min-height:100vh;background:radial-gradient(ellipse 140% 55% at 50% 0%,rgba(0,87,184,0.22) 0%,transparent 65%),#0F1117;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
 .login-box{width:100%;max-width:380px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:28px 24px}
 .login-logo{display:flex;flex-direction:column;align-items:center;margin-bottom:28px}
-  .logo-container{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin-bottom:20px;
-}
-
-.logo-app{
-    width:140px;
-    max-width:85%;
-    height:auto;
-    object-fit:contain;
-}
 .login-ico{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#003B7A,#1A7FE8);display:flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 6px 24px rgba(0,87,184,0.4)}
 .login-ico svg{width:32px;height:32px;fill:#fff}
 .login-brand{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:24px;color:#fff;letter-spacing:4px;text-transform:uppercase}
@@ -94,7 +81,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .c-blue{border-left:4px solid #0057B8}.c-red{border-left:4px solid #F05252}.c-green{border-left:4px solid #00C48C}.c-yellow{border-left:4px solid #F5A623}.c-purple{border-left:4px solid #8B5CF6}
 
 /* ── INPUTS ── */
-.lbl{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:8px}
+.lbl{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:8px}
 .lb{color:#0057B8}.lr{color:#F05252}.lg{color:#00C48C}.ly{color:#F5A623}.lp{color:#8B5CF6}
 .inp{width:100%;padding:14px 15px;background:var(--inp-bg);border:1.5px solid var(--border);border-radius:13px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;outline:none;transition:all .2s;-webkit-appearance:none;appearance:none}
 .inp:focus{border-color:#0057B8;box-shadow:0 0 0 3px rgba(0,87,184,.15)}
@@ -104,8 +91,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .ta{resize:none;line-height:1.7}
 
 /* ── SEC TITLE ── */
-.sec-t{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:17px;color:var(--text);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:8px}
-.sec-s{font-size:13px;color:var(--text3);margin-bottom:16px}
+.sec-t{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:19px;color:var(--text);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.sec-s{font-size:14px;color:var(--text3);margin-bottom:16px}
 
 /* ── TURNO ── */
 .turno-g{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:8px}
@@ -124,16 +111,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 /* ── OPERACIONAL ── */
 .op-row{margin-bottom:16px}
 .op-row-top{display:grid;grid-template-columns:90px 1fr;gap:8px;margin-bottom:8px}
-.op-q-lbl{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;display:block}
+.op-q-lbl{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;display:block}
 
 /* ── MOV ── */
 .mov-a{background:var(--bg4);border:1px solid var(--border);border-radius:15px;padding:16px;margin-bottom:10px}
-.mov-t{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.mov-t{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .mv3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .mv2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .mi{width:100%;padding:14px 8px;background:var(--bg3);border:1px solid var(--border2);border-radius:12px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;text-align:center;outline:none;-webkit-appearance:none}
 .mi:disabled{color:#1A7FE8;background:rgba(0,87,184,.07);border-color:rgba(0,87,184,.2);cursor:default}
-.ml{font-size:11px;color:var(--text3);text-align:center;margin-top:5px;font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-transform:uppercase}
+.ml{font-size:13px;color:var(--text3);text-align:center;margin-top:5px;font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-transform:uppercase}
 
 /* ── FOTOS ── */
 .fp{display:flex;align-items:center;gap:10px;padding:13px 15px;background:var(--bg4);border-radius:13px;margin-bottom:14px;border:1px solid var(--border)}
@@ -163,7 +150,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .btn-s{width:100%;padding:13px;border-radius:13px;background:rgba(255,255,255,.05);border:1.5px solid var(--border2);color:var(--text2);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
 
 /* ── BADGE ── */
-.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:99px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:4px 12px;border-radius:99px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px}
 .bb{background:rgba(0,87,184,.18);color:#7DBCFF;border:1px solid rgba(0,87,184,.35)}
 .bg2{background:rgba(0,196,140,.14);color:#4DDDAE;border:1px solid rgba(0,196,140,.3)}
 .br2{background:rgba(240,82,82,.14);color:#FF8585;border:1px solid rgba(240,82,82,.3)}
@@ -174,11 +161,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .kpi-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .kc{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
 .kc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.kc-l{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:2px;text-transform:uppercase;line-height:1.5}
+.kc-l{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--text3);letter-spacing:2px;text-transform:uppercase;line-height:1.5}
 .kc-i{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px}
 .kc-v{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:36px;line-height:1}
-.kc-t{font-family:'Rajdhani',sans-serif;font-size:11px;margin-top:4px;color:var(--text3)}
-.shd{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:13px;display:flex;align-items:center;gap:8px}
+.kc-t{font-family:'Rajdhani',sans-serif;font-size:13px;margin-top:4px;color:var(--text3)}
+.shd{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--text3);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:13px;display:flex;align-items:center;gap:8px}
 .shd::after{content:'';flex:1;height:1px;background:var(--border)}
 .cw{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
 
@@ -191,10 +178,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .r3{background:rgba(205,127,50,.15);color:#CD7F32;border:1px solid rgba(205,127,50,.3)}
 .ro{background:rgba(255,255,255,.05);color:var(--text3);border:1px solid var(--border)}
 .rk-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.rk-bar-lbl{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;width:80px;flex-shrink:0}
+.rk-bar-lbl{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;width:90px;flex-shrink:0}
 .rk-bar-track{flex:1;height:10px;background:var(--border);border-radius:99px;overflow:hidden}
 .rk-bar-fill{height:100%;border-radius:99px;transition:width .8s}
-.rk-bar-val{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:var(--text2);width:32px;text-align:right;flex-shrink:0}
+.rk-bar-val{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--text2);width:32px;text-align:right;flex-shrink:0}
 
 /* ── HIST ── */
 .hi{background:var(--bg4);border:1px solid var(--border);border-radius:16px;padding:15px;margin-bottom:10px}
@@ -264,9 +251,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <div id="sc-login">
   <div class="login-box">
     <div class="login-logo">
-<div class="logo-container">
-    <img src="logo-radar.png" class="logo-app">
-</div>
+      <div class="login-ico"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+      <div class="login-brand">ShiftFlow</div>
       <div class="login-sub">BR3R Expedição</div>
     </div>
     <select id="login-conf" class="login-sel">
@@ -293,8 +279,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 <header class="hdr">
   <div class="hdr-left">
-    <div class="hdr-ico"><img src="logo-radar.png" style="width:42px;height:auto;border-radius:10px;"></div>
-    <div><div class="hdr-brand">Radar Logístico</div><div class="hdr-sub">BR3R Expedição</div></div>
+    <div class="hdr-ico"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+    <div><div class="hdr-brand">ShiftFlow</div><div class="hdr-sub">BR3R Expedição</div></div>
   </div>
   <div class="hdr-right">
     <div class="hdr-user"><span id="hdr-nome"></span><strong id="hdr-turma"></strong></div>
@@ -404,15 +390,38 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Movimentação Detalhada</div>
     <div class="sec-s">Volume de cargas por área</div>
     <div class="mov-a">
-      <div class="mov-t"><svg width="12" height="12" viewBox="0 0 24 24" fill="#1A7FE8"><circle cx="12" cy="12" r="10"/></svg>Área: Planta</div>
+      <div class="mov-t"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1A7FE8"><circle cx="12" cy="12" r="10"/></svg>Planta</div>
       <div class="mv3">
         <div><input type="number" id="m-p-c" class="mi" placeholder="0" oninput="app.calc()" inputmode="numeric"><div class="ml">Carregados</div></div>
         <div><input type="number" id="m-p-d" class="mi" placeholder="0" oninput="app.calc()" inputmode="numeric"><div class="ml">Descarregados</div></div>
         <div><input type="number" id="m-p-t" class="mi" disabled><div class="ml" style="color:#1A7FE8">Total</div></div>
       </div>
+
+      <!-- ENTRADAS -->
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#1A7FE8;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">📥 Entradas</div>
+
+        <!-- Tampa Básica -->
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:14px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text2);letter-spacing:1px">🔲 Tampa Básica</div>
+          </div>
+          <div id="tampa-lista"></div>
+          <button onclick="app.addTampa()" style="width:100%;padding:11px;border-radius:11px;background:rgba(0,87,184,.1);border:1.5px dashed rgba(0,87,184,.4);color:#7DBCFF;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:4px">+ Adicionar Tampa</button>
+        </div>
+
+        <!-- Devolução -->
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text2);letter-spacing:1px">🔄 Devolução Latas/Tampas</div>
+          </div>
+          <div id="dev-lista"></div>
+          <button onclick="app.addDev()" style="width:100%;padding:11px;border-radius:11px;background:rgba(245,166,35,.08);border:1.5px dashed rgba(245,166,35,.4);color:#FFD166;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:4px">+ Adicionar Devolução</button>
+        </div>
+      </div>
     </div>
     <div class="mov-a">
-      <div class="mov-t"><svg width="12" height="12" viewBox="0 0 24 24" fill="#6E7A8F"><circle cx="12" cy="12" r="10"/></svg>Área: NSA</div>
+      <div class="mov-t"><svg width="14" height="14" viewBox="0 0 24 24" fill="#6E7A8F"><circle cx="12" cy="12" r="10"/></svg>NSA</div>
       <div class="mv2">
         <div><input type="number" id="m-n-c" class="mi" placeholder="0" oninput="app.calc()" inputmode="numeric"><div class="ml">Carregados</div></div>
         <div><input type="number" id="m-n-t" class="mi" disabled><div class="ml">Total</div></div>
@@ -517,6 +526,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <button onclick="app.saveEdit()" class="btn-m" style="padding:14px">💾 Salvar</button>
     <button onclick="app.closeModal()" class="btn-s">Cancelar</button>
   </div>
+  <div style="margin-top:10px">
+    <button onclick="app.deleteEdit()" style="width:100%;padding:13px;border-radius:13px;background:rgba(240,82,82,.12);border:1.5px solid rgba(240,82,82,.35);color:#FF8585;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px">🗑️ Excluir Registro</button>
+  </div>
 </div>
 </div>
 
@@ -525,7 +537,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <script>
 // ── SUPABASE CONFIG ──
 const SUPA_URL = 'https://qbohupozrbqjplgpqbxr.supabase.co';
-const SUPA_KEY = 'sb_publishable_rw-LOuK0LWnvqfna79-1iQ_XYywUCme';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFib2h1cG96cmJxanBsZ3BxYnhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NjY3OTgsImV4cCI6MjA5NjQ0Mjc5OH0.wPxRLIGqfooU5bpV5UZICvH34cQrok2p5nHqYWt0Ye0';
 const { createClient } = supabase;
 const db = createClient(SUPA_URL, SUPA_KEY);
 
@@ -636,11 +648,14 @@ const app = {
     document.getElementById('conf-display').textContent = this.user.nome;
     document.getElementById('turno-hint').textContent = '🕐 Turno padrão: ' + this.user.turma;
     this.setTurno(this.user.turma, null, 'sai');
+    // Gestor: desbloqueia área automaticamente
     if(this.user.role === 'gestor') {
       document.getElementById('gestor-area').classList.remove('hidden');
       this.setupRealtime();
     }
     document.getElementById('plano-acao') && (document.getElementById('plano-acao').value = localStorage.getItem('sf_plano') || '');
+    this.tampaEntradas = []; this.devEntradas = [];
+    setTimeout(() => { this.renderTampaLista(); this.renderDevLista(); }, 100);
   },
 
   logout() {
@@ -705,6 +720,24 @@ const app = {
       document.getElementById('yn-qual-n').classList.toggle('on', val === 'nao');
       document.getElementById('yn-qual-s').classList.toggle('on', val === 'sim');
       document.getElementById('qual-x').classList.toggle('on', val === 'sim');
+    }
+  },
+
+  ynEntrada(tipo, val) {
+    if(tipo === 'tampa') {
+      this.tampaRecebeu = val;
+      document.getElementById('yn-tampa-n').classList.toggle('on', val === 'nao');
+      document.getElementById('yn-tampa-s').classList.toggle('on', val === 'sim');
+      document.getElementById('yn-tampa-n').classList.toggle('no', val === 'nao');
+      document.getElementById('yn-tampa-s').classList.toggle('yes', val === 'sim');
+      document.getElementById('tampa-extra').style.display = val === 'sim' ? 'block' : 'none';
+    } else {
+      this.devRecebeu = val;
+      document.getElementById('yn-dev-n').classList.toggle('on', val === 'nao');
+      document.getElementById('yn-dev-s').classList.toggle('on', val === 'sim');
+      document.getElementById('yn-dev-n').classList.toggle('no', val === 'nao');
+      document.getElementById('yn-dev-s').classList.toggle('yes', val === 'sim');
+      document.getElementById('dev-extra').style.display = val === 'sim' ? 'block' : 'none';
     }
   },
 
@@ -775,7 +808,7 @@ const app = {
     const segOK = r.seg === 'nao';
     const qualOK = r.qual === 'nao';
     return [
-      '🔵 *BALL <title>Radar Logístico</title> BR3R*', '',
+      '🔵 *BALL ShiftFlow BR3R*', '',
       '👤 *Conferente:* ' + r.conferente,
       '🔄 *Turma que saiu:* ' + r.turma_sai,
       '↩️ *Turma que entrou:* ' + (r.turma_rec || '—'),
@@ -803,6 +836,16 @@ const app = {
       '', '',
       '📝 *Relato Operacional:*',
       r.relato,
+      // Entradas Tampa
+      ...(r.tampa_entradas && JSON.parse(r.tampa_entradas||'[]').length > 0 ? [
+        '', '📥 *ENTRADAS — Tampa Básica:*',
+        ...JSON.parse(r.tampa_entradas).map((e,i) => `· ${i+1}. ${e.tipo||'—'} | ${e.origem||'—'} | ${e.qtd||'0'} carreta(s)`)
+      ] : []),
+      // Devoluções
+      ...(r.devolucao_entradas && JSON.parse(r.devolucao_entradas||'[]').length > 0 ? [
+        '', '🔄 *DEVOLUÇÕES:*',
+        ...JSON.parse(r.devolucao_entradas).map((e,i) => `· ${i+1}. ${e.origem||'—'} | ${e.qtd||'0'} carreta(s)`)
+      ] : []),
     ].filter(l => l !== null).join('\n');
   },
 
@@ -838,6 +881,8 @@ const app = {
       n_c: parseInt(document.getElementById('m-n-c').value) || 0,
       n_t: parseInt(document.getElementById('m-n-t').value) || 0,
       relato: document.getElementById('f-relato').value || 'Sem observações.',
+      tampa_entradas: JSON.stringify(this.tampaEntradas),
+      devolucao_entradas: JSON.stringify(this.devEntradas),
     };
 
     try {
@@ -866,7 +911,10 @@ const app = {
     document.querySelectorAll('#sc-form select').forEach(el => el.selectedIndex = 0);
     this.turnoSai = this.user?.turma || '';
     this.turnoRec = '';
-    this.seg = 'nao'; this.qual = 'nao'; this.bauSite = 'nao'; this.empCham = 'nao'; this.fotos = {};
+    this.seg = 'nao'; this.qual = 'nao'; this.bauSite = 'nao'; this.empCham = 'nao';
+    this.tampaEntradas = []; this.devEntradas = [];
+    this.fotos = {};
+    this.renderTampaLista(); this.renderDevLista();
     document.querySelectorAll('.tp').forEach(b => b.classList.remove('on'));
     this.yn('seg','nao'); this.yn('qual','nao'); this.ynS('bau','nao'); this.ynS('emp','nao');
     if(this.user) { document.getElementById('conf-display').textContent = this.user.nome; this.setTurno(this.user.turma, null, 'sai'); }
@@ -880,7 +928,95 @@ const app = {
     window.scrollTo(0,0);
   },
 
-  // ── DASHBOARD ──
+  // ── ENTRADAS DINÂMICAS ──
+  tampaEntradas: [],
+  devEntradas: [],
+
+  addTampa() {
+    const id = Date.now();
+    this.tampaEntradas.push({ id, tipo:'', origem:'', qtd:'' });
+    this.renderTampaLista();
+  },
+
+  removeTampa(id) {
+    this.tampaEntradas = this.tampaEntradas.filter(e => e.id !== id);
+    this.renderTampaLista();
+  },
+
+  renderTampaLista() {
+    const el = document.getElementById('tampa-lista');
+    if(!el) return;
+    if(!this.tampaEntradas.length) {
+      el.innerHTML = '<div style="text-align:center;color:var(--text3);font-size:13px;padding:8px 0">Nenhuma entrada registrada</div>';
+      return;
+    }
+    el.innerHTML = this.tampaEntradas.map((e, i) => `
+      <div style="background:var(--bg4);border:1px solid var(--border2);border-radius:11px;padding:12px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:#7DBCFF;letter-spacing:1px">ENTRADA ${i+1}</span>
+          <button onclick="app.removeTampa(${e.id})" style="background:rgba(240,82,82,.12);border:1px solid rgba(240,82,82,.3);color:#FF8585;border-radius:7px;padding:4px 10px;font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:700;cursor:pointer">🗑️ Remover</button>
+        </div>
+        <div class="g2 mb8">
+          <div>
+            <span class="lbl">Tipo</span>
+            <select class="inp inp-sm" onchange="app.tampaEntradas[${i}].tipo=this.value">
+              <option value="" ${!e.tipo?'selected':''}>Selecione...</option>
+              <option value="Prata" ${e.tipo==='Prata'?'selected':''}>Prata</option>
+              <option value="Ouro" ${e.tipo==='Ouro'?'selected':''}>Ouro</option>
+            </select>
+          </div>
+          <div>
+            <span class="lbl">Origem</span>
+            <select class="inp inp-sm" onchange="app.tampaEntradas[${i}].origem=this.value">
+              <option value="" ${!e.origem?'selected':''}>Selecione...</option>
+              <option value="Manaus" ${e.origem==='Manaus'?'selected':''}>Manaus</option>
+              <option value="Paraguai" ${e.origem==='Paraguai'?'selected':''}>Paraguai</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <span class="lbl">Qtd. Carretas/Contêineres</span>
+          <input type="number" class="inp inp-sm" placeholder="Ex: 1, 2, 3..." inputmode="numeric" min="1" value="${e.qtd}" onchange="app.tampaEntradas[${i}].qtd=this.value">
+        </div>
+      </div>`).join('');
+  },
+
+  addDev() {
+    const id = Date.now();
+    this.devEntradas.push({ id, origem:'', qtd:'' });
+    this.renderDevLista();
+  },
+
+  removeDev(id) {
+    this.devEntradas = this.devEntradas.filter(e => e.id !== id);
+    this.renderDevLista();
+  },
+
+  renderDevLista() {
+    const el = document.getElementById('dev-lista');
+    if(!el) return;
+    if(!this.devEntradas.length) {
+      el.innerHTML = '<div style="text-align:center;color:var(--text3);font-size:13px;padding:8px 0">Nenhuma devolução registrada</div>';
+      return;
+    }
+    el.innerHTML = this.devEntradas.map((e, i) => `
+      <div style="background:var(--bg4);border:1px solid var(--border2);border-radius:11px;padding:12px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:#FFD166;letter-spacing:1px">DEVOLUÇÃO ${i+1}</span>
+          <button onclick="app.removeDev(${e.id})" style="background:rgba(240,82,82,.12);border:1px solid rgba(240,82,82,.3);color:#FF8585;border-radius:7px;padding:4px 10px;font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:700;cursor:pointer">🗑️ Remover</button>
+        </div>
+        <div class="g2">
+          <div>
+            <span class="lbl">Origem</span>
+            <input type="text" class="inp inp-sm" placeholder="Ex: Cliente X..." value="${e.origem}" onchange="app.devEntradas[${i}].origem=this.value">
+          </div>
+          <div>
+            <span class="lbl">Qtd. Carretas/Contêineres</span>
+            <input type="number" class="inp inp-sm" placeholder="Ex: 1, 2, 3..." inputmode="numeric" min="1" value="${e.qtd}" onchange="app.devEntradas[${i}].qtd=this.value">
+          </div>
+        </div>
+      </div>`).join('');
+  },
   async updateDash() {
     this.showLoading('Carregando dados...');
     try {
@@ -933,28 +1069,92 @@ const app = {
     const labels = turmas.map(t => 'Turma ' + t);
     const totPlanta = turmas.map(t => byT[t].pc + byT[t].pd);
     const totNSA = turmas.map(t => byT[t].nc);
+    const totGeral = turmas.map(t => byT[t].pc + byT[t].pd + byT[t].nc);
+    const labelColor = isDark ? '#E8ECF4' : '#0F1721';
+
     this.charts.prod = new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
         datasets: [
-          { label:'Planta Carr.', data:turmas.map(t=>byT[t].pc), backgroundColor:turmas.map(t=>TURMA_CORES[t]||'rgba(0,87,184,.85)'), borderRadius:{topLeft:0,topRight:0,bottomLeft:6,bottomRight:6}, borderSkipped:false, stack:'planta' },
-          { label:'Planta Desc.', data:turmas.map(t=>byT[t].pd), backgroundColor:'rgba(245,166,35,.75)', borderRadius:{topLeft:6,topRight:6,bottomLeft:0,bottomRight:0}, borderSkipped:false, stack:'planta' },
-          { label:'NSA Carr.', data:turmas.map(t=>byT[t].nc), backgroundColor:'rgba(100,116,139,.75)', borderRadius:6, borderSkipped:false, stack:'nsa' },
+          {
+            label:'Planta Carr.',
+            data:turmas.map(t=>byT[t].pc),
+            backgroundColor:turmas.map(t=>TURMA_CORES[t]||'rgba(0,87,184,.85)'),
+            borderRadius:{topLeft:0,topRight:0,bottomLeft:6,bottomRight:6},
+            borderSkipped:false,
+            stack:'planta',
+          },
+          {
+            label:'Planta Desc.',
+            data:turmas.map(t=>byT[t].pd),
+            backgroundColor:'rgba(245,166,35,.75)',
+            borderRadius:{topLeft:6,topRight:6,bottomLeft:0,bottomRight:0},
+            borderSkipped:false,
+            stack:'planta',
+          },
+          {
+            label:'NSA Carr.',
+            data:turmas.map(t=>byT[t].nc),
+            backgroundColor:'rgba(100,116,139,.75)',
+            borderRadius:6,
+            borderSkipped:false,
+            stack:'nsa',
+          },
         ]
       },
+      plugins: [{
+        id: 'topLabels',
+        afterDatasetsDraw(chart) {
+          const { ctx, data } = chart;
+          // Get last dataset meta for each stack
+          const plantaMeta = chart.getDatasetMeta(1); // Planta Desc (top of planta stack)
+          const nsaMeta = chart.getDatasetMeta(2);    // NSA (only dataset in nsa stack)
+          ctx.save();
+          ctx.font = "bold 14px 'Rajdhani', sans-serif";
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          turmas.forEach((t, i) => {
+            // Planta total
+            const pBar = plantaMeta.data[i];
+            if(pBar && totPlanta[i] > 0) {
+              ctx.fillStyle = labelColor;
+              ctx.fillText(totPlanta[i], pBar.x, pBar.y - 4);
+            }
+            // NSA total
+            const nBar = nsaMeta.data[i];
+            if(nBar && totNSA[i] > 0) {
+              ctx.fillStyle = isDark ? '#94A3B8' : '#64748B';
+              ctx.fillText(totNSA[i], nBar.x, nBar.y - 4);
+            }
+          });
+          ctx.restore();
+        }
+      }],
       options: {
-        responsive:true, maintainAspectRatio:true, layout:{padding:{top:28}},
+        responsive:true,
+        maintainAspectRatio:true,
+        layout:{padding:{top:30}},
         plugins: {
-          legend:{position:'bottom',labels:{color:isDark?'#B0BDD0':'#374151',font:{size:12},padding:16}},
-          tooltip:{backgroundColor:isDark?'#1E2330':'#fff',titleColor:isDark?'#E8ECF4':'#0F1721',bodyColor:isDark?'#B0BDD0':'#374151',cornerRadius:10,padding:12,
-            callbacks:{footer:(items)=>{const i=items[0].dataIndex;const st=items[0].dataset.stack;return st==='planta'?'Total Planta: '+totPlanta[i]:'Total NSA: '+totNSA[i];}}
+          legend:{position:'bottom',labels:{color:isDark?'#B0BDD0':'#374151',font:{size:13},padding:16}},
+          tooltip:{
+            backgroundColor:isDark?'#1E2330':'#fff',
+            titleColor:isDark?'#E8ECF4':'#0F1721',
+            bodyColor:isDark?'#B0BDD0':'#374151',
+            cornerRadius:10,padding:12,
+            callbacks:{
+              footer:(items)=>{
+                const i=items[0].dataIndex;
+                const st=items[0].dataset.stack;
+                return st==='planta'?'Total Planta: '+totPlanta[i]:'Total NSA: '+totNSA[i];
+              }
+            }
           },
           datalabels:{display:false},
         },
         scales:{
-          x:{stacked:false,grid:{display:false},ticks:{color:tickCol,font:{family:"'Rajdhani',sans-serif",weight:'700',size:13}}},
-          y:{stacked:true,beginAtZero:true,grid:{color:gridCol},ticks:{color:tickCol,font:{size:12}}},
+          x:{stacked:false,grid:{display:false},ticks:{color:tickCol,font:{family:"'Rajdhani',sans-serif",weight:'700',size:14}}},
+          y:{stacked:true,beginAtZero:true,grid:{color:gridCol},ticks:{color:tickCol,font:{size:13}}},
         }
       }
     });
@@ -1031,25 +1231,169 @@ const app = {
     let items = [...this.allTurnos];
     if(search) items = items.filter(r => r.conferente.toLowerCase().includes(search) || (r.relato||'').toLowerCase().includes(search));
     if(filter) items = items.filter(r => r.turma_sai === filter);
-    if(!items.length) { document.getElementById('hist-list').innerHTML = '<p style="text-align:center;color:var(--text3);font-size:13px;padding:20px">Nenhum registro encontrado.</p>'; return; }
+    if(!items.length) { document.getElementById('hist-list').innerHTML = '<p style="text-align:center;color:var(--text3);font-size:14px;padding:20px">Nenhum registro encontrado.</p>'; return; }
+    const isGestor = this.user?.role === 'gestor';
     document.getElementById('hist-list').innerHTML = items.map(r => `
       <div class="hi">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px">
-          <div><div class="hc">${r.conferente}</div><div class="hd">${new Date(r.data_registro).toLocaleString('pt-BR')} · Turma ${r.turma_sai} → ${r.turma_rec||'—'}</div></div>
+          <div>
+            <div class="hc">${r.conferente}</div>
+            <div class="hd">${new Date(r.data_registro).toLocaleString('pt-BR')} · Turma ${r.turma_sai} → ${r.turma_rec||'—'}</div>
+          </div>
+          ${isGestor ? `<button class="he" onclick="app.openModal('${r.id}')">✏️ Editar</button>` : ''}
         </div>
-        <div style="font-size:13px;color:var(--text2);line-height:1.6;margin:8px 0;font-style:italic">"${r.relato||''}"</div>
+        <div style="font-size:14px;color:var(--text2);line-height:1.6;margin:8px 0;font-style:italic">"${r.relato||''}"</div>
         <div style="display:flex;flex-wrap:wrap;gap:5px">
-          <span class="badge ${r.seg==='sim'?'br2':'bg2'}" style="font-size:11px">🛡️ ${r.seg==='sim'?'Incidente':'OK'}</span>
-          <span class="badge ${r.qual==='sim'?'by2':'bg2'}" style="font-size:11px">📦 ${r.qual==='sim'?'Bloqueio':'OK'}</span>
-          <span class="badge ${r.s_falta==='Sim'?'bp2':'bg2'}" style="font-size:11px">👷 Sodexo ${r.s_falta}</span>
-          <span class="badge bb" style="font-size:11px">📊 ${(r.p_t||0)+(r.n_t||0)} vol.</span>
+          <span class="badge ${r.seg==='sim'?'br2':'bg2'}">🛡️ ${r.seg==='sim'?'Incidente':'OK'}</span>
+          <span class="badge ${r.qual==='sim'?'by2':'bg2'}">📦 ${r.qual==='sim'?'Bloqueio':'OK'}</span>
+          <span class="badge ${r.s_falta==='Sim'?'bp2':'bg2'}">👷 Sodexo ${r.s_falta}</span>
+          <span class="badge bb">📊 ${(r.p_t||0)+(r.n_t||0)} vol.</span>
+          ${r.tampa_recebeu==='Sim'?`<span class="badge bb">🔲 Tampa ${r.tampa_tipo||''} ${r.tampa_qtd||''}ct.</span>`:''}
+          ${r.devolucao_recebeu==='Sim'?`<span class="badge by2">🔄 Dev. ${r.devolucao_qtd||''}ct.</span>`:''}
         </div>
       </div>`).join('');
   },
 
-  closeModal() { document.getElementById('edit-modal').classList.remove('on'); },
+  openModal(id) {
+    const r = this.allTurnos.find(t => t.id === id);
+    if(!r) return;
+    this.editId = id;
+    this.editTurnoSai = r.turma_sai || '';
+    this.editTurnoRec = r.turma_rec || '';
+    this.editSeg = r.seg || 'nao';
+    this.editQual = r.qual || 'nao';
+    const mkTP = (t, tipo, sel) => `<button class="tp${sel===t?' on':''}" style="font-size:${t==='ADM'?'13':'18'}px" onclick="app.setEditTurno('${t}',this,'${tipo}')">${t}<div class="tp-s">${t==='A'||t==='B'?'06-18h':t==='ADM'?'07-16h':'18-06h'}</div></button>`;
+    document.getElementById('modal-fields').innerHTML = `
+      <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:#1A7FE8;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">👤 Identificação</div>
+      <div class="mb12"><span class="lbl">Conferente</span>
+        <select id="e-conf" class="inp inp-sm">${['RAFAEL JANUARIO CUNHA','RICKSON CARMO','ROMUALDO AZEVEDO','LUIS DOMINGOS','JOSE CLAUDIO REIS','PAULO TEIXEIRA','DEIVEDE LIMA'].map(function(n){return '<option'+(n===r.conferente?' selected':'')+'>'+n+'</option>';}).join('')}</select>
+      </div>
+      <div class="mb12"><span class="lbl">Turno que SAIU</span><div class="turno-g" id="e-tg-sai">${['A','B','C','D','ADM'].map(t=>mkTP(t,'sai',this.editTurnoSai)).join('')}</div></div>
+      <div class="mb16"><span class="lbl">Turno que RECEBEU</span><div class="turno-g" id="e-tg-rec">${['A','B','C','D','ADM'].map(t=>mkTP(t,'rec',this.editTurnoRec)).join('')}</div></div>
+      <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:#F05252;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">🛡️ Segurança</div>
+      <div class="mb12">
+        <div class="yn-g mb8"><button class="yn no${this.editSeg==='nao'?' on':''}" id="e-seg-n" onclick="app.setEditYN('seg','nao')">✅ Não — OK</button><button class="yn yes${this.editSeg==='sim'?' on':''}" id="e-seg-s" onclick="app.setEditYN('seg','sim')">⚠️ Sim</button></div>
+        <textarea id="e-s-relato" class="inp ta" style="min-height:70px;display:${this.editSeg==='sim'?'block':'none'}" placeholder="Detalhe...">${r.relato_seg||''}</textarea>
+      </div>
+      <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:#0057B8;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">✅ Qualidade</div>
+      <div class="mb12">
+        <div class="yn-g mb8"><button class="yn no${this.editQual==='nao'?' on':''}" id="e-qual-n" onclick="app.setEditYN('qual','nao')">✅ Não — OK</button><button class="yn yes${this.editQual==='sim'?' on':''}" id="e-qual-s" onclick="app.setEditYN('qual','sim')">⚠️ Sim</button></div>
+        <textarea id="e-q-relato" class="inp ta" style="min-height:70px;display:${this.editQual==='sim'?'block':'none'}" placeholder="Detalhe...">${r.relato_qual||''}</textarea>
+      </div>
+      <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:#8B5CF6;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">👥 Sodexo</div>
+      <div class="g2 mb12">
+        <div><span class="lbl">Falta?</span><select id="e-s-falta" class="inp inp-sm"><option${r.s_falta==='Não'?' selected':''}>Não</option><option${r.s_falta==='Sim'?' selected':''}>Sim</option></select></div>
+        <div><span class="lbl">Função</span><select id="e-s-funcao" class="inp inp-sm"><option>—</option><option${r.s_funcao==='Op. Empilhadeira'?' selected':''}>Op. Empilhadeira</option><option${r.s_funcao==='Aux. Logística'?' selected':''}>Aux. Logística</option><option${r.s_funcao==='Conferente'?' selected':''}>Conferente</option><option${r.s_funcao==='Outro'?' selected':''}>Outro</option></select></div>
+      </div>
+      <div class="g2 mb16">
+        <div><span class="lbl">Reposição?</span><select id="e-s-repo" class="inp inp-sm"><option${r.s_repo==='Não'?' selected':''}>Não</option><option${r.s_repo==='Sim'?' selected':''}>Sim</option></select></div>
+        <div><span class="lbl">Nome</span><input type="text" id="e-s-nome" class="inp inp-sm" value="${r.s_nome||''}"></div>
+      </div>
+      <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:#F5A623;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">⚙️ Operacional</div>
+      <div class="g2 mb8">
+        <div><span class="lbl">Baú Repr.?</span><select id="e-bau-s" class="inp inp-sm"><option${r.bau_s==='Não'?' selected':''}>Não</option><option${r.bau_s==='Sim'?' selected':''}>Sim</option></select></div>
+        <div><span class="lbl">Qtd</span><input type="number" id="e-bau-q" class="inp inp-sm" value="${r.bau_q||''}"></div>
+      </div>
+      <div class="mb12"><span class="lbl">Site Registrado?</span>
+        <div class="yn-g" style="margin-bottom:0"><button class="yn no${r.bau_site==='Não'?' on':''}" id="e-bau-site-n" onclick="app.setEditSingle('bau_site','Não')">Não</button><button class="yn yes${r.bau_site==='Sim'?' on':''}" id="e-bau-site-s" onclick="app.setEditSingle('bau_site','Sim')">Sim</button></div>
+      </div>
+      <div class="g2 mb8">
+        <div><span class="lbl">Emp. Parada?</span><select id="e-emp-s" class="inp inp-sm"><option${r.emp_s==='Não'?' selected':''}>Não</option><option${r.emp_s==='Sim'?' selected':''}>Sim</option></select></div>
+        <div><span class="lbl">Qtd</span><input type="number" id="e-emp-q" class="inp inp-sm" value="${r.emp_q||''}"></div>
+      </div>
+      <div class="mb16"><span class="lbl">Chamado Aberto?</span>
+        <div class="yn-g" style="margin-bottom:0"><button class="yn no${r.emp_cham==='Não'?' on':''}" id="e-emp-cham-n" onclick="app.setEditSingle('emp_cham','Não')">Não</button><button class="yn yes${r.emp_cham==='Sim'?' on':''}" id="e-emp-cham-s" onclick="app.setEditSingle('emp_cham','Sim')">Sim</button></div>
+      </div>
+      <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:#0057B8;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">📊 Movimentação</div>
+      <div class="g3 mb12">
+        <div><span class="lbl">Pl. Carr.</span><input type="number" id="e-pc" class="inp inp-sm" value="${r.p_c}" oninput="document.getElementById('e-pt').value=(parseInt(document.getElementById('e-pc').value)||0)+(parseInt(document.getElementById('e-pd').value)||0)"></div>
+        <div><span class="lbl">Pl. Desc.</span><input type="number" id="e-pd" class="inp inp-sm" value="${r.p_d}" oninput="document.getElementById('e-pt').value=(parseInt(document.getElementById('e-pc').value)||0)+(parseInt(document.getElementById('e-pd').value)||0)"></div>
+        <div><span class="lbl">Total</span><input type="number" id="e-pt" class="inp inp-sm" value="${r.p_t}" disabled></div>
+      </div>
+      <div class="g2 mb16">
+        <div><span class="lbl">NSA Carr.</span><input type="number" id="e-nc" class="inp inp-sm" value="${r.n_c}"></div>
+        <div><span class="lbl">NSA Total</span><input type="number" id="e-nt" class="inp inp-sm" value="${r.n_t}" disabled></div>
+      </div>
+      <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">📝 Relato</div>
+      <textarea id="e-relato" class="inp ta" style="min-height:90px">${r.relato}</textarea>
+    `;
+    document.getElementById('edit-modal').classList.add('on');
+  },
 
-  exportCSV() {
+  closeModal() { document.getElementById('edit-modal').classList.remove('on'); this.editId = null; },
+
+  setEditTurno(t, btn, tipo) {
+    if(tipo==='sai') this.editTurnoSai=t; else this.editTurnoRec=t;
+    const gId=tipo==='sai'?'e-tg-sai':'e-tg-rec';
+    document.querySelectorAll('#'+gId+' .tp').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+  },
+
+  setEditYN(tipo, val) {
+    if(tipo==='seg'){
+      this.editSeg=val;
+      document.getElementById('e-seg-n').classList.toggle('on',val==='nao');
+      document.getElementById('e-seg-s').classList.toggle('on',val==='sim');
+      const ta=document.getElementById('e-s-relato');if(ta)ta.style.display=val==='sim'?'block':'none';
+    } else {
+      this.editQual=val;
+      document.getElementById('e-qual-n').classList.toggle('on',val==='nao');
+      document.getElementById('e-qual-s').classList.toggle('on',val==='sim');
+      const ta=document.getElementById('e-q-relato');if(ta)ta.style.display=val==='sim'?'block':'none';
+    }
+  },
+
+  setEditSingle(field, val) {
+    if(field==='bau_site'){
+      document.getElementById('e-bau-site-n').classList.toggle('on',val==='Não');
+      document.getElementById('e-bau-site-s').classList.toggle('on',val==='Sim');
+    } else {
+      document.getElementById('e-emp-cham-n').classList.toggle('on',val==='Não');
+      document.getElementById('e-emp-cham-s').classList.toggle('on',val==='Sim');
+    }
+    this['_edit_'+field]=val;
+  },
+
+  async saveEdit() {
+    if(!this.editId) return;
+    const pc=parseInt(document.getElementById('e-pc').value)||0;
+    const pd=parseInt(document.getElementById('e-pd').value)||0;
+    const nc=parseInt(document.getElementById('e-nc').value)||0;
+    const updates={
+      conferente:document.getElementById('e-conf').value,
+      turma_sai:this.editTurnoSai,turma_rec:this.editTurnoRec,
+      seg:this.editSeg,relato_seg:document.getElementById('e-s-relato')?.value||'',
+      qual:this.editQual,relato_qual:document.getElementById('e-q-relato')?.value||'',
+      s_falta:document.getElementById('e-s-falta').value,
+      s_funcao:document.getElementById('e-s-funcao').value,
+      s_repo:document.getElementById('e-s-repo').value,
+      s_nome:document.getElementById('e-s-nome').value,
+      bau_s:document.getElementById('e-bau-s').value,
+      bau_q:document.getElementById('e-bau-q').value,
+      bau_site:this['_edit_bau_site']||'Não',
+      emp_s:document.getElementById('e-emp-s').value,
+      emp_q:document.getElementById('e-emp-q').value,
+      emp_cham:this['_edit_emp_cham']||'Não',
+      p_c:pc,p_d:pd,p_t:pc+pd,n_c:nc,n_t:nc,
+      relato:document.getElementById('e-relato').value,
+    };
+    this.showLoading('Salvando...');
+    const {error}=await db.from('turnos').update(updates).eq('id',this.editId);
+    this.hideLoading();
+    if(error){alert('Erro ao salvar: '+error.message);return;}
+    this.closeModal();this.updateDash();
+  },
+
+  async deleteEdit() {
+    if(!this.editId) return;
+    if(!confirm('⚠️ Tem certeza que deseja EXCLUIR este registro?\n\nEsta ação não pode ser desfeita.')) return;
+    this.showLoading('Excluindo...');
+    const { error } = await db.from('turnos').delete().eq('id', this.editId);
+    this.hideLoading();
+    if(error) { alert('Erro ao excluir: ' + error.message); return; }
+    this.closeModal();
+    this.updateDash();
+  },
     const esc = v => '"' + String(v||'').replace(/"/g,"'") + '"';
     const h = ['Data','Conferente','Turma Saiu','Turma Recebeu','Incidente','Detalhe Incidente','Bloqueio','Detalhe Bloqueio','Pl. Carr.','Pl. Desc.','Pl. Total','NSA Carr.','NSA Total','Baú Repr.','Qtd Baú','Site Registrado','Emp. Parada','Qtd Emp.','Chamado','Sodexo Falta','Função','Reposição','Nome','Relato'];
     let csv = '\uFEFF' + h.join(';') + '\n';
