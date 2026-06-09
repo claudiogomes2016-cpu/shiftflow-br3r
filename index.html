@@ -479,7 +479,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="kc"><div class="kc-top"><div class="kc-l">Qualidade</div><div class="kc-i" style="background:rgba(0,196,140,.15)">✅</div></div><div class="kc-v cs" id="k-qual">OK</div><div class="kc-t cs" id="k-qual-t">sem bloqueios</div></div>
   </div>
 
-  <div class="cw"><div class="shd">Produtividade por Turma</div><div style="position:relative;min-height:260px"><canvas id="chart-prod"></canvas></div></div>
+  <div class="cw"><div class="shd">Produtividade por Turma</div><div style="position:relative;min-height:340px"><canvas id="chart-prod"></canvas></div></div>
 
   <div class="g2">
     <div class="cw" style="padding:18px"><div class="shd" style="font-size:10px">🛡️ Segurança</div><div id="card-seg"><div style="text-align:center;color:var(--text3);font-size:12px;padding:20px 0">Nenhum registro ainda</div></div></div>
@@ -1131,10 +1131,10 @@ const app = {
       }],
       options: {
         responsive:true,
-        maintainAspectRatio:true,
-        layout:{padding:{top:30}},
+        maintainAspectRatio:false,
+        layout:{padding:{top:36}},
         plugins: {
-          legend:{position:'bottom',labels:{color:isDark?'#B0BDD0':'#374151',font:{size:13},padding:16}},
+          legend:{position:'bottom',labels:{color:isDark?'#B0BDD0':'#374151',font:{size:13},padding:14,boxWidth:14}},
           tooltip:{
             backgroundColor:isDark?'#1E2330':'#fff',
             titleColor:isDark?'#E8ECF4':'#0F1721',
