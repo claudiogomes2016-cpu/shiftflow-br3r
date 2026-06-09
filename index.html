@@ -389,6 +389,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="card c-blue">
     <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Movimentação Detalhada</div>
     <div class="sec-s">Volume de cargas por área</div>
+
+    <!-- PLANTA -->
     <div class="mov-a">
       <div class="mov-t"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1A7FE8"><circle cx="12" cy="12" r="10"/></svg>Planta</div>
       <div class="mv3">
@@ -396,35 +398,33 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <div><input type="number" id="m-p-d" class="mi" placeholder="0" oninput="app.calc()" inputmode="numeric"><div class="ml">Descarregados</div></div>
         <div><input type="number" id="m-p-t" class="mi" disabled><div class="ml" style="color:#1A7FE8">Total</div></div>
       </div>
-
-      <!-- ENTRADAS -->
-      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
-        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#1A7FE8;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">📥 Entradas</div>
-
-        <!-- Tampa Básica -->
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:14px;margin-bottom:10px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text2);letter-spacing:1px">🔲 Tampa Básica</div>
-          </div>
-          <div id="tampa-lista"></div>
-          <button onclick="app.addTampa()" style="width:100%;padding:11px;border-radius:11px;background:rgba(0,87,184,.1);border:1.5px dashed rgba(0,87,184,.4);color:#7DBCFF;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:4px">+ Adicionar Tampa</button>
-        </div>
-
-        <!-- Devolução -->
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:14px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text2);letter-spacing:1px">🔄 Devolução Latas/Tampas</div>
-          </div>
-          <div id="dev-lista"></div>
-          <button onclick="app.addDev()" style="width:100%;padding:11px;border-radius:11px;background:rgba(245,166,35,.08);border:1.5px dashed rgba(245,166,35,.4);color:#FFD166;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:4px">+ Adicionar Devolução</button>
-        </div>
-      </div>
     </div>
+
+    <!-- NSA — logo abaixo de Planta -->
     <div class="mov-a">
       <div class="mov-t"><svg width="14" height="14" viewBox="0 0 24 24" fill="#6E7A8F"><circle cx="12" cy="12" r="10"/></svg>NSA</div>
       <div class="mv2">
         <div><input type="number" id="m-n-c" class="mi" placeholder="0" oninput="app.calc()" inputmode="numeric"><div class="ml">Carregados</div></div>
         <div><input type="number" id="m-n-t" class="mi" disabled><div class="ml">Total</div></div>
+      </div>
+    </div>
+
+    <!-- ENTRADAS — depois de Planta e NSA -->
+    <div style="margin-top:6px;padding-top:14px;border-top:1px solid var(--border)">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#1A7FE8;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">📥 Entradas</div>
+
+      <!-- Tampa Básica -->
+      <div style="background:var(--bg4);border:1px solid var(--border);border-radius:13px;padding:14px;margin-bottom:10px">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text2);letter-spacing:1px;margin-bottom:10px">🔲 Tampa Básica</div>
+        <div id="tampa-lista"></div>
+        <button onclick="app.addTampa()" style="width:100%;padding:11px;border-radius:11px;background:rgba(0,87,184,.1);border:1.5px dashed rgba(0,87,184,.4);color:#7DBCFF;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:4px">+ Adicionar Tampa</button>
+      </div>
+
+      <!-- Devolução -->
+      <div style="background:var(--bg4);border:1px solid var(--border);border-radius:13px;padding:14px">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text2);letter-spacing:1px;margin-bottom:10px">🔄 Devolução Latas/Tampas</div>
+        <div id="dev-lista"></div>
+        <button onclick="app.addDev()" style="width:100%;padding:11px;border-radius:11px;background:rgba(245,166,35,.08);border:1.5px dashed rgba(245,166,35,.4);color:#FFD166;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:4px">+ Adicionar Devolução</button>
       </div>
     </div>
   </div>
@@ -951,8 +951,8 @@ const app = {
       return;
     }
     el.innerHTML = this.tampaEntradas.map((e, i) => `
-      <div style="background:var(--bg4);border:1px solid var(--border2);border-radius:11px;padding:12px;margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:11px;padding:12px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
           <span style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:#7DBCFF;letter-spacing:1px">ENTRADA ${i+1}</span>
           <button onclick="app.removeTampa(${e.id})" style="background:rgba(240,82,82,.12);border:1px solid rgba(240,82,82,.3);color:#FF8585;border-radius:7px;padding:4px 10px;font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:700;cursor:pointer">🗑️ Remover</button>
         </div>
@@ -975,7 +975,7 @@ const app = {
           </div>
         </div>
         <div>
-          <span class="lbl">Qtd. Carretas/Contêineres</span>
+          <span class="lbl">Qtd. Carretas</span>
           <input type="number" class="inp inp-sm" placeholder="Ex: 1, 2, 3..." inputmode="numeric" min="1" value="${e.qtd}" onchange="app.tampaEntradas[${i}].qtd=this.value">
         </div>
       </div>`).join('');
@@ -1000,20 +1000,18 @@ const app = {
       return;
     }
     el.innerHTML = this.devEntradas.map((e, i) => `
-      <div style="background:var(--bg4);border:1px solid var(--border2);border-radius:11px;padding:12px;margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:11px;padding:12px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
           <span style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:#FFD166;letter-spacing:1px">DEVOLUÇÃO ${i+1}</span>
           <button onclick="app.removeDev(${e.id})" style="background:rgba(240,82,82,.12);border:1px solid rgba(240,82,82,.3);color:#FF8585;border-radius:7px;padding:4px 10px;font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:700;cursor:pointer">🗑️ Remover</button>
         </div>
-        <div class="g2">
-          <div>
-            <span class="lbl">Origem</span>
-            <input type="text" class="inp inp-sm" placeholder="Ex: Cliente X..." value="${e.origem}" onchange="app.devEntradas[${i}].origem=this.value">
-          </div>
-          <div>
-            <span class="lbl">Qtd. Carretas/Contêineres</span>
-            <input type="number" class="inp inp-sm" placeholder="Ex: 1, 2, 3..." inputmode="numeric" min="1" value="${e.qtd}" onchange="app.devEntradas[${i}].qtd=this.value">
-          </div>
+        <div class="mb8">
+          <span class="lbl">Origem</span>
+          <input type="text" class="inp inp-sm" placeholder="Ex: Coca-Cola, Ambev..." value="${e.origem}" onchange="app.devEntradas[${i}].origem=this.value">
+        </div>
+        <div>
+          <span class="lbl">Qtd. Carretas</span>
+          <input type="number" class="inp inp-sm" placeholder="Ex: 1, 2, 3..." inputmode="numeric" min="1" value="${e.qtd}" onchange="app.devEntradas[${i}].qtd=this.value">
         </div>
       </div>`).join('');
   },
