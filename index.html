@@ -1394,6 +1394,8 @@ const app = {
     this.closeModal();
     this.updateDash();
   },
+
+  exportCSV() {
     const esc = v => '"' + String(v||'').replace(/"/g,"'") + '"';
     const h = ['Data','Conferente','Turma Saiu','Turma Recebeu','Incidente','Detalhe Incidente','Bloqueio','Detalhe Bloqueio','Pl. Carr.','Pl. Desc.','Pl. Total','NSA Carr.','NSA Total','Baú Repr.','Qtd Baú','Site Registrado','Emp. Parada','Qtd Emp.','Chamado','Sodexo Falta','Função','Reposição','Nome','Relato'];
     let csv = '\uFEFF' + h.join(';') + '\n';
