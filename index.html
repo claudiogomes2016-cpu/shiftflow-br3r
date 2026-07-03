@@ -579,6 +579,28 @@ body {
   .kpi-g{grid-template-columns:repeat(4,1fr)}
 }
 
+/* ── PERIODO FILTER ── */
+.periodo-btn {
+  padding: 8px 16px;
+  border-radius: 99px;
+  border: 1.5px solid var(--border2);
+  background: var(--bg4);
+  color: var(--text2);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.periodo-btn:hover { border-color: var(--blue); color: var(--blue); }
+.periodo-btn.on {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(59,130,246,0.3);
+}
+
 @media(min-width:900px){
   .wrap{max-width:680px; padding:28px 32px}
   .wrap-dash{padding:28px 32px}
@@ -642,12 +664,13 @@ body {
 <header class="hdr">
   <div class="hdr-left">
     <div class="hdr-ico"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-    <div><div class="hdr-brand">ShiftFlow</div><div class="hdr-sub">BR3R Expedição</div></div>
+    <div>
+      <div class="hdr-brand">ShiftFlow <span style="font-weight:400;opacity:0.4;font-size:13px">BR3R</span></div>
+    </div>
   </div>
   <div class="hdr-right">
-    <div class="hdr-user"><span id="hdr-nome"></span><strong id="hdr-turma"></strong></div>
-    <span id="theme-icon" style="font-size:14px">🌙</span>
-    <button class="theme-toggle" onclick="app.toggleTheme()"></button>
+    <div class="hdr-user"><strong id="hdr-nome"></strong><span id="hdr-turma" style="font-size:11px;color:var(--text3)"></span></div>
+    <button class="theme-toggle" onclick="app.toggleTheme()" title="Alternar tema"></button>
     <button class="logout-btn" onclick="app.logout()">Sair</button>
   </div>
 </header>
@@ -826,12 +849,23 @@ body {
 <!-- SCREEN DASHBOARD -->
 <div id="sc-dash" class="screen app-wrap">
 <div class="wrap-dash">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+
+  <!-- Dashboard Header -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
     <div>
-      <div class="frd" style="font-weight:700;font-size:24px;color:var(--text);letter-spacing:2px;text-transform:uppercase">BI Gestão BR3R</div>
-      <div style="font-size:15px;color:var(--text3);margin-top:3px" id="dash-per">Carregando dados...</div>
+      <div style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.5px">BI Gestão <span style="color:var(--blue)">BR3R</span></div>
+      <div style="font-size:13px;color:var(--text3);margin-top:3px" id="dash-per">Carregando dados...</div>
     </div>
     <div class="rt-badge"><div class="rt-dot"></div>Tempo Real</div>
+  </div>
+
+  <!-- Filtro de Período -->
+  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+    <button class="periodo-btn on" onclick="app.setPeriodo('hoje',this)">Hoje</button>
+    <button class="periodo-btn" onclick="app.setPeriodo('semana',this)">Esta semana</button>
+    <button class="periodo-btn" onclick="app.setPeriodo('mes',this)">Este mês</button>
+    <button class="periodo-btn" onclick="app.setPeriodo('anterior',this)">Mês anterior</button>
+    <button class="periodo-btn" onclick="app.setPeriodo('tudo',this)">Tudo</button>
   </div>
 
   <div class="kpi-g">
@@ -1086,6 +1120,9 @@ const app = {
     }
     document.getElementById('plano-acao') && (document.getElementById('plano-acao').value = localStorage.getItem('sf_plano') || '');
     this.tampaEntradas = []; this.devEntradas = [];
+    // Set default periodo button
+    const defaultBtn = document.querySelector('.periodo-btn.on');
+    if(!defaultBtn) { const btns = document.querySelectorAll('.periodo-btn'); if(btns[2]) btns[2].classList.add('on'); }
     setTimeout(() => { this.renderTampaLista(); this.renderDevLista(); }, 100);
   },
 
@@ -1465,13 +1502,42 @@ const app = {
         </div>
       </div>`).join('');
   },
+  periodoAtivo: 'mes',
+
+  setPeriodo(periodo, btn) {
+    this.periodoAtivo = periodo;
+    document.querySelectorAll('.periodo-btn').forEach(b => b.classList.remove('on'));
+    if(btn) btn.classList.add('on');
+    this.renderDash(this.filtrarPorPeriodo(this.allTurnos));
+  },
+
+  filtrarPorPeriodo(turnos) {
+    const agora = new Date();
+    const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+    const inicioSemana = new Date(hoje);
+    inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+    const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
+    const inicioMesAnterior = new Date(agora.getFullYear(), agora.getMonth()-1, 1);
+    const fimMesAnterior = new Date(agora.getFullYear(), agora.getMonth(), 0, 23, 59, 59);
+    return turnos.filter(r => {
+      const dt = new Date(r.data_registro);
+      switch(this.periodoAtivo) {
+        case 'hoje':     return dt >= hoje;
+        case 'semana':   return dt >= inicioSemana;
+        case 'mes':      return dt >= inicioMes;
+        case 'anterior': return dt >= inicioMesAnterior && dt <= fimMesAnterior;
+        default:         return true;
+      }
+    });
+  },
+
   async updateDash() {
     this.showLoading('Carregando dados...');
     try {
       const { data: turnos, error } = await db.from('turnos').select('*').order('data_registro', { ascending: false });
       if(error) throw error;
       this.allTurnos = turnos || [];
-      this.renderDash(this.allTurnos);
+      this.renderDash(this.filtrarPorPeriodo(this.allTurnos));
     } catch(e) { console.error(e); }
     this.hideLoading();
   },
@@ -1497,7 +1563,8 @@ const app = {
     const kQ = document.getElementById('k-qual'), kQT = document.getElementById('k-qual-t');
     kQ.textContent = qual > 0 ? qual : 'OK'; kQT.textContent = qual > 0 ? 'bloqueios' : 'sem bloqueios';
     kQ.className = 'kc-v ' + (qual > 0 ? 'cw2' : 'cs'); kQT.className = 'kc-t ' + (qual > 0 ? 'cw2' : 'cs');
-    document.getElementById('dash-per').textContent = total > 0 ? total + ' registros em tempo real ⚡' : 'Nenhum registro ainda.';
+    const periodoNome = {hoje:'Hoje',semana:'Esta semana',mes:'Este mês',anterior:'Mês anterior',tudo:'Todos os registros'};
+    document.getElementById('dash-per').textContent = total > 0 ? `${total} registro${total!==1?'s':''} · ${periodoNome[this.periodoAtivo]||''}` : `Sem registros · ${periodoNome[this.periodoAtivo]||''}`;
 
     this.renderGroupedChart(byT);
     this.renderStatCard('card-seg', seg, Math.max(0,total-seg), 'Incidentes','Sem Ocorrências','#EF4444','#10B981');
@@ -1537,7 +1604,7 @@ const app = {
           {
             label: 'Descarregados',
             data: turmas.map(t => byT[t].pd),
-            backgroundColor: turmas.map(t => TURMA_CORES[t]+'99' || 'rgba(59,130,246,0.6)'),
+            backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)',
             borderRadius: { topLeft:6, topRight:6, bottomLeft:0, bottomRight:0 },
             borderSkipped: false,
             stack: 'planta',
@@ -1637,29 +1704,43 @@ const app = {
     const el = document.getElementById(cardId);
     if(!el) return;
     const total = bad + good;
-    if(total === 0) { el.innerHTML = '<div style="text-align:center;color:var(--text3);font-size:14px;padding:20px 0">Nenhum registro ainda</div>'; return; }
+    if(total === 0) { el.innerHTML = '<div style="text-align:center;color:var(--text3);font-size:14px;padding:24px 0;font-weight:500">Sem registros no período</div>'; return; }
     const pctBad = Math.round(bad/total*100);
     const pctGood = Math.round(good/total*100);
     const isDark = this.theme === 'dark';
-    const subCol = isDark ? '#D4D4D8' : '#475569';
-    const trackBg = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.06)';
+    const trackBg = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
     el.innerHTML = `
-      <div style="text-align:center;margin-bottom:14px">
-        <div style="font-family:var(--font);font-weight:700;font-size:48px;line-height:1;color:${bad>0?colorBad:colorGood}">${bad>0?bad:'✓'}</div>
-        <div style="font-family:var(--font);font-size:15px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${bad>0?colorBad:colorGood};margin-top:3px">${bad>0?lblBad:lblGood}</div>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px">
+        <div>
+          <div style="font-size:40px;font-weight:900;line-height:1;letter-spacing:-2px;color:${bad>0?colorBad:colorGood}">${bad>0?bad:'✓'}</div>
+          <div style="font-size:13px;font-weight:600;color:${bad>0?colorBad:colorGood};margin-top:4px">${bad>0?lblBad:lblGood}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:22px;font-weight:800;color:${colorGood}">${good}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">${lblGood}</div>
+        </div>
       </div>
       <div style="margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-family:var(--font);font-size:14px;font-weight:700;color:${colorBad};letter-spacing:1px;text-transform:uppercase">${lblBad}: ${bad}</span><span style="font-family:var(--font);font-size:14px;color:${subCol}">${pctBad}%</span></div>
-        <div style="height:10px;background:${trackBg};border-radius:99px;overflow:hidden"><div style="height:100%;width:${pctBad}%;background:${colorBad};border-radius:99px;transition:width .8s"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="font-size:12px;font-weight:600;color:${colorBad}">${lblBad}</span>
+          <span style="font-size:12px;font-weight:700;color:${colorBad}">${bad} · ${pctBad}%</span>
+        </div>
+        <div style="height:6px;background:${trackBg};border-radius:99px;overflow:hidden">
+          <div style="height:100%;width:${pctBad}%;background:${colorBad};border-radius:99px;transition:width 0.8s ease"></div>
+        </div>
       </div>
-      <div style="margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-family:var(--font);font-size:14px;font-weight:700;color:${colorGood};letter-spacing:1px;text-transform:uppercase">${lblGood}: ${good}</span><span style="font-family:var(--font);font-size:14px;color:${subCol}">${pctGood}%</span></div>
-        <div style="height:10px;background:${trackBg};border-radius:99px;overflow:hidden"><div style="height:100%;width:${pctGood}%;background:${colorGood};border-radius:99px;transition:width .8s"></div></div>
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="font-size:12px;font-weight:600;color:${colorGood}">${lblGood}</span>
+          <span style="font-size:12px;font-weight:700;color:${colorGood}">${good} · ${pctGood}%</span>
+        </div>
+        <div style="height:6px;background:${trackBg};border-radius:99px;overflow:hidden">
+          <div style="height:100%;width:${pctGood}%;background:${colorGood};border-radius:99px;transition:width 0.8s ease"></div>
+        </div>
       </div>
-      <div style="display:flex;justify-content:center;gap:6px;padding-top:10px;border-top:1px solid ${trackBg}">
-        <span style="font-family:var(--font);font-size:15px;color:${subCol}">${total} turno${total!==1?'s':''}</span>
-        <span style="color:${subCol}">·</span>
-        <span style="font-family:var(--font);font-size:15px;color:${bad===0?colorGood:colorBad};font-weight:700">${bad===0?'✅ 100% OK':'⚠️ '+pctBad+'% com ocorr.'}</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid ${trackBg}">
+        <span style="font-size:12px;color:var(--text3);font-weight:500">${total} turno${total!==1?'s':''}</span>
+        <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:${bad===0?'rgba(16,185,129,0.12)':'rgba(239,68,68,0.12)'};color:${bad===0?colorGood:colorBad}">${bad===0?'100% OK':pctBad+'% alertas'}</span>
       </div>`;
   },
 
