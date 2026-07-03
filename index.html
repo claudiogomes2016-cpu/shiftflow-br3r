@@ -1029,7 +1029,8 @@ const app = {
   // ── INIT ──
   async init() {
     document.documentElement.setAttribute('data-theme', this.theme);
-    document.getElementById('theme-icon').textContent = this.theme === 'dark' ? '🌙' : '☀️';
+    const themeIcon = document.getElementById('theme-icon');
+    if(themeIcon) themeIcon.textContent = this.theme === 'dark' ? '🌙' : '☀️';
     await this.loadConferentes();
   },
 
@@ -1162,7 +1163,8 @@ const app = {
   toggleTheme() {
     this.theme = this.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', this.theme);
-    document.getElementById('theme-icon').textContent = this.theme === 'dark' ? '🌙' : '☀️';
+    const ti = document.getElementById('theme-icon');
+    if(ti) ti.textContent = this.theme === 'dark' ? '🌙' : '☀️';
     localStorage.setItem('sf_theme', this.theme);
     if(document.getElementById('sc-dash').classList.contains('on')) this.updateDash();
   },
