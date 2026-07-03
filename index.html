@@ -998,10 +998,16 @@ body {
 
 <script>
 // ── SUPABASE CONFIG ──
+// ── SUPABASE CONFIG ──
 const SUPA_URL = 'https://qbohupozrbqjplgpqbxr.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFib2h1cG96cmJxanBsZ3BxYnhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NjY3OTgsImV4cCI6MjA5NjQ0Mjc5OH0.wPxRLIGqfooU5bpV5UZICvH34cQrok2p5nHqYWt0Ye0';
-const { createClient } = supabase;
-const db = createClient(SUPA_URL, SUPA_KEY);
+let db;
+try {
+  const { createClient } = supabase;
+  db = createClient(SUPA_URL, SUPA_KEY);
+} catch(e) {
+  console.error('Supabase init error:', e);
+}
 
 const TURMA_CORES = {A:'#3B82F6',B:'#8B5CF6',C:'#10B981',D:'#F59E0B',ADM:'#64748B'};
 const TURMA_SOLID = {A:'#3B82F6',B:'#8B5CF6',C:'#10B981',D:'#F59E0B',ADM:'#64748B'};
@@ -1027,15 +1033,15 @@ const app = {
     await this.loadConferentes();
   },
 
-  // ── CARREGAR CONFERENTES DO SUPABASE ──
   async loadConferentes() {
     this.showLoading('Carregando...');
     try {
-      const { data, error } = await db.from('profiles').select('*').eq('ativo', true).order('nome');
+      const { createClient } = supabase;
+      const testDb = createClient(SUPA_URL, SUPA_KEY);
+      const { data, error } = await testDb.from('profiles').select('*').eq('ativo', true).order('nome');
       if(error) throw error;
       const sel = document.getElementById('login-conf');
       sel.innerHTML = '<option value="">— Selecione seu nome —</option>';
-      // Guarda os dados completos num mapa para evitar qualquer dessincronia do DOM
       this.conferentesMap = {};
       data.forEach(p => {
         const opt = document.createElement('option');
@@ -1044,8 +1050,14 @@ const app = {
         sel.appendChild(opt);
         this.conferentesMap[String(p.id)] = { nome: p.nome, turma: p.turma, pin: String(p.pin), role: p.role };
       });
+      if(data.length === 0) {
+        sel.innerHTML = '<option value="">Nenhum conferente cadastrado</option>';
+      }
     } catch(e) {
-      console.error(e);
+      console.error('Erro ao carregar conferentes:', e);
+      document.getElementById('login-conf').innerHTML = '<option value="">Erro ao carregar — tente recarregar</option>';
+      document.getElementById('login-err').textContent = 'Erro de conexão. Verifique sua internet.';
+      document.getElementById('login-err').style.display = 'block';
     }
     this.hideLoading();
   },
