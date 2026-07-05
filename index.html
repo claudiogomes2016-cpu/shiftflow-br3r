@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0A0A0F">
+<meta name="theme-color" content="#08080D">
 <title>ShiftFlow BR3R</title>
 <link rel="manifest" href="manifest.json">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,77 +20,82 @@
 
 /* TOKENS */
 :root {
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-md: 16px;
-  --radius-lg: 20px;
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-md: 18px;
+  --radius-lg: 22px;
   --transition: 150ms cubic-bezier(0.4,0,0.2,1);
   --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --sidebar-w: 248px;
 }
 
 [data-theme="dark"] {
-  --bg:        #000000;
-  --bg2:       #0A0A0A;
-  --bg3:       #121212;
-  --bg4:       #1A1A1A;
-  --bg5:       #222222;
-  --text:      #FFFFFF;
-  --text2:     #D4D4D8;
-  --text3:     #9CA3AF;
-  --border:    rgba(255,255,255,0.10);
-  --border2:   rgba(255,255,255,0.16);
-  --shadow:    0 8px 30px rgba(0,0,0,0.50);
-  --shadow-sm: 0 2px 12px rgba(0,0,0,0.40);
-  --inp-bg:    #121212;
-  --card-bg:   #0A0A0A;
-  --nav-bg:    #000000;
+  --bg:        #08080D;
+  --bg2:       #0D0D14;
+  --bg3:       #13131C;
+  --bg4:       #1A1A25;
+  --bg5:       #23232F;
+  --text:      #F5F5F7;
+  --text2:     #C6C6D2;
+  --text3:     #8B8B9C;
+  --border:    rgba(255,255,255,0.08);
+  --border2:   rgba(255,255,255,0.14);
+  --shadow:    0 12px 36px rgba(0,0,0,0.55);
+  --shadow-sm: 0 2px 14px rgba(0,0,0,0.45);
+  --inp-bg:    #13131C;
+  --card-bg:   #101018;
+  --nav-bg:    #0B0B12;
   --hover:     rgba(255,255,255,0.05);
-  --blue:      #3B82F6;
-  --blue-dim:  rgba(59,130,246,0.15);
-  --green:     #10B981;
-  --green-dim: rgba(16,185,129,0.15);
-  --red:       #EF4444;
-  --red-dim:   rgba(239,68,68,0.15);
-  --yellow:    #F59E0B;
-  --yellow-dim:rgba(245,158,11,0.15);
-  --purple:    #8B5CF6;
-  --purple-dim:rgba(139,92,246,0.15);
+  --blue:      #6C8CFF;
+  --blue-dim:  rgba(108,140,255,0.16);
+  --green:     #22C58B;
+  --green-dim: rgba(34,197,139,0.16);
+  --red:       #F0555F;
+  --red-dim:   rgba(240,85,95,0.16);
+  --yellow:    #F5A524;
+  --yellow-dim:rgba(245,165,36,0.16);
+  --purple:    #B879F5;
+  --purple-dim:rgba(184,121,245,0.18);
   --orange:    #F97316;
   --orange-dim:rgba(249,115,22,0.15);
   --chart-grid: rgba(255,255,255,0.06);
-  --chart-tick: #D4D4D8;
+  --chart-tick: #C6C6D2;
+  --grad-brand: linear-gradient(135deg, #7C7BFF 0%, #B879F5 100%);
+  --grad-soft: radial-gradient(120% 120% at 0% 0%, rgba(124,123,255,0.14) 0%, rgba(184,121,245,0.05) 45%, rgba(0,0,0,0) 75%);
 }
 
 [data-theme="light"] {
-  --bg:        #F0F4F9;
+  --bg:        #F5F6FB;
   --bg2:       #FFFFFF;
   --bg3:       #FFFFFF;
-  --bg4:       #EEF2F8;
-  --bg5:       #E4EAF4;
-  --text:      #0F172A;
-  --text2:     #475569;
-  --text3:     #94A3B8;
-  --border:    rgba(0,0,0,0.07);
-  --border2:   rgba(0,0,0,0.11);
-  --shadow:    0 4px 16px rgba(0,0,0,0.06);
-  --shadow-sm: 0 1px 4px rgba(0,0,0,0.04);
-  --inp-bg:    #EEF2F8;
+  --bg4:       #F0F1F9;
+  --bg5:       #E7E9F5;
+  --text:      #171726;
+  --text2:     #55566B;
+  --text3:     #9494A8;
+  --border:    rgba(23,23,38,0.08);
+  --border2:   rgba(23,23,38,0.12);
+  --shadow:    0 10px 28px rgba(31,31,60,0.08);
+  --shadow-sm: 0 2px 10px rgba(31,31,60,0.05);
+  --inp-bg:    #F0F1F9;
   --card-bg:   #FFFFFF;
   --nav-bg:    #FFFFFF;
-  --hover:     rgba(0,0,0,0.02);
-  --blue:      #2563EB;
-  --blue-dim:  rgba(37,99,235,0.08);
-  --green:     #059669;
-  --green-dim: rgba(5,150,105,0.08);
-  --red:       #DC2626;
-  --red-dim:   rgba(220,38,38,0.08);
-  --yellow:    #D97706;
-  --yellow-dim:rgba(217,119,6,0.08);
-  --purple:    #7C3AED;
-  --purple-dim:rgba(124,58,237,0.08);
+  --hover:     rgba(23,23,38,0.03);
+  --blue:      #4F5BEA;
+  --blue-dim:  rgba(79,91,234,0.09);
+  --green:     #0D9668;
+  --green-dim: rgba(13,150,104,0.09);
+  --red:       #E0334F;
+  --red-dim:   rgba(224,51,79,0.08);
+  --yellow:    #D9820A;
+  --yellow-dim:rgba(217,130,10,0.09);
+  --purple:    #8B3FE0;
+  --purple-dim:rgba(139,63,224,0.09);
   --orange:    #EA580C;
   --orange-dim:rgba(234,88,12,0.08);
-  --chart-grid: rgba(0,0,0,0.04);
+  --chart-grid: rgba(23,23,38,0.05);
+  --grad-brand: linear-gradient(135deg, #4F5BEA 0%, #8B3FE0 100%);
+  --grad-soft: radial-gradient(120% 120% at 0% 0%, rgba(79,91,234,0.08) 0%, rgba(139,63,224,0.04) 45%, rgba(255,255,255,0) 75%);
   --chart-tick: #94A3B8;
 }
 
@@ -99,7 +104,8 @@
 html { scroll-behavior:smooth; }
 body {
   font-family: var(--font);
-  background: var(--bg);
+  background: var(--grad-soft), var(--bg);
+  background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
@@ -132,12 +138,12 @@ body {
   margin-bottom: 40px;
 }
 .login-ico {
-  width: 52px; height: 52px;
+  width: 56px; height: 56px;
   border-radius: var(--radius-md);
-  background: var(--blue);
+  background: var(--grad-brand);
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 16px;
-  box-shadow: 0 8px 24px rgba(59,130,246,0.30);
+  box-shadow: 0 10px 28px rgba(108,140,255,0.35);
 }
 .login-ico svg { width:26px; height:26px; fill:#fff; }
 .login-brand {
@@ -212,7 +218,7 @@ body {
 .hdr-left { display:flex; align-items:center; gap:10px; }
 .hdr-ico {
   width:30px; height:30px; border-radius:9px;
-  background: var(--blue); display:flex; align-items:center; justify-content:center;
+  background: var(--grad-brand); display:flex; align-items:center; justify-content:center;
 }
 .hdr-ico svg { width:15px; height:15px; fill:#fff; }
 .hdr-brand { font-size:16px; font-weight:800; color:var(--text); letter-spacing:-0.4px; }
@@ -247,6 +253,7 @@ body {
   display:flex; z-index:900;
   transition: background var(--transition);
 }
+.side-brand { display:none; }
 .nav-btn {
   flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:4px; cursor:pointer; border:none; background:transparent; position:relative;
@@ -268,6 +275,38 @@ body {
   height:2px; background:var(--blue); border-radius:99px 99px 0 0;
 }
 
+/* ── SIDEBAR (desktop) ── */
+@media(min-width:1024px){
+  .nav-bot {
+    top:0; bottom:0; left:0; right:auto; height:100vh; width:var(--sidebar-w);
+    flex-direction:column; align-items:stretch; justify-content:flex-start;
+    border-top:none; border-right:1px solid var(--border);
+    padding:20px 14px; gap:2px;
+  }
+  .side-brand {
+    display:flex; align-items:center; gap:10px;
+    padding:6px 10px 20px; margin-bottom:10px; border-bottom:1px solid var(--border);
+  }
+  .side-brand-ico {
+    width:34px; height:34px; border-radius:10px; flex-shrink:0;
+    background:var(--grad-brand); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 16px rgba(108,140,255,0.30);
+  }
+  .side-brand-ico svg { width:17px; height:17px; fill:#fff; }
+  .side-brand-name { font-size:15px; font-weight:800; color:var(--text); letter-spacing:-0.3px; }
+  .side-brand-sub { font-size:12px; font-weight:600; color:var(--text3); margin-top:1px; }
+  .nav-btn {
+    flex:none; flex-direction:row; justify-content:flex-start; gap:12px;
+    padding:12px 12px; border-radius:var(--radius); text-align:left;
+  }
+  .nav-btn span { font-size:14px; }
+  .nav-btn.on { background:var(--blue-dim); }
+  .nav-btn.on::after { display:none; }
+  .nav-btn:hover:not(.on) { background:var(--hover); }
+  .hdr { left:var(--sidebar-w); justify-content:flex-end; padding:0 28px; }
+  .hdr-left { display:none; }
+}
+
 /* ── SCREENS ── */
 .screen { display:none; animation:fadeIn 0.2s ease; }
 .screen.on { display:block; }
@@ -275,6 +314,9 @@ body {
 .app-wrap { padding-top:64px; padding-bottom:72px; }
 .wrap { max-width:800px; margin:0 auto; padding:20px 16px; }
 .wrap-dash { max-width:1280px; margin:0 auto; padding:20px 16px; }
+@media(min-width:1024px){
+  .app-wrap { padding-left:var(--sidebar-w); padding-bottom:32px; }
+}
 
 /* ── CARDS ── */
 .card {
@@ -403,13 +445,13 @@ body {
 /* ── BUTTONS ── */
 .btn-m {
   width:100%; padding:16px;
-  border-radius:var(--radius); background:var(--blue); border:none; color:#fff;
+  border-radius:var(--radius); background:var(--grad-brand); border:none; color:#fff;
   font-family:var(--font); font-weight:700; font-size:16px; letter-spacing:0;
-  cursor:pointer; box-shadow:0 4px 16px rgba(59,130,246,0.30);
+  cursor:pointer; box-shadow:0 6px 20px rgba(108,140,255,0.30);
   display:flex; align-items:center; justify-content:center; gap:8px;
   transition:all var(--transition);
 }
-.btn-m:hover { background:#2563EB; box-shadow:0 6px 20px rgba(59,130,246,0.35); transform:translateY(-1px); }
+.btn-m:hover { filter:brightness(1.08); box-shadow:0 8px 24px rgba(108,140,255,0.38); transform:translateY(-1px); }
 .btn-m:active { transform:translateY(0) scale(0.99); }
 .btn-wpp { background:#25D366!important; box-shadow:0 4px 16px rgba(37,211,102,0.25)!important; }
 .btn-wpp:hover { background:#1DA851!important; }
@@ -441,6 +483,15 @@ body {
   transition: all var(--transition);
 }
 .kc:hover { transform:translateY(-1px); box-shadow:var(--shadow); }
+.kc-clickable, .cw-clickable { cursor:pointer; }
+.kc-clickable:hover, .cw-clickable:hover { border-color:var(--border2); }
+.kc-filter-hint {
+  font-size:11px; font-weight:600; color:var(--text3); margin-top:8px;
+  opacity:0; transition:opacity var(--transition);
+}
+.kc-clickable:hover .kc-filter-hint, .cw-clickable:hover .kc-filter-hint { opacity:1; }
+.kc-active-seg  { border-color:var(--red) !important; box-shadow:0 0 0 3px var(--red-dim) !important; }
+.kc-active-qual { border-color:var(--yellow) !important; box-shadow:0 0 0 3px var(--yellow-dim) !important; }
 .kc-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
 .kc-l { font-size:13px; font-weight:700; color:var(--text2); letter-spacing:0.3px; text-transform:uppercase; line-height:1.5; }
 .kc-i { width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; }
@@ -595,10 +646,10 @@ body {
 }
 .periodo-btn:hover { border-color: var(--blue); color: var(--blue); }
 .periodo-btn.on {
-  background: var(--blue);
-  border-color: var(--blue);
+  background: var(--grad-brand);
+  border-color: transparent;
   color: #fff;
-  box-shadow: 0 2px 12px rgba(59,130,246,0.3);
+  box-shadow: 0 4px 14px rgba(108,140,255,0.30);
 }
 
 @media(min-width:900px){
@@ -863,16 +914,17 @@ body {
   <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
     <button class="periodo-btn" onclick="app.setPeriodo('hoje',this)">Hoje</button>
     <button class="periodo-btn" onclick="app.setPeriodo('semana',this)">7 dias</button>
+    <button class="periodo-btn" onclick="app.setPeriodo('atual',this)">Mês atual</button>
     <button class="periodo-btn on" onclick="app.setPeriodo('mes',this)">30 dias</button>
     <button class="periodo-btn" onclick="app.setPeriodo('anterior',this)">Mês anterior</button>
     <button class="periodo-btn" onclick="app.setPeriodo('tudo',this)">Tudo</button>
   </div>
 
   <div class="kpi-g">
-    <div class="kc">
+    <div class="kc" style="background:var(--grad-soft),var(--card-bg)">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div style="width:40px;height:40px;border-radius:12px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/></svg>
+        <div style="width:40px;height:40px;border-radius:12px;background:var(--grad-brand);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(108,140,255,0.30)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/></svg>
         </div>
         <span style="font-size:15px;font-weight:600;color:var(--green);display:flex;align-items:center;gap:3px">↑ <span id="k-planta-trend">0</span></span>
       </div>
@@ -882,7 +934,7 @@ body {
     </div>
     <div class="kc">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div style="width:40px;height:40px;border-radius:12px;background:rgba(139,92,246,0.12);display:flex;align-items:center;justify-content:center">
+        <div style="width:40px;height:40px;border-radius:12px;background:var(--purple-dim);display:flex;align-items:center;justify-content:center">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </div>
         <span style="font-size:15px;font-weight:600;color:var(--text3);display:flex;align-items:center;gap:3px">↑ <span id="k-nsa-trend">0</span></span>
@@ -891,7 +943,7 @@ body {
       <div class="kc-l" style="margin-top:6px;text-transform:none;letter-spacing:0;font-size:15px;font-weight:500;color:var(--text2)">Volume NSA</div>
       <div class="kc-t">carregados</div>
     </div>
-    <div class="kc">
+    <div class="kc kc-clickable" id="kc-seg" onclick="app.filterByTipo('seg')">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <div style="width:40px;height:40px;border-radius:12px;background:var(--green-dim);display:flex;align-items:center;justify-content:center">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -900,8 +952,9 @@ body {
       <div class="kc-v cs" id="k-seg">OK</div>
       <div class="kc-l" style="margin-top:6px;text-transform:none;letter-spacing:0;font-size:15px;font-weight:500;color:var(--text2)">Segurança</div>
       <div class="kc-t cs" id="k-seg-t">sem incidentes</div>
+      <div class="kc-filter-hint">🔍 Clique para filtrar histórico</div>
     </div>
-    <div class="kc">
+    <div class="kc kc-clickable" id="kc-qual" onclick="app.filterByTipo('qual')">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <div style="width:40px;height:40px;border-radius:12px;background:var(--yellow-dim);display:flex;align-items:center;justify-content:center">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
@@ -910,6 +963,7 @@ body {
       <div class="kc-v" style="color:var(--yellow)" id="k-qual">OK</div>
       <div class="kc-l" style="margin-top:6px;text-transform:none;letter-spacing:0;font-size:15px;font-weight:500;color:var(--text2)">Qualidade</div>
       <div class="kc-t cs" id="k-qual-t">sem bloqueios</div>
+      <div class="kc-filter-hint">🔍 Clique para filtrar histórico</div>
     </div>
   </div>
 
@@ -925,17 +979,19 @@ body {
   </div>
 
   <div class="g2">
-    <div class="cw" style="padding:18px">
+    <div class="cw cw-clickable" id="cw-seg" style="padding:18px" onclick="app.filterByTipo('seg')">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
         <div style="width:8px;height:8px;border-radius:99px;background:var(--red)"></div>
         <span style="font-size:14px;font-weight:700;color:var(--text);letter-spacing:-0.2px">Segurança</span>
+        <span class="kc-filter-hint" style="margin-left:auto">🔍 Filtrar</span>
       </div>
       <div id="card-seg"><div style="text-align:center;color:var(--text3);font-size:14px;padding:20px 0">Nenhum registro ainda</div></div>
     </div>
-    <div class="cw" style="padding:18px">
+    <div class="cw cw-clickable" id="cw-qual" style="padding:18px" onclick="app.filterByTipo('qual')">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
         <div style="width:8px;height:8px;border-radius:99px;background:var(--yellow)"></div>
         <span style="font-size:14px;font-weight:700;color:var(--text);letter-spacing:-0.2px">Qualidade</span>
+        <span class="kc-filter-hint" style="margin-left:auto">🔍 Filtrar</span>
       </div>
       <div id="card-qual"><div style="text-align:center;color:var(--text3);font-size:14px;padding:20px 0">Nenhum registro ainda</div></div>
     </div>
@@ -961,6 +1017,7 @@ body {
       <span class="lbl lb">Plano de Ação</span>
       <textarea id="plano-acao" class="inp ta mb16" style="min-height:100px" placeholder="Ações corretivas e planos..." oninput="app.savePlano()"></textarea>
       <div class="shd mt16">Histórico Completo — Tempo Real</div>
+      <div id="hist-tipo-chip" style="display:none;align-items:center;gap:8px;margin-bottom:10px"></div>
       <div class="sr">
         <input type="text" id="hist-search" class="si2" placeholder="🔍 Buscar por conferente..." oninput="app.renderHist()">
         <select id="hist-filter" class="sf" onchange="app.renderHist()"><option value="">Todos</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="ADM">ADM</option></select>
@@ -972,6 +1029,7 @@ body {
 </div></div>
 
 <nav class="nav-bot">
+  <div class="side-brand"><div class="side-brand-ico"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div><div class="side-brand-name">ShiftFlow</div><div class="side-brand-sub">BR3R Expedição</div></div></div>
   <button class="nav-btn on" onclick="app.tab('form',this)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Registro</span></button>
   <button class="nav-btn" onclick="app.tab('dash',this)"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span>BI Gestão</span></button>
 </nav>
@@ -1009,9 +1067,9 @@ try {
   console.error('Supabase init error:', e);
 }
 
-const TURMA_CORES = {A:'#3B82F6',B:'#8B5CF6',C:'#10B981',D:'#F59E0B',ADM:'#64748B'};
-const TURMA_SOLID = {A:'#3B82F6',B:'#8B5CF6',C:'#10B981',D:'#F59E0B',ADM:'#64748B'};
-const TURMA_DIM   = {A:'rgba(59,130,246,0.15)',B:'rgba(139,92,246,0.15)',C:'rgba(16,185,129,0.15)',D:'rgba(245,158,11,0.15)',ADM:'rgba(100,116,139,0.15)'};
+const TURMA_CORES = {A:'#6C8CFF',B:'#B879F5',C:'#22C58B',D:'#F5A524',ADM:'#8B8B9C'};
+const TURMA_SOLID = {A:'#6C8CFF',B:'#B879F5',C:'#22C58B',D:'#F5A524',ADM:'#8B8B9C'};
+const TURMA_DIM   = {A:'rgba(108,140,255,0.16)',B:'rgba(184,121,245,0.16)',C:'rgba(34,197,139,0.16)',D:'rgba(245,165,36,0.16)',ADM:'rgba(139,139,156,0.16)'};
 const MEDALS = {0:'🥇',1:'🥈',2:'🥉'};
 
 const app = {
@@ -1517,6 +1575,20 @@ const app = {
       </div>`).join('');
   },
   periodoAtivo: 'mes',
+  histTipo: null,
+
+  filterByTipo(tipo) {
+    this.histTipo = (this.histTipo === tipo) ? null : tipo;
+    ['kc-seg','cw-seg'].forEach(id => document.getElementById(id)?.classList.toggle('kc-active-seg', this.histTipo === 'seg'));
+    ['kc-qual','cw-qual'].forEach(id => document.getElementById(id)?.classList.toggle('kc-active-qual', this.histTipo === 'qual'));
+    if(this.user?.role !== 'gestor') return;
+    this.renderHist();
+    const el = document.getElementById('hist-list');
+    if(el && this.histTipo) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 90;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  },
 
   setPeriodo(periodo, btn) {
     this.periodoAtivo = periodo;
@@ -1539,6 +1611,7 @@ const app = {
       switch(this.periodoAtivo) {
         case 'hoje':     return dt >= hoje;
         case 'semana':   return dt >= inicioSemana;
+        case 'atual':    return dt.getFullYear() === agora.getFullYear() && dt.getMonth() === agora.getMonth();
         case 'mes':      return dt >= ultimos30;
         case 'anterior': return dt >= inicioMesAnterior && dt <= fimMesAnterior;
         default:         return true;
@@ -1578,7 +1651,7 @@ const app = {
     const kQ = document.getElementById('k-qual'), kQT = document.getElementById('k-qual-t');
     kQ.textContent = qual > 0 ? qual : 'OK'; kQT.textContent = qual > 0 ? 'bloqueios' : 'sem bloqueios';
     kQ.className = 'kc-v ' + (qual > 0 ? 'cw2' : 'cs'); kQT.className = 'kc-t ' + (qual > 0 ? 'cw2' : 'cs');
-    const periodoNome = {hoje:'Hoje',semana:'Últimos 7 dias',mes:'Últimos 30 dias',anterior:'Mês anterior',tudo:'Todos os registros'};
+    const periodoNome = {hoje:'Hoje',semana:'Últimos 7 dias',atual:'Mês atual',mes:'Últimos 30 dias',anterior:'Mês anterior',tudo:'Todos os registros'};
     document.getElementById('dash-per').textContent = total > 0 ? `${total} registro${total!==1?'s':''} · ${periodoNome[this.periodoAtivo]||''}` : `Sem registros · ${periodoNome[this.periodoAtivo]||''}`;
 
     this.renderGroupedChart(byT);
@@ -1763,7 +1836,7 @@ const app = {
     const sorted = Object.entries(byT).sort((a,b) => (b[1].pc+b[1].pd+b[1].nc)-(a[1].pc+a[1].pd+a[1].nc));
     if(!sorted.length) { document.getElementById('ranking-list').innerHTML = '<p style="text-align:center;color:var(--text3);font-size:15px;padding:20px">Nenhum dado ainda.</p>'; return; }
     const maxVol = sorted[0][1].pc+sorted[0][1].pd+sorted[0][1].nc || 1;
-    const posColors = ['#10B981','#3B82F6','#F59E0B','#EF4444','#8B5CF6'];
+    const posColors = ['#22C58B','#6C8CFF','#F5A524','#F0555F','#B879F5'];
     const posLabels = ['1º','2º','3º','4º','5º'];
     document.getElementById('ranking-list').innerHTML = sorted.map(([t,v],i) => {
       const vol = v.pc+v.pd+v.nc;
@@ -1793,7 +1866,22 @@ const app = {
   renderHist() {
     const search = (document.getElementById('hist-search')?.value || '').toLowerCase();
     const filter = document.getElementById('hist-filter')?.value || '';
-    let items = [...this.allTurnos];
+    let items = this.filtrarPorPeriodo(this.allTurnos);
+    if(this.histTipo === 'seg') items = items.filter(r => r.seg === 'sim');
+    if(this.histTipo === 'qual') items = items.filter(r => r.qual === 'sim');
+    const chip = document.getElementById('hist-tipo-chip');
+    if(chip) {
+      if(this.histTipo) {
+        const lbl = this.histTipo === 'seg' ? '🛡️ Segurança · Incidentes' : '📦 Qualidade · Bloqueios';
+        const col = this.histTipo === 'seg' ? 'var(--red)' : 'var(--yellow)';
+        const dim = this.histTipo === 'seg' ? 'var(--red-dim)' : 'var(--yellow-dim)';
+        chip.style.display = 'flex';
+        chip.innerHTML = `<span class="badge" style="background:${dim};color:${col};border:1px solid ${col}">${lbl}</span><button onclick="app.filterByTipo('${this.histTipo}')" style="background:none;border:none;color:var(--text3);font-size:13px;font-weight:600;cursor:pointer">✕ limpar filtro</button>`;
+      } else {
+        chip.style.display = 'none';
+        chip.innerHTML = '';
+      }
+    }
     if(search) items = items.filter(r => r.conferente.toLowerCase().includes(search) || (r.relato||'').toLowerCase().includes(search));
     if(filter) items = items.filter(r => r.turma_sai === filter);
     if(!items.length) { document.getElementById('hist-list').innerHTML = '<p style="text-align:center;color:var(--text3);font-size:14px;padding:20px">Nenhum registro encontrado.</p>'; return; }
