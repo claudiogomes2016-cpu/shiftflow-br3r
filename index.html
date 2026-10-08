@@ -22,10 +22,10 @@
 
 /* TOKENS */
 :root {
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-md: 16px;
-  --radius-lg: 20px;
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
   --transition: 150ms cubic-bezier(0.4,0,0.2,1);
   --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -740,7 +740,7 @@ body {
   </div>
 
   <div class="card c-red">
-    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#F05252" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span style="color:#F05252">Segurança</span></div>
+    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Segurança</div>
     <div class="sec-s">Registro de incidentes e acidentes</div>
     <span class="lbl lr">Acidente ou Incidente no turno?</span>
     <div class="yn-g">
@@ -757,7 +757,7 @@ body {
   </div>
 
   <div class="card c-blue">
-    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0057B8" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span style="color:#0057B8">Qualidade</span></div>
+    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Qualidade</div>
     <div class="sec-s">Bloqueio de lata durante inspeção</div>
     <span class="lbl lb">Bloqueio de lata?</span>
     <div class="yn-g">
@@ -774,7 +774,7 @@ body {
   </div>
 
   <div class="card c-red">
-    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#F05252" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span style="color:#F05252">Justificativa TMA</span></div>
+    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Justificativa TMA</div>
     <div class="sec-s">Veículos acima de 4 horas de espera</div>
     <span class="lbl lr">Temos veículos marcados acima de 4 horas?</span>
     <div class="yn-g">
@@ -790,7 +790,7 @@ body {
   </div>
 
   <div class="card c-purple">
-    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span style="color:#8B5CF6">Absenteísmo Sodexo</span></div>
+    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Absenteísmo Sodexo</div>
     <div class="sec-s">Controle de faltas e reposições</div>
     <div class="g2 mb12">
       <div><span class="lbl">Houve falta?</span><select id="s-falta" class="inp inp-sm"><option>Não</option><option>Sim</option></select></div>
@@ -803,17 +803,17 @@ body {
   </div>
 
   <div class="card c-yellow">
-    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#F5A623" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="color:#F5A623">Status Operacional</span></div>
+    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Status Operacional</div>
     <div class="sec-s">Equipamentos e ocorrências</div>
     <div class="op-row">
-      <span class="lbl ly">Baú Reprovado?</span>
+      <span class="lbl">Baú Reprovado?</span>
       <div class="op-row-top"><select id="o-bau-s" class="inp inp-sm"><option value="Não">Não</option><option value="Sim">Sim</option></select><input type="number" id="o-bau-q" class="inp inp-sm" placeholder="Quantidade"></div>
       <div><span class="op-q-lbl">Registrado no site? 🔗</span>
         <div class="yn-g" style="margin-bottom:0"><button class="yn no on" id="yn-bau-n" onclick="app.ynS('bau','nao')">Não</button><button class="yn yes" id="yn-bau-s" onclick="app.ynS('bau','sim')">Sim</button></div>
       </div>
     </div>
     <div class="op-row" style="margin-bottom:0">
-      <span class="lbl ly">Empilhadeira Parada?</span>
+      <span class="lbl">Empilhadeira Parada?</span>
       <div class="op-row-top"><select id="o-emp-s" class="inp inp-sm"><option value="Não">Não</option><option value="Sim">Sim</option></select><input type="number" id="o-emp-q" class="inp inp-sm" placeholder="Quantidade"></div>
       <div><span class="op-q-lbl">Chamado aberto? 📋</span>
         <div class="yn-g" style="margin-bottom:0"><button class="yn no on" id="yn-emp-n" onclick="app.ynS('emp','nao')">Não</button><button class="yn yes" id="yn-emp-s" onclick="app.ynS('emp','sim')">Sim</button></div>
@@ -865,7 +865,7 @@ body {
   </div>
 
   <div class="card c-green">
-    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00C48C" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span style="color:#00C48C">Fotos Obrigatórias</span></div>
+    <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Fotos Obrigatórias</div>
     <div class="sec-s">5 registros fotográficos — todas obrigatórias</div>
     <div class="fp mb12"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1A7FE8" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><div class="fpb"><div class="fpf" id="foto-fill" style="width:0%"></div></div><span style="font-family:var(--font);font-size:15px;font-weight:700;color:var(--text2)" id="foto-cnt">0/5</span></div>
     <div class="fg">
@@ -2253,7 +2253,7 @@ const app = {
           {
             label: 'NSA',
             data: turmas.map(t => byT[t].nc),
-            backgroundColor: isDark ? '#FFFFFF' : '#1A1A1A',
+            backgroundColor: '#8CA3FF',
             borderRadius: 6,
             borderSkipped: false,
             stack: 'nsa',
