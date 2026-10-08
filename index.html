@@ -31,21 +31,21 @@
 }
 
 [data-theme="dark"] {
-  --bg:        #000000;
-  --bg2:       #1A1A1A;
-  --bg3:       #1A1A1A;
-  --bg4:       #1A1A1A;
-  --bg5:       #2A2A2A;
-  --text:      #FFFFFF;
-  --text2:     #8C8E94;
-  --text3:     #8C8E94;
-  --border:    rgba(255,255,255,0.08);
-  --border2:   rgba(255,255,255,0.12);
+  --bg:        #0A0B10;
+  --bg2:       #10121A;
+  --bg3:       #14161F;
+  --bg4:       #181B25;
+  --bg5:       #20232F;
+  --text:      #F2F3F5;
+  --text2:     #9699A8;
+  --text3:     #6E7180;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.13);
   --shadow:    0 8px 30px rgba(0,0,0,0.40);
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.30);
-  --inp-bg:    #1A1A1A;
-  --card-bg:   #1A1A1A;
-  --nav-bg:    #000000;
+  --inp-bg:    #161922;
+  --card-bg:   #14161F;
+  --nav-bg:    #10121A;
   --hover:     rgba(255,255,255,0.04);
   --blue:      #1140FE;
   --blue-dim:  rgba(17,64,254,0.12);
@@ -64,22 +64,22 @@
 }
 
 [data-theme="light"] {
-  --bg:        #FFFFFF;
+  --bg:        #F6F7F9;
   --bg2:       #FFFFFF;
   --bg3:       #FFFFFF;
-  --bg4:       #F5F5F5;
-  --bg5:       #EBEBEB;
-  --text:      #000000;
-  --text2:     #1A1A1A;
-  --text3:     #8C8E94;
-  --border:    rgba(0,0,0,0.08);
-  --border2:   rgba(0,0,0,0.12);
-  --shadow:    0 4px 16px rgba(0,0,0,0.06);
-  --shadow-sm: 0 1px 4px rgba(0,0,0,0.04);
-  --inp-bg:    #F5F5F5;
+  --bg4:       #F1F2F5;
+  --bg5:       #E7E9ED;
+  --text:      #15171C;
+  --text2:     #4A4E5A;
+  --text3:     #878B98;
+  --border:    rgba(15,23,42,0.08);
+  --border2:   rgba(15,23,42,0.13);
+  --shadow:    0 4px 16px rgba(15,23,42,0.06);
+  --shadow-sm: 0 1px 4px rgba(15,23,42,0.04);
+  --inp-bg:    #F1F2F5;
   --card-bg:   #FFFFFF;
   --nav-bg:    #FFFFFF;
-  --hover:     rgba(0,0,0,0.02);
+  --hover:     rgba(15,23,42,0.03);
   --blue:      #1140FE;
   --blue-dim:  rgba(17,64,254,0.08);
   --green:     #059669;
@@ -630,6 +630,32 @@ body {
 @media(min-width:1200px){
   .wrap-dash{max-width:1400px}
   .kc-v{font-size:42px}
+}
+
+/* ── DESKTOP: sidebar nav instead of bottom bar, so wide screens don't show
+   empty space on both sides of a phone-width column ── */
+@media(min-width:1024px){
+  .nav-bot {
+    top:60px; bottom:0; left:0; right:auto;
+    width:224px; height:auto;
+    flex-direction:column; align-items:stretch;
+    border-top:none; border-right:1px solid var(--border);
+    padding:18px 12px; gap:4px;
+  }
+  .nav-btn {
+    flex-direction:row; justify-content:flex-start; gap:12px;
+    padding:12px 14px; border-radius:var(--radius);
+  }
+  .nav-btn svg { width:19px; height:19px; flex-shrink:0; }
+  .nav-btn span { font-size:14.5px; }
+  .nav-btn.on { background:var(--blue-dim); }
+  .nav-btn.on::after { display:none; }
+  .nav-btn:hover:not(.on) { background:var(--hover); }
+  .app-wrap { padding-left:224px; padding-bottom:24px; }
+}
+
+@media(min-width:1440px){
+  .wrap{max-width:860px}
 }
 </style>
 </head>
@@ -1783,6 +1809,16 @@ const app = {
       if(fotoSection) fotoSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
       alert('🚫 BLOQUEADO!\n\nRegistre as 5 fotos obrigatórias antes de finalizar.\n\n📸 Faltando: ' + faltando.map(s => s.toUpperCase()).join(', '));
       return;
+    }
+
+    if(this.tmaHasAbove === 'sim') {
+      const semJustificativa = this.tmaEntries.length === 0 || this.tmaEntries.some(e => !e.cliente || !e.motivo);
+      if(semJustificativa) {
+        const tmaSection = document.getElementById('tma-x');
+        if(tmaSection) tmaSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        alert('🚫 BLOQUEADO!\n\nVocê marcou que houve veículo(s) acima de 4 horas, mas falta justificar.\n\n⏱️ Preencha o cliente e o motivo de cada veículo na "Justificativa TMA" antes de finalizar.');
+        return;
+      }
     }
 
     this.showLoading('Salvando registro...');
