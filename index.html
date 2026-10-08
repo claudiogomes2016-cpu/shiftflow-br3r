@@ -1109,7 +1109,7 @@ body {
   <div class="mh"><h3>📋 Nova Ocorrência Disciplinar</h3><button class="mc" onclick="app.closeDiscModal()">✕</button></div>
   <div class="mb12">
     <span class="lbl">Conferente</span>
-    <select id="disc-conf" class="inp inp-sm"><option value="">— Selecione —</option></select>
+    <select id="disc-conf" class="inp inp-sm" onchange="app.autoTurmaDisc()"><option value="">— Selecione —</option></select>
   </div>
   <div class="g2 mb12">
     <div><span class="lbl">Data</span><input type="date" id="disc-data" class="inp inp-sm"></div>
@@ -2917,6 +2917,14 @@ const app = {
     const dataEl = document.getElementById('disc-data');
     if(dataEl) dataEl.value = today;
     document.getElementById('disc-modal').classList.add('on');
+  },
+
+  autoTurmaDisc() {
+    const nome = document.getElementById('disc-conf')?.value;
+    const turmaEl = document.getElementById('disc-turma');
+    if(!nome || !turmaEl || !this.conferentesMap) return;
+    const pessoa = Object.values(this.conferentesMap).find(c => c.nome === nome);
+    if(pessoa && pessoa.turma) turmaEl.value = pessoa.turma;
   },
 
   closeDiscModal() {
