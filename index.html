@@ -287,14 +287,13 @@ body {
 /* ── CARDS ── */
 .card {
   background:var(--card-bg); border:1px solid var(--border);
-  border-radius:var(--radius-md); padding:20px; margin-bottom:12px;
-  box-shadow:var(--shadow-sm); transition:all var(--transition);
+  border-radius:var(--radius-lg); padding:22px; margin-bottom:16px;
+  box-shadow:var(--shadow); transition:all var(--transition);
 }
-.c-blue  { border-left:2px solid var(--blue); }
-.c-red   { border-left:2px solid var(--red); }
-.c-green { border-left:2px solid var(--green); }
-.c-yellow{ border-left:2px solid var(--yellow); }
-.c-purple{ border-left:2px solid var(--purple); }
+/* Section accent now lives only in the small icon + heading text (set inline per
+   card), not a full-height colored bar on every card — a bar on each of 7+ stacked
+   cards in 5 different hues reads as decorative "rainbow" noise rather than meaning. */
+.c-blue, .c-red, .c-green, .c-yellow, .c-purple { border-left:1px solid var(--border); }
 
 /* ── LABELS & INPUTS ── */
 .lbl {
@@ -777,11 +776,12 @@ body {
   <div class="card c-red">
     <div class="sec-t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#F05252" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span style="color:#F05252">Justificativa TMA</span></div>
     <div class="sec-s">Veículos acima de 4 horas de espera</div>
-    <span class="lbl lr">Houve veículo(s) acima do limite?</span>
+    <span class="lbl lr">Temos veículos marcados acima de 4 horas?</span>
     <div class="yn-g">
-      <button class="yn no on" id="yn-tma-n" onclick="app.ynTma('nao')">✅ Não</button>
+      <button class="yn no" id="yn-tma-n" onclick="app.ynTma('nao')">✅ Não</button>
       <button class="yn yes" id="yn-tma-s" onclick="app.ynTma('sim')">⚠️ Sim</button>
     </div>
+    <div style="font-size:12px;color:var(--red);margin-top:6px;display:none" id="tma-resp-hint">⚠️ Toque em Sim ou Não — esse campo precisa ser respondido para finalizar.</div>
     <div class="yn-x" id="tma-x">
       <div id="tma-lista"></div>
       <button onclick="app.addTma()" style="width:100%;padding:11px;border-radius:11px;background:rgba(240,82,82,.1);border:1.5px dashed rgba(240,82,82,.35);color:#FF8585;font-family:var(--font);font-size:15px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:4px">+ Adicionar Veículo</button>
@@ -1414,7 +1414,7 @@ const app = {
     if(navDisc) navDisc.style.display = this.user?.role === 'gestor' ? '' : 'none';
     document.getElementById('plano-acao') && (document.getElementById('plano-acao').value = localStorage.getItem('sf_plano') || '');
     this.tampaEntradas = []; this.devEntradas = [];
-    this.tmaHasAbove = 'nao'; this.tmaEntries = [];
+    this.tmaHasAbove = 'nao'; this.tmaAnswered = false; this.tmaEntries = [];
     setTimeout(() => { this.renderTampaLista(); this.renderDevLista(); this.renderTmaLista(); }, 100);
   },
 
@@ -1811,6 +1811,15 @@ const app = {
       return;
     }
 
+    if(!this.tmaAnswered) {
+      const tmaHint = document.getElementById('tma-resp-hint');
+      if(tmaHint) tmaHint.style.display = 'block';
+      const tmaCard = document.getElementById('yn-tma-n');
+      if(tmaCard) tmaCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      alert('🚫 BLOQUEADO!\n\n⏱️ Responda "Temos veículos marcados acima de 4 horas?" antes de finalizar.');
+      return;
+    }
+
     if(this.tmaHasAbove === 'sim') {
       const semJustificativa = this.tmaEntries.length === 0 || this.tmaEntries.some(e => !e.cliente || !e.motivo);
       if(semJustificativa) {
@@ -1924,11 +1933,16 @@ const app = {
     this.turnoRec = '';
     this.seg = 'nao'; this.qual = 'nao'; this.bauSite = 'nao'; this.empCham = 'nao';
     this.tampaEntradas = []; this.devEntradas = [];
-    this.tmaHasAbove = 'nao'; this.tmaEntries = [];
+    this.tmaHasAbove = 'nao'; this.tmaAnswered = false; this.tmaEntries = [];
     this.fotos = {};
     this.renderTampaLista(); this.renderDevLista(); this.renderTmaLista();
     document.querySelectorAll('.tp').forEach(b => b.classList.remove('on'));
-    this.yn('seg','nao'); this.yn('qual','nao'); this.ynS('bau','nao'); this.ynS('emp','nao'); this.ynTma('nao');
+    this.yn('seg','nao'); this.yn('qual','nao'); this.ynS('bau','nao'); this.ynS('emp','nao');
+    document.getElementById('yn-tma-n').classList.remove('on');
+    document.getElementById('yn-tma-s').classList.remove('on');
+    document.getElementById('tma-x').classList.remove('on');
+    const tmaHint = document.getElementById('tma-resp-hint');
+    if(tmaHint) tmaHint.style.display = 'none';
     if(this.user) { document.getElementById('conf-display').textContent = this.user.nome; this.setTurno(this.user.turma, null, 'sai'); }
     ['geral','gk','fifo','picking','docas'].forEach(id => {
       const prev = document.getElementById('prev-'+id);
@@ -1944,13 +1958,17 @@ const app = {
   tampaEntradas: [],
   devEntradas: [],
   tmaHasAbove: 'nao',
+  tmaAnswered: false,
   tmaEntries: [],
 
   ynTma(val) {
     this.tmaHasAbove = val;
+    this.tmaAnswered = true;
     document.getElementById('yn-tma-n').classList.toggle('on', val === 'nao');
     document.getElementById('yn-tma-s').classList.toggle('on', val === 'sim');
     document.getElementById('tma-x').classList.toggle('on', val === 'sim');
+    const hint = document.getElementById('tma-resp-hint');
+    if(hint) hint.style.display = 'none';
     if(val === 'sim' && this.tmaEntries.length === 0) this.addTma();
   },
 
