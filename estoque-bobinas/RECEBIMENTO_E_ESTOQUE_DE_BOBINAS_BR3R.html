@@ -1052,28 +1052,41 @@ footer{
 .mb52-title span{color:var(--brand);}
 .mb52-sub{font-size:13px;color:var(--ink-faint);margin-top:2px;}
 .mb52-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px;}
-.mb52-kpi{background:var(--surface);border:1px solid var(--border-soft);border-top:3px solid var(--ball-blue);box-shadow:var(--shadow-card);padding:14px 16px;}
+.mb52-kpi{background:var(--surface);border:1px solid var(--border-soft);border-top:3px solid var(--ball-blue);box-shadow:var(--shadow-card);padding:14px 16px;font-family:var(--font);text-align:left;color:inherit;}
+button.mb52-kpi{cursor:pointer;transition:transform .08s ease, box-shadow .15s ease, background .15s ease;}
+button.mb52-kpi:hover{box-shadow:0 4px 14px rgba(0,0,0,.12);transform:translateY(-1px);}
+button.mb52-kpi.sel{background:var(--brand-bg);outline:2px solid var(--brand);outline-offset:-2px;}
+.mb52-kpi-hint{font-size:11.5px;color:var(--ink-faint);margin-top:8px;}
+.mb52-kpi.status{grid-column:span 2;}
+@media (max-width:760px){ .mb52-kpi.status{grid-column:auto;} }
+.mb52-st-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.mb52-st-btn{font-family:var(--font);font-size:12px;font-weight:800;padding:7px 6px;border:1px solid var(--border);background:var(--surface);color:var(--ink-soft);cursor:pointer;text-align:center;line-height:1.2;}
+.mb52-st-btn b{display:block;font-family:var(--mono);font-size:20px;margin-top:3px;}
+.mb52-st-btn.st-bloqueado{color:var(--crit);border-color:var(--crit);}
+.mb52-st-btn.st-nochao{color:var(--warn);border-color:var(--warn);}
+.mb52-st-btn.st-mandril{color:var(--ok);border-color:var(--ok);}
+.mb52-st-btn.st-bloqueado.active{background:var(--crit);color:#fff;}
+.mb52-st-btn.st-nochao.active{background:var(--warn);color:#fff;}
+.mb52-st-btn.st-mandril.active{background:var(--ok);color:#fff;}
+.mb52-st-btn.st-sem.active{background:var(--ink-soft);color:var(--surface);border-color:var(--ink-soft);}
+.mb52-st-btn:hover{filter:brightness(.95);}
+@media (max-width:500px){ .mb52-st-btns{grid-template-columns:repeat(2,1fr);} }
 .mb52-kpi.ok{border-top-color:var(--ok);} .mb52-kpi.warn{border-top-color:#EAB308;} .mb52-kpi.crit{border-top-color:var(--crit);} .mb52-kpi.status{border-top-color:#7C3AED;}
+.mb52-kpis{grid-template-columns:repeat(auto-fit,minmax(165px,1fr));}
 .mb52-kpi-label{font-size:11.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;}
 .mb52-kpi-value{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;color:var(--ink);}
 .mb52-kpi-value small{font-size:13px;font-weight:700;color:var(--ink-faint);margin-left:4px;}
 .mb52-kpi-status-row{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;font-weight:700;color:var(--ink-soft);}
 .mb52-kpi-status-row b{font-family:var(--mono);font-size:20px;color:var(--ink);margin-left:4px;}
-.mb52-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:16px;align-items:start;}
-@media (max-width:900px){ .mb52-layout{grid-template-columns:1fr;} }
-.mb52-side{display:flex;flex-direction:column;gap:14px;position:sticky;top:120px;}
-@media (max-width:900px){ .mb52-side{position:static;} }
-.mb52-slicer{background:var(--surface);border:1px solid var(--border-soft);box-shadow:var(--shadow-card);padding:12px;}
-.mb52-slicer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.mb52-slicer-title{font-size:12.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-soft);}
+.mb52-toolbar{margin:0 0 16px;}
+.mb52-toolbar .filter-row-label{min-width:170px;}
+.mb52-toolbar .filter-row-label .mb52-slicer-clear{margin-left:4px;text-transform:none;letter-spacing:0;font-weight:600;}
 .mb52-slicer-clear{background:none;border:none;color:var(--ink-faint);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;font-family:var(--font);}
-.mb52-slicer-clear:disabled{opacity:.35;cursor:default;text-decoration:none;}
-.mb52-slicer-list{display:flex;flex-direction:column;gap:5px;max-height:320px;overflow:auto;}
-.mb52-chip{font-family:var(--font);text-align:left;font-size:13.5px;font-weight:600;padding:7px 10px;border:1px solid var(--border);background:var(--surface);color:var(--ink-soft);cursor:pointer;display:flex;justify-content:space-between;gap:8px;}
-.mb52-chip:hover{border-color:var(--brand);color:var(--brand);}
-.mb52-chip.active{background:var(--brand);border-color:var(--brand);color:#fff;}
-.mb52-chip .cnt{font-family:var(--mono);font-size:12px;opacity:.75;}
-.mb52-search{width:100%;padding:9px 11px;border:1px solid var(--border);background:var(--surface);color:var(--ink);font-family:var(--font);font-size:14px;}
+.mb52-slicer-clear:disabled{display:none;}
+.mb52-toolbar .filter-btn.active{background:#1140FE;color:#fff;box-shadow:0 1px 5px rgba(17,64,254,.35);}
+.mb52-chip .cnt{font-family:var(--mono);font-size:11px;font-weight:700;margin-left:6px;opacity:.65;}
+.mb52-chip.active .cnt{opacity:.9;}
+.mb52-search{flex:1 1 260px;max-width:420px;padding:8px 11px;border:1px solid var(--border);background:var(--surface);color:var(--ink);font-family:var(--font);font-size:14px;}
 .mb52-search:focus{outline:none;border-color:var(--brand);}
 .mb52-tablecard{background:var(--surface);border:1px solid var(--border-soft);box-shadow:var(--shadow-card);min-width:0;}
 .mb52-tabletools{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--border-soft);}
@@ -1105,7 +1118,6 @@ footer{
 .app-header{position:sticky;top:0;z-index:60;}
 .app-header .topbar{position:relative;top:auto;}
 .dash-nav{top:var(--app-header-h,0px);}
-.mb52-side{top:calc(var(--app-header-h,0px) + 16px);}
 .mb52-tablewrap{max-height:calc(100vh - var(--app-header-h,0px) - 90px);}
 @media (max-width:760px){ .app-header{position:relative;} .dash-nav{top:0;} }
 .capturing .app-header,.capturing.app-header{position:relative!important;}
@@ -1444,22 +1456,22 @@ footer{
 
     <div class="mb52-kpis" id="mb52Kpis"></div>
 
-    <div class="mb52-layout">
-      <aside class="mb52-side">
-        <input type="search" class="mb52-search" id="mb52Search" placeholder="Buscar lote, material ou texto…">
-        <div class="mb52-slicer" data-slicer="formato">
-          <div class="mb52-slicer-head"><span class="mb52-slicer-title">Formato</span><button class="mb52-slicer-clear" data-clear="formato">limpar</button></div>
-          <div class="mb52-slicer-list" id="mb52SlicerFormato"></div>
-        </div>
-        <div class="mb52-slicer" data-slicer="classe">
-          <div class="mb52-slicer-head"><span class="mb52-slicer-title">Class Espessura</span><button class="mb52-slicer-clear" data-clear="classe">limpar</button></div>
-          <div class="mb52-slicer-list" id="mb52SlicerClasse"></div>
-        </div>
-        <div class="mb52-slicer" data-slicer="status">
-          <div class="mb52-slicer-head"><span class="mb52-slicer-title">Status</span><button class="mb52-slicer-clear" data-clear="status">limpar</button></div>
-          <div class="mb52-slicer-list" id="mb52SlicerStatus"></div>
-        </div>
-      </aside>
+    <div class="filter-toolbar mb52-toolbar">
+      <div class="filter-row">
+        <div class="filter-row-label"><span class="dot" style="background:#1140FE"></span>Formato <button class="mb52-slicer-clear" data-clear="formato">limpar</button></div>
+        <div class="filter-pillgroup" id="mb52SlicerFormato"></div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-row-label"><span class="dot" style="background:#1140FE"></span>Class Espessura <button class="mb52-slicer-clear" data-clear="classe">limpar</button></div>
+        <div class="filter-pillgroup" id="mb52SlicerClasse"></div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-row-label"><span class="dot" style="background:#1140FE"></span>Buscar</div>
+        <input type="search" class="mb52-search" id="mb52Search" placeholder="Lote, material ou texto…">
+        <button class="mb52-tool-btn" id="mb52LimparTudoBtn">Limpar todos os filtros</button>
+      </div>
+    </div>
+
       <div class="mb52-tablecard">
         <div class="mb52-tabletools">
           <span class="mb52-count" id="mb52Count"></span>
@@ -1470,7 +1482,6 @@ footer{
         </div>
         <div class="mb52-tablewrap" id="mb52TableWrap"></div>
       </div>
-    </div>
   </div>
 
   <footer id="footerNote">Os dados exibidos são de exemplo/demonstração. Carregue os arquivos MB52, MB51 e NOVELIS do dia para atualizar.</footer>
@@ -4379,6 +4390,7 @@ const mb52Tab = {
   mb52Nome: null, novelisNome: null, carregadoEm: null,
   status: {},             // lote -> 'BLOQUEADO' | 'NO CHÃO' | 'MANDRIL'
   filtros: { formato:new Set(), classe:new Set(), status:new Set() },
+  cardFiltro: null,       // card clicado: 'livre' | 'cq' | 'bloq' | 'nd' (null = todos)
   colFiltros: {},         // coluna -> Set com os valores marcados na lupa (igual ao filtro do Excel)
   lupaAberta: null,
   busca: '',
@@ -4456,10 +4468,19 @@ function mb52TabTextoCol(l, col){
   else v = l[col];
   return (v==null || v==='') ? MB52TAB_VAZIO : String(v);
 }
-function mb52TabFiltrar(ignorar, ignorarCol){
+// filtros dos cards clicáveis (Livre / Cont. qualidade / HFI / sem PROCV)
+const MB52TAB_CARD_FILTROS = {
+  livre: l=>l.livre>0,
+  cq:    l=>l.cq>0,
+  bloq:  l=>l.bloq>0,
+  nd:    l=>l.classe===MB52TAB_ND || l.espReal==null
+};
+function mb52TabFiltrar(ignorar, ignorarCol, ignorarCard){
   const f = mb52Tab.filtros, q = mb52Tab.busca, cf = mb52Tab.colFiltros;
   const cols = Object.keys(cf).filter(c=>c!==ignorarCol && cf[c]);
+  const card = (!ignorarCard && mb52Tab.cardFiltro) ? MB52TAB_CARD_FILTROS[mb52Tab.cardFiltro] : null;
   return (mb52Tab.linhas||[]).filter(l=>{
+    if(card && !card(l)) return false;
     for(const c of cols){ if(!cf[c].has(mb52TabTextoCol(l,c))) return false; }
     if(ignorar!=='formato' && f.formato.size && !f.formato.has(l.formato)) return false;
     if(ignorar!=='classe' && f.classe.size && !f.classe.has(l.classe)) return false;
@@ -4477,18 +4498,29 @@ const fmtMb52Esp = v => v==null ? '' : v.toFixed(3);
 const fmtMb52Ton = kg => ((kg||0)/1000).toLocaleString('pt-BR',{minimumFractionDigits:3,maximumFractionDigits:3});
 function mb52TabEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
-function mb52TabRenderKpis(linhas){
+function mb52TabRenderKpis(){
+  // os totais ignoram o card selecionado (senão os outros cards zerariam ao clicar em um)
+  const linhas = mb52TabFiltrar(null, null, true);
   const soma = k => linhas.reduce((a,l)=>a+(l[k]||0),0);
-  const cont = {}; MB52TAB_STATUS_OPCOES.forEach(s=>cont[s]=0);
-  linhas.forEach(l=>{ const s=mb52TabStatusDe(l); if(s) cont[s]++; });
-  const semProcv = linhas.filter(l=>l.classe===MB52TAB_ND).length;
+  const semProcv = linhas.filter(MB52TAB_CARD_FILTROS.nd).length;
+  // contagem por status ignora o próprio filtro de status, para os botões não sumirem
+  const cont = {}; MB52TAB_STATUS_OPCOES.concat([MB52TAB_SEM_STATUS]).forEach(s=>cont[s]=0);
+  mb52TabFiltrar('status').forEach(l=>{ cont[mb52TabStatusDe(l)||MB52TAB_SEM_STATUS]++; });
+  const sel = k => mb52Tab.cardFiltro===k ? ' sel' : '';
+  const stSel = mb52Tab.filtros.status;
+  const stCls = { 'BLOQUEADO':'st-bloqueado', 'NO CHÃO':'st-nochao', 'MANDRIL':'st-mandril' };
+  stCls[MB52TAB_SEM_STATUS]='st-sem';
+  const stLabel = s => s===MB52TAB_SEM_STATUS ? 'SEM STATUS' : s;
+  const nenhumFiltro = !mb52Tab.cardFiltro && !stSel.size && !mb52Tab.filtros.formato.size && !mb52Tab.filtros.classe.size && !mb52Tab.busca && !Object.keys(mb52Tab.colFiltros).length;
   document.getElementById('mb52Kpis').innerHTML = `
-    <div class="mb52-kpi"><div class="mb52-kpi-label">Unidades</div><div class="mb52-kpi-value">${linhas.length.toLocaleString('pt-BR')}</div></div>
-    <div class="mb52-kpi ok"><div class="mb52-kpi-label">Livre</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('livre'))}<small>TON</small></div></div>
-    <div class="mb52-kpi warn"><div class="mb52-kpi-label">Cont. qualidade</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('cq'))}<small>TON</small></div></div>
-    <div class="mb52-kpi crit"><div class="mb52-kpi-label">HFI (bloqueado)</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('bloq'))}<small>TON</small></div></div>
-    <div class="mb52-kpi status"><div class="mb52-kpi-label">Status marcados</div><div class="mb52-kpi-status-row">${MB52TAB_STATUS_OPCOES.map(s=>`<span>${s}<b>${cont[s]}</b></span>`).join('')}</div></div>
-    <div class="mb52-kpi ${semProcv?'crit':'ok'}"><div class="mb52-kpi-label">Lotes sem PROCV (#N/D)</div><div class="mb52-kpi-value">${semProcv}</div></div>`;
+    <button type="button" class="mb52-kpi${nenhumFiltro?'':' '}" data-card="todos" title="Mostrar todos (limpa os filtros)"><div class="mb52-kpi-label">Unidades</div><div class="mb52-kpi-value">${linhas.length.toLocaleString('pt-BR')}</div><div class="mb52-kpi-hint">${nenhumFiltro?'todos os lotes':'clique para limpar filtros'}</div></button>
+    <button type="button" class="mb52-kpi ok${sel('livre')}" data-card="livre" title="Filtrar lotes com utilização livre"><div class="mb52-kpi-label">Livre</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('livre'))}<small>TON</small></div><div class="mb52-kpi-hint">${linhas.filter(MB52TAB_CARD_FILTROS.livre).length} lotes</div></button>
+    <button type="button" class="mb52-kpi warn${sel('cq')}" data-card="cq" title="Filtrar lotes em controle de qualidade"><div class="mb52-kpi-label">Cont. qualidade</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('cq'))}<small>TON</small></div><div class="mb52-kpi-hint">${linhas.filter(MB52TAB_CARD_FILTROS.cq).length} lotes</div></button>
+    <button type="button" class="mb52-kpi crit${sel('bloq')}" data-card="bloq" title="Filtrar lotes bloqueados (HFI)"><div class="mb52-kpi-label">HFI (bloqueado)</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('bloq'))}<small>TON</small></div><div class="mb52-kpi-hint">${linhas.filter(MB52TAB_CARD_FILTROS.bloq).length} lotes</div></button>
+    <button type="button" class="mb52-kpi ${semProcv?'crit':'ok'}${sel('nd')}" data-card="nd" title="Filtrar lotes não encontrados na Novelis"><div class="mb52-kpi-label">Lotes sem PROCV (#N/D)</div><div class="mb52-kpi-value">${semProcv}</div><div class="mb52-kpi-hint">não encontrados na Novelis</div></button>
+    <div class="mb52-kpi status"><div class="mb52-kpi-label">Status</div><div class="mb52-st-btns">${
+      MB52TAB_STATUS_OPCOES.concat([MB52TAB_SEM_STATUS]).map(s=>`<button type="button" class="mb52-st-btn ${stCls[s]}${stSel.has(s)?' active':''}" data-status="${mb52TabEsc(s)}">${stLabel(s)}<b>${cont[s]}</b></button>`).join('')
+    }</div></div>`;
 }
 
 function mb52TabRenderSlicer(grupo, elId, valores){
@@ -4500,7 +4532,8 @@ function mb52TabRenderSlicer(grupo, elId, valores){
     const v = grupo==='status' ? (mb52TabStatusDe(l)||MB52TAB_SEM_STATUS) : l[grupo];
     contagem[v] = (contagem[v]||0)+1;
   });
-  el.innerHTML = valores.map(v=>`<button class="mb52-chip${sel.has(v)?' active':''}" data-grupo="${grupo}" data-valor="${mb52TabEsc(v)}"><span>${mb52TabEsc(v)}</span><span class="cnt">${contagem[v]||0}</span></button>`).join('');
+  el.innerHTML = `<button class="filter-btn mb52-chip${sel.size?'':' active'}" data-grupo="${grupo}" data-valor="">Todos</button>` +
+    valores.map(v=>`<button class="filter-btn mb52-chip${sel.has(v)?' active':''}" data-grupo="${grupo}" data-valor="${mb52TabEsc(v)}">${mb52TabEsc(v)}<span class="cnt">${contagem[v]||0}</span></button>`).join('');
   const clearBtn = document.querySelector(`.mb52-slicer-clear[data-clear="${grupo}"]`);
   if(clearBtn) clearBtn.disabled = !sel.size;
 }
@@ -4510,7 +4543,7 @@ function mb52TabRender(){
   const sub = document.getElementById('mb52Sub');
   if(!mb52Tab.linhas){
     document.getElementById('mb52Kpis').innerHTML='';
-    ['mb52SlicerFormato','mb52SlicerClasse','mb52SlicerStatus'].forEach(id=>document.getElementById(id).innerHTML='');
+    ['mb52SlicerFormato','mb52SlicerClasse'].forEach(id=>document.getElementById(id).innerHTML='');
     document.getElementById('mb52Count').textContent='';
     wrap.innerHTML = '<div class="mb52-empty">Nenhum dado carregado. Na tela inicial, carregue <b>MB52</b>, <b>MB51</b> e <b>NOVELIS</b> e clique em <b>Processar dados</b> — o relatório é montado automaticamente.</div>';
     return;
@@ -4527,7 +4560,6 @@ function mb52TabRender(){
   const classes = ORDEM_CLASSIFICACAO.filter(c=>classesPresentes.has(c)).concat(ordenarTexto([...classesPresentes].filter(c=>!ORDEM_CLASSIFICACAO.includes(c))));
   mb52TabRenderSlicer('formato','mb52SlicerFormato',formatos);
   mb52TabRenderSlicer('classe','mb52SlicerClasse',classes);
-  mb52TabRenderSlicer('status','mb52SlicerStatus',MB52TAB_STATUS_OPCOES.concat([MB52TAB_SEM_STATUS]));
 
   let linhas = mb52TabFiltrar(null);
   const { col, dir } = mb52Tab.ordem;
@@ -4538,7 +4570,7 @@ function mb52TabRender(){
       return String(va??'').localeCompare(String(vb??''),'pt-BR',{numeric:true})*dir;
     });
   }
-  mb52TabRenderKpis(linhas);
+  mb52TabRenderKpis();
   const nColFiltros = Object.keys(mb52Tab.colFiltros).length;
   document.getElementById('mb52Count').innerHTML = `${linhas.length} de ${mb52Tab.linhas.length} lotes` + (nColFiltros ? ` · ${nColFiltros} filtro(s) de coluna <button class="mb52-slicer-clear" id="mb52LimparColFiltros">limpar</button>` : '');
 
@@ -4637,6 +4669,12 @@ document.getElementById('mb52ViewBtn').addEventListener('click', showMb52View);
 document.getElementById('mb52BackBtn').addEventListener('click', mb52TabVoltar);
 
 /* ---- interações da tabela (delegação de eventos) ---- */
+function mb52TabLimparTudo(){
+  mb52Tab.cardFiltro=null; mb52Tab.colFiltros={}; mb52Tab.busca='';
+  Object.values(mb52Tab.filtros).forEach(set=>set.clear());
+  const b=document.getElementById('mb52Search'); if(b) b.value='';
+  mb52TabRender();
+}
 /* ---- lupa: filtro por coluna (lista de valores com caixa de seleção + busca) ---- */
 function mb52TabFecharLupa(){
   const p=document.getElementById('mb52Lupa'); if(p) p.remove();
@@ -4711,9 +4749,23 @@ document.getElementById('mb52View').addEventListener('click', e=>{
   if(chip){
     const set = mb52Tab.filtros[chip.dataset.grupo];
     const v = chip.dataset.valor;
+    if(!v) set.clear(); else if(set.has(v)) set.delete(v); else set.add(v);
+    mb52TabRender(); return;
+  }
+  const card = e.target.closest('button.mb52-kpi');
+  if(card){
+    const k = card.dataset.card;
+    if(k==='todos') mb52TabLimparTudo();
+    else { mb52Tab.cardFiltro = mb52Tab.cardFiltro===k ? null : k; mb52TabRender(); }
+    return;
+  }
+  const stBtn = e.target.closest('.mb52-st-btn');
+  if(stBtn){
+    const set = mb52Tab.filtros.status, v = stBtn.dataset.status;
     if(set.has(v)) set.delete(v); else set.add(v);
     mb52TabRender(); return;
   }
+  if(e.target.id==='mb52LimparTudoBtn'){ mb52TabLimparTudo(); return; }
   if(e.target.id==='mb52LimparColFiltros'){ mb52Tab.colFiltros={}; mb52TabRender(); return; }
   const clr = e.target.closest('.mb52-slicer-clear');
   if(clr){ mb52Tab.filtros[clr.dataset.clear].clear(); mb52TabRender(); return; }
