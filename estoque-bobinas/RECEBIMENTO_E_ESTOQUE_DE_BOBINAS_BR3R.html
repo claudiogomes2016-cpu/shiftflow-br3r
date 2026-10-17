@@ -1770,8 +1770,11 @@ function processMB51(rows, novelisMap, cadastroMap){
 // avisa claramente que o filtro de depósito não pôde ser aplicado, em vez de falhar
 // silenciosamente ou impedir a importação inteira por causa de uma coluna que só é
 // necessária quando presente.
-const CT_COLUNAS_OBRIGATORIAS_METAL = ['Material','Texto breve material','Utilização livre','Em contr.qualidade','Bloqueado'];
-const CT_COLUNAS_OBRIGATORIAS_TAMPA = ['Material','Texto breve material','Utilização livre','Em contr.qualidade','Bloqueado'];
+const CT_COLUNAS_OBRIGATORIAS_METAL = ['Material','Texto breve material','Utilização livre'];
+const CT_COLUNAS_OBRIGATORIAS_TAMPA = ['Material','Texto breve material','Utilização livre'];
+// Colunas de status que o SAP às vezes não exporta (ex.: layout sem estoque bloqueado):
+// se faltarem, a quantidade daquele status é considerada 0 e a tela avisa — não trava a importação.
+const CT_COLUNAS_STATUS_OPCIONAIS = ['Em contr.qualidade','Bloqueado'];
 
 function ctValidarColunas(rows, colunasObrigatorias, nomeArquivo){
   if(!rows || !rows.length) throw new Error(`O arquivo ${nomeArquivo} está vazio ou não pôde ser lido.`);
@@ -1780,6 +1783,12 @@ function ctValidarColunas(rows, colunasObrigatorias, nomeArquivo){
   if(faltando.length){
     throw new Error(`O arquivo ${nomeArquivo} não tem a(s) coluna(s) obrigatória(s): ${faltando.join(', ')}. Confirme se é a exportação original do MB52 do SAP, sem alterações de coluna.`);
   }
+  return CT_COLUNAS_STATUS_OPCIONAIS.filter(c=>!colunasPresentes.has(c));
+}
+function ctMsgColunasAusentes(nome, ausentes){
+  return ausentes && ausentes.length
+    ? `${nome} carregado — coluna(s) ${ausentes.join(' e ')} não encontrada(s) no arquivo; considerado 0.`
+    : `${nome} carregado e processado.`;
 }
 // Normaliza o código do depósito (aceita tanto texto "0500" quanto número 500 vindos do Excel).
 function ctNormDeposito(v){
@@ -1791,7 +1800,7 @@ function ctNormDeposito(v){
 }
 
 function processMB52Metal(rows){
-  ctValidarColunas(rows, CT_COLUNAS_OBRIGATORIAS_METAL, 'MB52 — Metal');
+  const colunasAusentes = ctValidarColunas(rows, CT_COLUNAS_OBRIGATORIAS_METAL, 'MB52 — Metal');
   const temColunaDeposito = Object.keys(rows[0]).includes('Depósito');
   const out=[];
   for(const r of rows){
@@ -1818,12 +1827,14 @@ function processMB52Metal(rows){
     }
   }
   out.avisoSemDeposito = !temColunaDeposito; // usado para avisar na tela quando o filtro 0500/0800 não pôde ser aplicado
+  out.colunasAusentes = colunasAusentes;
   return out;
 }
 
 function processMB52TampaAcabada(rows){
-  ctValidarColunas(rows, CT_COLUNAS_OBRIGATORIAS_TAMPA, 'MB52 — Tampa Acabada');
+  const colunasAusentes = ctValidarColunas(rows, CT_COLUNAS_OBRIGATORIAS_TAMPA, 'MB52 — Tampa Acabada');
   const out=[];
+  out.colunasAusentes = colunasAusentes;
   for(const r of rows){
     const descricaoBruta=r['Texto breve material'];
     if(descricaoBruta==null) continue;
@@ -2152,10 +2163,35 @@ function readWorkbook(file){
     reader.readAsArrayBuffer(file);
   });
 }
+// Nomes de coluna do MB52 variam conforme o layout/idioma da exportação do SAP
+// (espaços extras, "Estoque bloqueado", "Contr.qualidade"...). Tudo é renomeado para o
+// nome padrão usado no resto do painel, para não travar a importação por causa disso.
+const MB52_ALIASES_COLUNA = {
+  'material': 'Material',
+  'texto breve material': 'Texto breve material', 'texto breve de material': 'Texto breve material', 'descricao do material': 'Texto breve material',
+  'lote': 'Lote',
+  'deposito': 'Depósito',
+  'utilizacao livre': 'Utilização livre', 'livre utilizacao': 'Utilização livre', 'estoque de utilizacao livre': 'Utilização livre', 'estoque livre': 'Utilização livre',
+  'em contr.qualidade': 'Em contr.qualidade', 'em contr. qualidade': 'Em contr.qualidade', 'contr.qualidade': 'Em contr.qualidade', 'em controle de qualidade': 'Em contr.qualidade', 'controle de qualidade': 'Em contr.qualidade', 'estoque em controle de qualidade': 'Em contr.qualidade',
+  'bloqueado': 'Bloqueado', 'estoque bloqueado': 'Bloqueado', 'bloq.': 'Bloqueado', 'bloqueados': 'Bloqueado'
+};
+function mb52NormNomeColuna(h){
+  return String(h==null?'':h).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim().toLowerCase();
+}
+function mb52PadronizarColunas(rows){
+  if(!rows.length) return rows;
+  const mapa={};
+  for(const k of Object.keys(rows[0])){
+    const padrao=MB52_ALIASES_COLUNA[mb52NormNomeColuna(k)];
+    if(padrao && padrao!==k && !(padrao in rows[0])) mapa[k]=padrao;
+  }
+  if(!Object.keys(mapa).length) return rows;
+  return rows.map(r=>{ const o={...r}; for(const [de,para] of Object.entries(mapa)){ o[para]=o[de]; delete o[de]; } return o; });
+}
 async function parseMB52File(file){
   const wb=await readWorkbook(file);
   const ws=wb.Sheets[wb.SheetNames[0]];
-  return XLSX.utils.sheet_to_json(ws,{defval:null});
+  return mb52PadronizarColunas(XLSX.utils.sheet_to_json(ws,{defval:null}));
 }
 async function parseMB51File(file){
   const wb=await readWorkbook(file);
@@ -3739,7 +3775,7 @@ document.getElementById('ct-file-metal')._ctOnFile = async file=>{
     state.ct.metalLoadedAt=new Date().toLocaleString('pt-BR');
     drop.classList.add('loaded');
     renderControlTower();
-    showToast('MB52 — Metal carregado e processado.');
+    showToast(ctMsgColunasAusentes('MB52 — Metal', state.ct.mb52MetalProc.colunasAusentes), 6000);
   }catch(err){
     console.error(err);
     drop.classList.remove('loaded');
@@ -3759,7 +3795,7 @@ document.getElementById('ct-file-tampa')._ctOnFile = async file=>{
     state.ct.tampaLoadedAt=new Date().toLocaleString('pt-BR');
     drop.classList.add('loaded');
     renderControlTower();
-    showToast('MB52 — Tampa Acabada carregado e processado.');
+    showToast(ctMsgColunasAusentes('MB52 — Tampa Acabada', state.ct.mb52TampaProc.colunasAusentes), 6000);
   }catch(err){
     console.error(err);
     drop.classList.remove('loaded');
