@@ -1114,6 +1114,17 @@ button.mb52-kpi.sel{background:var(--brand-bg);outline:2px solid var(--brand);ou
 .mb52-status-sel.st-mandril{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);}
 .mb52-cls{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;color:#fff;min-width:34px;}
 @media (max-width:760px){ .topbar{flex-wrap:wrap;} }
+/* detalhamento por formato — barras horizontais empilhadas */
+.det-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin:0 0 16px;}
+.det-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;}
+.det-rows{display:flex;flex-direction:column;gap:14px;flex:1;justify-content:center;}
+.det-row{display:grid;grid-template-columns:86px minmax(0,1fr) 40px;align-items:center;gap:10px;}
+.det-label{font-size:13.5px;font-weight:700;color:var(--ink);text-align:right;line-height:1.15;}
+.det-track{display:flex;height:28px;gap:2px;min-width:6px;}
+.det-seg{height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;font-family:var(--mono);overflow:hidden;white-space:nowrap;cursor:default;min-width:3px;}
+.det-seg:first-child{border-radius:4px 0 0 4px;} .det-seg:last-child{border-radius:0 4px 4px 0;} .det-seg:only-child{border-radius:4px;}
+.det-val{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink);}
+.det-tip{position:fixed;pointer-events:none;background:#15171C;color:#fff;font-size:12.5px;padding:7px 10px;border-radius:6px;box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:300;display:none;white-space:nowrap;}
 /* banner + barra de botões fixos no topo (não rolam com a página) */
 .app-header{position:sticky;top:0;z-index:60;}
 .app-header .topbar{position:relative;top:auto;}
@@ -1542,7 +1553,7 @@ const FORMATOS_BOBINA = ['12 oz - Linha 01','12 SL - Linha 02','16 oz - Linha 03
 // Incrementar sempre que a lógica de processamento do MB52/MB51 mudar (ex: forma de
 // identificar o formato), para que o cache local antigo seja descartado automaticamente
 // em vez de mostrar dados processados com a regra anterior.
-const CACHE_VERSION = 2;
+const CACHE_VERSION = 3;
 const DEFAULT_MEDIA_CONSUMO = { "12 oz - Linha 01": 40000, "12 SL - Linha 02": 36000, "16 oz - Linha 03": 32000, "9.1 oz - Linha 02": 36000 };
 
 /* ============================================================
@@ -1662,6 +1673,27 @@ function detectarFormatoPorDescricao(descricao){
   return null;
 }
 
+// Metal importado (lote que não existe na planilha Novelis) — o fornecedor vem escrito no
+// Texto breve material do MB52/MB51: XIAMEN aparece como "XIAMEN" e NANSHAN como "NAN"
+// (ou "NANSHAN"). Lote sem Novelis e sem fornecedor no texto = "SEM PROCV".
+const FORN_XIAMEN = 'XIAMEN', FORN_NANSHAN = 'NANSHAN', CLASSE_SEM_PROCV = 'SEM PROCV';
+const CLASSES_SEM_NOVELIS = [FORN_XIAMEN, FORN_NANSHAN, CLASSE_SEM_PROCV];
+const CLASSES_SEM_NOVELIS_SET = new Set(CLASSES_SEM_NOVELIS);
+const COR_FORNECEDOR = { XIAMEN:'#2563EB', NANSHAN:'#A21CAF', 'SEM PROCV':'#78716C' };
+const LABEL_FORNECEDOR = { XIAMEN:'Xiamen', NANSHAN:'Nanshan', 'SEM PROCV':'Sem PROCV' };
+function detectarFornecedor(descricao){
+  const d=String(descricao||'').toUpperCase();
+  if(d.includes('XIAMEN')) return FORN_XIAMEN;
+  if(/NANSHAN|(^|[^A-Z])NAN([^A-Z]|$)/.test(d)) return FORN_NANSHAN;
+  return null;
+}
+// classificação do lote: fornecedor importado (pelo texto) > classe da Novelis (PROCV) > SEM PROCV
+function classificarLote(nov, descricao){
+  return detectarFornecedor(descricao) || (nov&&nov.classificacao) || CLASSE_SEM_PROCV;
+}
+function corClasseOuFornecedor(c){ return COR_FORNECEDOR[c] || VALOR_COR[c] || '#8C8E94'; }
+function labelClasseOuFornecedor(c){ return LABEL_FORNECEDOR[c] || c; }
+
 function buildCadastroMap(rows){
   const map=new Map();
   for(const r of rows){
@@ -1697,7 +1729,7 @@ function processMB52(rows, novelisMap, cadastroMap){
       const status=MB52_STATUS_MAP[colExcel];
       const nov=lote?novelisMap.get(lote):null;
       const metal=detectarFormatoPorDescricao(descricaoBruta);
-      out.push({ sku, lote, status, qtd, classificacao:(nov&&nov.classificacao)||'METAL CHINÊS', metal });
+      out.push({ sku, lote, status, qtd, classificacao:classificarLote(nov, descricaoBruta), metal });
     }
   }
   return out;
@@ -1715,7 +1747,7 @@ function processMB51(rows, novelisMap, cadastroMap){
     const nov=lote?novelisMap.get(lote):null;
     const descricaoBruta=r['Texto breve material'];
     const metal=detectarFormatoPorDescricao(descricaoBruta);
-    out.push({ sku, lote, qtd, classificacao:(nov&&nov.classificacao)||'METAL CHINÊS', metal });
+    out.push({ sku, lote, qtd, classificacao:classificarLote(nov, descricaoBruta), metal });
   }
   return out;
 }
@@ -1818,7 +1850,7 @@ function aggregateByMetalClass(records, metalFilter){
     if(metalFilter && !metalFilter(r.metal)) continue;
     if(!byMetal.has(r.metal)) byMetal.set(r.metal,new Map());
     const m=byMetal.get(r.metal);
-    const cls=r.classificacao||'METAL CHINÊS';
+    const cls=r.classificacao||CLASSE_SEM_PROCV;
     const cur=m.get(cls)||{qtd:0,count:0};
     cur.qtd+=r.qtd;
     cur.count++;
@@ -1846,7 +1878,7 @@ const TAMPA_METAIS = ['TAB PRATA','TAB GOLD','TAB RED','TAB BLACK','TAMPA BÁSIC
 const TAMPA_METAIS_SET = new Set(TAMPA_METAIS);
 
 function computeOcupacao(mb52proc, capacidadeMap){
-  // Metal Chinês (r.classificacao==='METAL CHINÊS') agora fica em outro armazém físico —
+  // Metal importado — Xiamen / Nanshan (ehMetalChines) — agora fica em outro armazém físico —
   // não entra mais na ocupação das ruas deste depósito (12 OZ / 9.1 OZ-SLEEK / 16 OZ).
   // Ele tem seu próprio card/cálculo em computeOcupacaoMetalChinesNovoArmazem().
   const livreNaoTab=mb52proc.filter(r=>r.status==='LIVRE' && r.metal && !TAB_METAIS.has(r.metal) && !ehMetalChines(r));
@@ -1866,19 +1898,22 @@ function computeOcupacao(mb52proc, capacidadeMap){
 }
 
 /* ------------------------------------------------------------
-   METAL CHINÊS — NOVO ARMAZÉM (depósito físico separado)
+   METAL IMPORTADO (XIAMEN / NANSHAN) — NOVO ARMAZÉM (depósito físico separado)
    O metal chinês recebido não entra mais na ocupação deste depósito
    (ver computeOcupacao acima). Ele é recebido e armazenado num
    armazém próprio, com capacidade física de 112 UN de bobinas.
    Conta-se por LOTE (bobina física), status LIVRE, exatamente com o
    mesmo critério usado para identificar "é metal chinês": o lote não
-   tem classificação Novelis (r.classificacao==='METAL CHINÊS') —
+   tem classificação Novelis (XIAMEN / NANSHAN / SEM PROCV, ver classificarLote) —
    ver processMB52/processMB51. Cálculo 100% dinâmico: acompanha
    automaticamente o volume real do arquivo carregado (hoje 18 UN,
    crescendo conforme mais bobinas chegarem a esse armazém).
    ------------------------------------------------------------ */
+// metal importado (Xiamen / Nanshan, identificado pelo texto breve) — fica no armazém separado.
+// Lote "SEM PROCV" sem fornecedor no texto continua contando na rua do próprio formato.
+const FORNECEDORES_IMPORTADOS_SET = new Set([FORN_XIAMEN, FORN_NANSHAN]);
 function ehMetalChines(r){
-  return !!r && r.classificacao==='METAL CHINÊS';
+  return !!r && FORNECEDORES_IMPORTADOS_SET.has(r.classificacao);
 }
 function computeOcupacaoMetalChinesNovoArmazem(mb52proc, capacidade){
   capacidade = capacidade ?? CAPACIDADE_METAL_CHINES_NOVO_ARMAZEM;
@@ -1902,13 +1937,15 @@ function computeOcupacaoMetalChinesPorFormato(mb52proc, capacidade){
   const setsPorFormato=new Map();
   for(const r of mb52proc){
     if(r.status!=='LIVRE' || !r.lote || !r.metal || TAB_METAIS.has(r.metal) || !ehMetalChines(r)) continue;
-    if(!setsPorFormato.has(r.metal)) setsPorFormato.set(r.metal, new Set());
-    setsPorFormato.get(r.metal).add(r.lote);
+    if(!setsPorFormato.has(r.metal)) setsPorFormato.set(r.metal, new Map());
+    setsPorFormato.get(r.metal).set(r.lote, r.classificacao);
   }
   const result={};
   for(const [formato,lotes] of setsPorFormato){
     const estoqueUN=lotes.size;
-    result[formato]={ estoqueUN, capacidade, percentual: capacidade?estoqueUN/capacidade:null };
+    const porFornecedor={};
+    for(const c of lotes.values()) porFornecedor[c]=(porFornecedor[c]||0)+1;
+    result[formato]={ estoqueUN, porFornecedor, capacidade, percentual: capacidade?estoqueUN/capacidade:null };
   }
   return result;
 }
@@ -2056,10 +2093,10 @@ function computeValorAgregado(records){
   const kgPorClasse={};
   const bobinasPorClasse={};   // conta registros (lotes), não kg/12000 — cada lote SAP = 1 bobina física
   ORDEM_CLASSIFICACAO.forEach(c=>{ kgPorClasse[c]=0; bobinasPorClasse[c]=0; });
-  kgPorClasse['METAL CHINÊS']=0; bobinasPorClasse['METAL CHINÊS']=0;
+  CLASSES_SEM_NOVELIS.forEach(c=>{ kgPorClasse[c]=0; bobinasPorClasse[c]=0; });
   for(const r of records){
     if(!ehMetalBobina(r.metal)) continue;
-    const cls=kgPorClasse.hasOwnProperty(r.classificacao)?r.classificacao:'METAL CHINÊS';
+    const cls=kgPorClasse.hasOwnProperty(r.classificacao)?r.classificacao:CLASSE_SEM_PROCV;
     kgPorClasse[cls]+=r.qtd;
     bobinasPorClasse[cls]++;
   }
@@ -2079,7 +2116,7 @@ function computeValorAgregado(records){
   const grupoL=bobinasPorClasse.L3+bobinasPorClasse.L2+bobinasPorClasse.L1;
   const grupoM=bobinasPorClasse.M;
   const grupoH=bobinasPorClasse.H1+bobinasPorClasse.H2+bobinasPorClasse.H3;
-  const grupoChines=bobinasPorClasse['METAL CHINÊS'];
+  const grupoChines=sumArr(CLASSES_SEM_NOVELIS.map(c=>bobinasPorClasse[c]));
   let predominancia='L';
   if(grupoM>=grupoL && grupoM>=grupoH) predominancia='M';
   else if(grupoH>grupoL && grupoH>grupoM) predominancia='H';
@@ -2401,9 +2438,9 @@ function renderHFI(mb52proc){
     d.classes.forEach(c=>lines.push({metal,cls:c.cls,qtd:c.qtd,count:c.count}));
   }
   lines.sort((a,b)=>b.count-a.count);
-  const corClasse = c => c==='METAL CHINÊS' ? COR_METAL_CHINES : (VALOR_COR[c] || '#8C8E94');
+  const corClasse = corClasseOuFornecedor;
   inner.innerHTML=`<table class="hfi-table"><thead><tr><th>Metal</th><th>Classificação</th><th>Quantidade</th></tr></thead><tbody>
-    ${lines.map(l=>`<tr><td class="hfi-metal">${labelMetal(l.metal)}</td><td><span class="class-badge" style="background:${corClasse(l.cls)};">${l.cls}</span></td><td>${l.count} bobinas · ${fmtTon(l.qtd)}</td></tr>`).join('')}
+    ${lines.map(l=>`<tr><td class="hfi-metal">${labelMetal(l.metal)}</td><td><span class="class-badge" style="background:${corClasse(l.cls)};">${labelClasseOuFornecedor(l.cls)}</span></td><td>${l.count} bobinas · ${fmtTon(l.qtd)}</td></tr>`).join('')}
   </tbody></table>`;
 }
 function renderOcupacaoHFI(mb52proc){
@@ -3155,7 +3192,7 @@ function buildValorBarChart(canvasId, d){
     {label:'M', qtd:d.grupoM, cor:VALOR_COR_LMH.M},
     {label:'H', qtd:d.grupoH, cor:VALOR_COR_LMH.H}
   ];
-  if(d.grupoChines>0) items.push({label:'Metal Chinês', qtd:d.grupoChines, cor:COR_METAL_CHINES});
+  CLASSES_SEM_NOVELIS.forEach(c=>{ if(d.bobinasPorClasse[c]>0) items.push({label:LABEL_FORNECEDOR[c], qtd:d.bobinasPorClasse[c], cor:COR_FORNECEDOR[c]}); });
   items.sort((a,b)=>b.qtd-a.qtd);   // maior em cima, menor embaixo
   const labels=items.map(i=>i.label);
   const data=items.map(i=>i.qtd);
@@ -3234,6 +3271,16 @@ function buildIvaoDonutCard(titulo, records, canvasId){
     <div class="chart-wrap" style="height:180px;"><canvas id="${canvasId}"></canvas></div>
   </div>`;
 }
+// Detalhamento por formato: barras horizontais empilhadas — L / M / H (detalhe L1..H3 no
+// mouse) + Xiamen / Nanshan. Comprimento = bobinas reais, comparável entre formatos do card.
+const DETALHE_GRUPOS=[
+  {nome:'L', cor:VALOR_COR_LMH.L, de:['L3','L2','L1']},
+  {nome:'M', cor:VALOR_COR_LMH.M, de:['M']},
+  {nome:'H', cor:VALOR_COR_LMH.H, de:['H1','H2','H3']},
+  {nome:'Xiamen', cor:COR_FORNECEDOR.XIAMEN, de:['XIAMEN']},
+  {nome:'Nanshan', cor:COR_FORNECEDOR.NANSHAN, de:['NANSHAN']},
+  {nome:'Sem PROCV', cor:COR_FORNECEDOR['SEM PROCV'], de:['SEM PROCV']}
+];
 function buildIvaoDetailCard(titulo, records, chartId){
   const d=computeValorAgregado(records);
   if(d.totalBobinas===0){
@@ -3242,43 +3289,24 @@ function buildIvaoDetailCard(titulo, records, chartId){
       <div class="empty-note">Sem volume suficiente para análise.</div>
     </div>`;
   }
+  const porFormato=computeValorAgregadoPorFormato(records).filter(f=>f.totalBobinas>0);
+  const max=Math.max(...porFormato.map(f=>f.totalBobinas),1);
+  const soma=(o,ks)=>ks.reduce((a,k)=>a+(o[k]||0),0);
+  const presentes=DETALHE_GRUPOS.filter(g=>porFormato.some(f=>soma(f.bobinasPorClasse,g.de)>0));
+  const legenda=`<div class="det-legend">${presentes.map(g=>`<span><i style="background:${g.cor}"></i>${g.nome}</span>`).join('')}</div>`;
+  const linhas=porFormato.map(f=>{
+    const t=f.totalBobinas, nome=labelMetal(f.metal);
+    const segs=DETALHE_GRUPOS.map(g=>{
+      const v=soma(f.bobinasPorClasse,g.de); if(!v) return '';
+      const det=g.de.length>1 ? '<br>'+g.de.filter(c=>f.bobinasPorClasse[c]).map(c=>`${c}: ${f.bobinasPorClasse[c]}`).join(' · ') : '';
+      return `<div class="det-seg" style="flex:${v};background:${g.cor}" data-tip="${nome} — ${g.nome}: ${v} bobinas (${Math.round(v/t*100)}%)${det}">${v/max>=0.07?v:''}</div>`;
+    }).join('');
+    return `<div class="det-row"><div class="det-label">${nome}</div><div class="det-trackwrap"><div class="det-track" style="width:${t/max*100}%">${segs}</div></div><div class="det-val">${t}</div></div>`;
+  }).join('');
   return `<div class="card ivao-card">
     <div class="card-head"><span class="card-title">${titulo}</span><span class="card-total">${d.totalBobinas} bobinas · ${fmtTon(d.totalKg)}</span></div>
-    <div class="chart-wrap" style="height:260px;"><canvas id="${chartId}"></canvas></div>
+    ${legenda}<div class="det-rows">${linhas}</div>
   </div>`;
-}
-function buildDetailBarChart(chartId, porFormato){
-  const ctx=document.getElementById(chartId);
-  if(!ctx||typeof Chart==='undefined') return;
-  if(charts[chartId]){ charts[chartId].destroy(); delete charts[chartId]; }
-  const labels=porFormato.map(f=>labelMetal(f.metal));
-  const datasets=[...ORDEM_CLASSIFICACAO,'METAL CHINÊS'].map(c=>({
-    label:c==='METAL CHINÊS'?'Metal Chinês':c,
-    data:porFormato.map(f=>f.bobinasPorClasse[c]||0),
-    backgroundColor:c==='METAL CHINÊS'?COR_METAL_CHINES:VALOR_COR[c],
-    borderRadius:0,
-    borderSkipped:false
-  })).filter(ds=>ds.data.some(v=>v>0));
-  charts[chartId]=new Chart(ctx,{
-    type:'bar',
-    data:{labels, datasets},
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      animation:false,
-      plugins:{
-        legend:{display:true,position:'top',labels:{font:{family:'Inter',size:12,weight:'700'},color:getCSSVar('--ink'),boxWidth:12,boxHeight:12,padding:10}},
-        tooltip:{callbacks:{label(ctx){
-          const pct=porFormato[ctx.dataIndex].totalBobinas?Math.round(ctx.parsed.y/porFormato[ctx.dataIndex].totalBobinas*100):0;
-          return ` ${ctx.dataset.label}: ${ctx.parsed.y} bobinas (${pct}%)`;
-        }}}
-      },
-      scales:{
-        x:{stacked:true,grid:{display:false},ticks:{font:{family:'Inter',weight:'700',size:13},color:getCSSVar('--ink')}},
-        y:{stacked:true,grid:{color:getCSSVar('--border-soft')},ticks:{font:{family:'Inter',size:12},color:getCSSVar('--ink-soft'),callback:v=>v%1===0?v:null}}
-      }
-    }
-  });
 }
 function renderIVAO(mb52proc, mb51proc){
   const donutGrid=document.getElementById('ivaoGrid');
@@ -3295,8 +3323,6 @@ function renderIVAO(mb52proc, mb51proc){
     const d=computeValorAgregado(s.records);
     if(d.totalBobinas>0){
       buildValorBarChart(s.canvasId,d);
-      const pf=computeValorAgregadoPorFormato(s.records).filter(f=>f.totalBobinas>0);
-      buildDetailBarChart(s.detailId,pf);
     }
   });
 }
@@ -3391,15 +3417,26 @@ function renderOcupacao(mb52proc){
 // formato. Os dias de cobertura usam o mesmo kg/dia configurado para esse formato na linha
 // principal (mesmo input, mesmo state.mediaConsumoMap), já que esse estoque alimenta a
 // mesma linha de produção quando chegar a hora de usá-lo.
+// "Xiamen", "Nanshan" ou "Xiamen + Nanshan" — conforme os fornecedores presentes no estoque
+function labelFornecedoresFormato(d){
+  const pf=(d&&d.porFornecedor)||{};
+  const nomes=CLASSES_SEM_NOVELIS.filter(c=>pf[c]>0).map(c=>LABEL_FORNECEDOR[c]);
+  return nomes.length ? nomes.join(' + ') : 'Metal importado';
+}
+function quebraFornecedores(d){
+  const pf=(d&&d.porFornecedor)||{};
+  return CLASSES_SEM_NOVELIS.filter(c=>pf[c]>0).map(c=>`<span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${COR_FORNECEDOR[c]};margin:0 4px 0 8px"></span>${LABEL_FORNECEDOR[c]} ${pf[c]} UN`).join('');
+}
 function buildChinesFormatoCard(formato, d, s){
   const cls = ocupacaoClasse(d.percentual);
   s = s || { dias:null, estoqueKg:0, mediaConsumo:state.mediaConsumoMap[formato]||0 };
   const sufCls = suficienciaClasse(s.dias)||'';
   const card=document.createElement('div');
   card.className='card semaforo-card';
-  card.innerHTML = `<div class="semaforo-label">Metal Chinês · ${labelMetal(formato)}</div>
+  card.innerHTML = `<div class="semaforo-label">${labelFornecedoresFormato(d)} · ${labelMetal(formato)}</div>
     <div class="semaforo-value ${cls}">${fmtPct(d.percentual)}</div>
     <div class="semaforo-foot">${d.estoqueUN} UN / ${d.capacidade} UN</div>
+    <div class="suf-inline-meta">${quebraFornecedores(d)}</div>
     <div class="suf-inline-divider"></div>
     <div class="suf-inline-days ${sufCls}">${fmtDias(s.dias)}</div>
     <div class="suf-nivel-label ${sufCls}">${nivelSuficienciaLabel(sufCls)}</div>
@@ -4180,7 +4217,7 @@ td{padding:3px 6px;border-bottom:1px solid #e5e7eb;}
         const d=chinesPorFormato[f];
         const cls=d.percentual>=1?'crit':d.percentual>=0.8?'warn':'ok';
         return `<div class="card">
-          <div class="card-head"><span class="card-title">Metal Chinês · ${labelMetal(f)}</span></div>
+          <div class="card-head"><span class="card-title">${labelFornecedoresFormato(d)} · ${labelMetal(f)}</span></div>
           <div class="big-pct ${cls}">${Math.round((d.percentual||0)*100)}%</div>
           <div class="sub">${d.estoqueUN} UN / ${d.capacidade} UN cap.</div>
           ${pctBar((d.percentual||0)*100,cls)}
@@ -4428,6 +4465,7 @@ function mb52TabMontarLinhas(){
     const sku = normCodigo(r['Material']);
     const lote = normLote(r['Lote']);
     const procv = mb52TabProcv(lote);
+    const fornecedor = detectarFornecedor(texto);
     const formato = detectarFormatoPorDescricao(texto) || (sku!=null && state.cadastroMap.get(sku) ? normSpace(state.cadastroMap.get(sku)) : '') || '—';
     out.push({
       material: sku!=null ? String(sku) : normSpace(r['Material']),
@@ -4438,7 +4476,7 @@ function mb52TabMontarLinhas(){
       bloq: Number(r['Bloqueado'])||0,
       espessura: mb52TabEspessuraDaDescricao(texto),
       espReal: procv.espReal,
-      classe: procv.classe,
+      classe: fornecedor || procv.classe,
       formato
     });
   }
@@ -4473,7 +4511,7 @@ const MB52TAB_CARD_FILTROS = {
   livre: l=>l.livre>0,
   cq:    l=>l.cq>0,
   bloq:  l=>l.bloq>0,
-  nd:    l=>l.classe===MB52TAB_ND || l.espReal==null
+  nd:    l=>l.espReal==null
 };
 function mb52TabFiltrar(ignorar, ignorarCol, ignorarCard){
   const f = mb52Tab.filtros, q = mb52Tab.busca, cf = mb52Tab.colFiltros;
@@ -4517,7 +4555,7 @@ function mb52TabRenderKpis(){
     <button type="button" class="mb52-kpi ok${sel('livre')}" data-card="livre" title="Filtrar lotes com utilização livre"><div class="mb52-kpi-label">Livre</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('livre'))}<small>TON</small></div><div class="mb52-kpi-hint">${linhas.filter(MB52TAB_CARD_FILTROS.livre).length} lotes</div></button>
     <button type="button" class="mb52-kpi warn${sel('cq')}" data-card="cq" title="Filtrar lotes em controle de qualidade"><div class="mb52-kpi-label">Cont. qualidade</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('cq'))}<small>TON</small></div><div class="mb52-kpi-hint">${linhas.filter(MB52TAB_CARD_FILTROS.cq).length} lotes</div></button>
     <button type="button" class="mb52-kpi crit${sel('bloq')}" data-card="bloq" title="Filtrar lotes bloqueados (HFI)"><div class="mb52-kpi-label">HFI (bloqueado)</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('bloq'))}<small>TON</small></div><div class="mb52-kpi-hint">${linhas.filter(MB52TAB_CARD_FILTROS.bloq).length} lotes</div></button>
-    <button type="button" class="mb52-kpi ${semProcv?'crit':'ok'}${sel('nd')}" data-card="nd" title="Filtrar lotes não encontrados na Novelis"><div class="mb52-kpi-label">Lotes sem PROCV (#N/D)</div><div class="mb52-kpi-value">${semProcv}</div><div class="mb52-kpi-hint">não encontrados na Novelis</div></button>
+    <button type="button" class="mb52-kpi ${semProcv?'warn':'ok'}${sel('nd')}" data-card="nd" title="Filtrar lotes não encontrados na Novelis (Xiamen, Nanshan e outros)"><div class="mb52-kpi-label">Sem PROCV (#N/D)</div><div class="mb52-kpi-value">${semProcv}</div><div class="mb52-kpi-hint">${(()=>{const sp=linhas.filter(MB52TAB_CARD_FILTROS.nd); const x=sp.filter(l=>l.classe===FORN_XIAMEN).length, n=sp.filter(l=>l.classe===FORN_NANSHAN).length; return `Xiamen ${x} · Nanshan ${n} · outros ${sp.length-x-n}`;})()}</div></button>
     <div class="mb52-kpi status"><div class="mb52-kpi-label">Status</div><div class="mb52-st-btns">${
       MB52TAB_STATUS_OPCOES.concat([MB52TAB_SEM_STATUS]).map(s=>`<button type="button" class="mb52-st-btn ${stCls[s]}${stSel.has(s)?' active':''}" data-status="${mb52TabEsc(s)}">${stLabel(s)}<b>${cont[s]}</b></button>`).join('')
     }</div></div>`;
@@ -4579,7 +4617,7 @@ function mb52TabRender(){
   const corpo = linhas.map(l=>{
     const st = mb52TabStatusDe(l);
     const cls = l.classe===MB52TAB_ND ? `<td class="nd">${MB52TAB_ND}</td>`
-      : `<td><span class="mb52-cls" style="background:${VALOR_COR[l.classe]||'#64748B'}">${mb52TabEsc(l.classe)}</span></td>`;
+      : `<td><span class="mb52-cls" style="background:${COR_FORNECEDOR[l.classe]||VALOR_COR[l.classe]||'#64748B'}">${mb52TabEsc(l.classe)}</span></td>`;
     return `<tr>
       <td>${mb52TabEsc(l.material)}</td>
       <td class="txt">${mb52TabEsc(l.texto)}</td>
@@ -4804,6 +4842,17 @@ try{
     mb52Tab.carregadoEm = new Date(c.ts);
   }
 }catch(e){}
+
+(function(){
+  const tip=document.createElement('div'); tip.className='det-tip'; document.body.appendChild(tip);
+  document.addEventListener('mousemove',e=>{
+    const sEl=e.target.closest && e.target.closest('.det-seg[data-tip]');
+    if(!sEl){ tip.style.display='none'; return; }
+    tip.innerHTML=sEl.dataset.tip; tip.style.display='block';
+    tip.style.left=Math.min(e.clientX+14, window.innerWidth-tip.offsetWidth-8)+'px';
+    tip.style.top=(e.clientY+14)+'px';
+  });
+})();
 
 /* ============================================================
    7) CARGA INICIAL — usa cache local se existir, senão pede upload

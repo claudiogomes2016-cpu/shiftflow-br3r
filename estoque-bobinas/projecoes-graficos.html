@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projeções de Gráficos</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F3F6; --surface:#FFFFFF; --border:#E5E7EB; --soft:#EEF0F3;
+  --ink:#15171C; --ink2:#3A3D45; --muted:#6B7080; --brand:#1140FE;
+  --L:#3FA34D; --M:#94A3B8; --H:#F2772C; --XM:#2563EB; --NS:#A21CAF;
+  --heat0:#F1F5FF; --heat1:#C9D6FF; --heat2:#8EA8FF; --heat3:#4F72F5; --heat4:#1838C7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0E1C; --surface:#121A2E; --border:#2A3354; --soft:#1B2238;
+    --ink:#F4F5F7; --ink2:#D7D9E0; --muted:#9AA0B4; --brand:#5C7CFF;
+    --M:#7D8899; --XM:#4F86F7; --NS:#C04BD0;
+    --heat0:#18203A; --heat1:#22336B; --heat2:#2D4AA6; --heat3:#4466E0; --heat4:#7D97FF;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0E1C; --surface:#121A2E; --border:#2A3354; --soft:#1B2238;
+  --ink:#F4F5F7; --ink2:#D7D9E0; --muted:#9AA0B4; --brand:#5C7CFF;
+  --M:#7D8899; --XM:#4F86F7; --NS:#C04BD0;
+  --heat0:#18203A; --heat1:#22336B; --heat2:#2D4AA6; --heat3:#4466E0; --heat4:#7D97FF;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:15px;line-height:1.45}
+header{background:#000;color:#fff;padding:18px 24px;border-bottom:4px solid #1f4fff}
+header h1{margin:0;font-size:22px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+header h1 span{color:#5b84ff}
+header p{margin:4px 0 0;color:#C9CEDF;font-size:14px}
+main{max-width:1400px;margin:0 auto;padding:24px 16px 60px}
+.opt{margin:0 0 40px}
+.opt-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.opt-tag{font-family:"DM Mono",monospace;font-size:13px;color:#fff;background:var(--brand);padding:2px 8px}
+.opt-head h2{margin:0;font-size:19px;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
+.reco{font-size:12px;font-weight:800;color:#15803D;background:#E7F5EC;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.4px}
+.opt-desc{color:var(--ink2);margin:0 0 14px;max-width:900px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:1100px){.grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--soft);box-shadow:0 1px 2px rgba(16,24,40,.04),0 2px 6px rgba(16,24,40,.06);padding:18px 20px;min-width:0}
+.card-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--ink2)}
+.card-total{font-family:"DM Mono",monospace;font-size:13.5px;color:var(--muted);white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2);margin:0 0 14px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+/* Opção A — barras horizontais empilhadas (volume real) */
+.hrow{display:grid;grid-template-columns:78px 1fr 44px;align-items:center;gap:10px;margin:0 0 12px}
+.hlabel{font-size:13.5px;font-weight:700;text-align:right;color:var(--ink)}
+.htrack{display:flex;height:26px;gap:2px}
+.seg{height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11.5px;font-weight:800;overflow:hidden;white-space:nowrap;position:relative;cursor:default}
+.seg:first-child{border-radius:4px 0 0 4px}.seg:last-child{border-radius:0 4px 4px 0}.seg:only-child{border-radius:4px}
+.hval{font-family:"DM Mono",monospace;font-size:13px;font-weight:700;color:var(--ink)}
+.hsub{grid-column:2/4;font-size:11.5px;color:var(--muted);margin-top:-8px;margin-bottom:6px}
+/* tooltip */
+.tip{position:fixed;pointer-events:none;background:#15171C;color:#fff;font-size:12.5px;padding:7px 10px;border-radius:6px;box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:10;display:none;white-space:nowrap}
+/* Opção B — mapa de calor */
+table.heat{width:100%;border-collapse:separate;border-spacing:2px;font-size:13px}
+.heat th{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;padding:4px 2px;text-align:center}
+.heat th.sup-xm{color:var(--XM)} .heat th.sup-ns{color:var(--NS)}
+.heat td{text-align:center;font-family:"DM Mono",monospace;font-weight:700;padding:7px 2px;border-radius:3px}
+.heat td.fmt{font-family:Inter,sans-serif;text-align:left;font-weight:700;padding-left:4px;white-space:nowrap}
+.heat td.tot{background:var(--soft);color:var(--ink)}
+.heat .z{color:var(--muted);font-weight:400}
+/* Opção C — cartões-resumo */
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.mini-card{border:1px solid var(--border);padding:12px}
+.mini-fmt{font-size:12px;font-weight:800;text-transform:uppercase;color:var(--muted);letter-spacing:.4px}
+.mini-num{font-family:"DM Mono",monospace;font-size:28px;font-weight:700;line-height:1.1;margin:4px 0 8px}
+.mini-num small{font-size:12px;color:var(--muted);margin-left:4px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:999px;border:1px solid var(--border);color:var(--ink2)}
+.chip i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.note{background:var(--surface);border-left:4px solid var(--brand);padding:14px 18px;margin:0 0 28px;color:var(--ink2)}
+.note b{color:var(--ink)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Projeções — <span>Detalhamento por formato e classificação</span></h1>
+  <p>Mesmos dados nas 3 opções (valores de exemplo, aproximados do print). "Metal Chinês" já aparece separado por fornecedor: <b>Xiamen</b> e <b>Nanshan</b>.</p>
+</header>
+<main>
+  <div class="note"><b>Por que o gráfico atual polui:</b> são 8 cores (L3, L2, L1, M, H1, H2, H3, Metal Chinês) empilhadas em coluna, com legenda longa em cima e eixo numérico que ninguém lê. As opções abaixo reduzem para <b>3 grupos de qualidade (L / M / H) + 2 fornecedores</b>, colocam o número direto na barra e deixam o detalhe L1/L2/L3… no passar do mouse.</div>
+
+  <section class="opt">
+    <div class="opt-head"><span class="opt-tag">A</span><h2>Barras horizontais empilhadas</h2><span class="reco">Recomendada</span></div>
+    <p class="opt-desc">Uma linha por formato, comprimento = quantidade real de bobinas (dá para comparar volume entre formatos). Número escrito dentro de cada parte e total no fim da linha. Passe o mouse para ver o detalhe (L3/L2/L1, H1/H2/H3).</p>
+    <div class="grid" id="optA"></div>
+  </section>
+
+  <section class="opt">
+    <div class="opt-head"><span class="opt-tag">B</span><h2>Mapa de calor (tabela)</h2></div>
+    <p class="opt-desc">Tabela formato × classificação com o número de bobinas em cada célula; quanto mais escuro o azul, mais bobinas. Zero cor de legenda, leitura exata — ótima para quem precisa do número detalhado.</p>
+    <div class="grid" id="optB"></div>
+  </section>
+
+  <section class="opt">
+    <div class="opt-head"><span class="opt-tag">C</span><h2>Cartões-resumo por formato</h2></div>
+    <p class="opt-desc">Sem gráfico: um número grande por formato e a distribuição em % de L / M / H e por fornecedor. O mais limpo para a imagem do e-mail, mas não compara volume visualmente.</p>
+    <div class="grid" id="optC"></div>
+  </section>
+</main>
+<div class="tip" id="tip"></div>
+<script>
+// dados de exemplo (bobinas) — aproximados do print enviado; Metal Chinês dividido em Xiamen/Nanshan
+const DADOS = {
+  'Entradas': {
+    '9.1 OZ': {L3:1,L2:11,L1:10,M:10,H1:4,H2:2},
+    '12 OZ':  {L2:5,L1:18,M:16,H1:6,H3:1},
+    '16 OZ':  {L3:2,L2:2,L1:9,M:10,H1:10,H2:1,H3:2,XIAMEN:10,NANSHAN:8}
+  },
+  'Estoque (livre)': {
+    '9.1 OZ': {L2:2,L1:4,M:4},
+    '12 OZ':  {L2:2,L1:4,M:9,H1:2},
+    '12 OZ SLEEK': {M:2},
+    '16 OZ':  {L3:1,M:7,H1:5,H3:2,XIAMEN:15,NANSHAN:11}
+  },
+  'Controle de qualidade': {
+    '12 OZ':  {L2:1,L1:1,M:2,H1:1},
+    '9.1 OZ': {L2:1,M:5,H1:3,H2:3,H3:1},
+    '16 OZ':  {L2:1,L1:1,H1:4,H2:3,XIAMEN:1}
+  }
+};
+const CLASSES=['L3','L2','L1','M','H1','H2','H3','XIAMEN','NANSHAN'];
+const GRUPOS=[
+  {k:'L',nome:'L',cor:'var(--L)',de:['L3','L2','L1']},
+  {k:'M',nome:'M',cor:'var(--M)',de:['M']},
+  {k:'H',nome:'H',cor:'var(--H)',de:['H1','H2','H3']},
+  {k:'XM',nome:'Xiamen',cor:'var(--XM)',de:['XIAMEN']},
+  {k:'NS',nome:'Nanshan',cor:'var(--NS)',de:['NANSHAN']}
+];
+const soma=(o,ks)=>ks.reduce((a,k)=>a+(o[k]||0),0);
+const total=o=>soma(o,CLASSES);
+const legenda=()=>`<div class="legend">${GRUPOS.map(g=>`<span><i style="background:${g.cor}"></i>${g.nome}</span>`).join('')}</div>`;
+
+// A
+document.getElementById('optA').innerHTML=Object.entries(DADOS).map(([titulo,fmts])=>{
+  const max=Math.max(...Object.values(fmts).map(total));
+  const tot=Object.values(fmts).reduce((a,o)=>a+total(o),0);
+  const linhas=Object.entries(fmts).map(([f,o])=>{
+    const t=total(o);
+    const segs=GRUPOS.map(g=>{
+      const v=soma(o,g.de); if(!v) return '';
+      const det=g.de.filter(c=>o[c]).map(c=>`${c==='XIAMEN'?'Xiamen':c==='NANSHAN'?'Nanshan':c}: ${o[c]}`).join(' · ');
+      return `<div class="seg" style="flex:${v};background:${g.cor}" data-tip="${f} — ${g.nome}: ${v} bobinas (${Math.round(v/t*100)}%)${g.de.length>1?'<br>'+det:''}">${v/max>0.06?v:''}</div>`;
+    }).join('');
+    return `<div class="hrow"><div class="hlabel">${f}</div><div class="htrack" style="width:${t/max*100}%">${segs}</div><div class="hval">${t}</div></div>`;
+  }).join('');
+  return `<div class="card"><div class="card-head"><span class="card-title">${titulo}</span><span class="card-total">${tot} bobinas</span></div>${legenda()}${linhas}</div>`;
+}).join('');
+
+// B
+document.getElementById('optB').innerHTML=Object.entries(DADOS).map(([titulo,fmts])=>{
+  const vals=Object.values(fmts).flatMap(o=>CLASSES.map(c=>o[c]||0));
+  const max=Math.max(...vals);
+  const heat=v=>{ if(!v) return ''; const n=Math.min(4,Math.ceil(v/max*4)); return `background:var(--heat${n});color:${n>=3?'#fff':'var(--ink)'}`; };
+  const tot=Object.values(fmts).reduce((a,o)=>a+total(o),0);
+  const head=`<tr><th></th>${['L3','L2','L1','M','H1','H2','H3'].map(c=>`<th>${c}</th>`).join('')}<th class="sup-xm">Xiam.</th><th class="sup-ns">Nansh.</th><th>Tot.</th></tr>`;
+  const rows=Object.entries(fmts).map(([f,o])=>`<tr><td class="fmt">${f}</td>${CLASSES.map(c=>o[c]?`<td style="${heat(o[c])}" title="${f} · ${c}: ${o[c]} bobinas">${o[c]}</td>`:'<td class="z">·</td>').join('')}<td class="tot">${total(o)}</td></tr>`).join('');
+  return `<div class="card"><div class="card-head"><span class="card-title">${titulo}</span><span class="card-total">${tot} bobinas</span></div><table class="heat">${head}${rows}</table></div>`;
+}).join('');
+
+// C
+document.getElementById('optC').innerHTML=Object.entries(DADOS).map(([titulo,fmts])=>{
+  const tot=Object.values(fmts).reduce((a,o)=>a+total(o),0);
+  const cards=Object.entries(fmts).map(([f,o])=>{
+    const t=total(o);
+    const chips=GRUPOS.map(g=>{const v=soma(o,g.de); return v?`<span class="chip"><i style="background:${g.cor}"></i>${g.nome} ${Math.round(v/t*100)}%</span>`:'';}).join('');
+    return `<div class="mini-card"><div class="mini-fmt">${f}</div><div class="mini-num">${t}<small>bobinas</small></div><div class="chips">${chips}</div></div>`;
+  }).join('');
+  return `<div class="card"><div class="card-head"><span class="card-title">${titulo}</span><span class="card-total">${tot} bobinas</span></div><div class="mini">${cards}</div></div>`;
+}).join('');
+
+// tooltip
+const tip=document.getElementById('tip');
+document.addEventListener('mousemove',e=>{
+  const s=e.target.closest('[data-tip]');
+  if(!s){tip.style.display='none';return;}
+  tip.innerHTML=s.dataset.tip; tip.style.display='block';
+  const x=Math.min(e.clientX+14, window.innerWidth-tip.offsetWidth-8);
+  tip.style.left=x+'px'; tip.style.top=(e.clientY+14)+'px';
+});
+</script>
+</body>
+</html>
