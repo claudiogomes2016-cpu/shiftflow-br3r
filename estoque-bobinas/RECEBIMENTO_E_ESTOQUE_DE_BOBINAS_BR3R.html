@@ -2036,10 +2036,14 @@ function validarOcupacao(){
   return ok===casos.length;
 }
 
+// Dias de cobertura do estoque LIVRE deste depósito (mesma base da ocupação em UN):
+// o metal importado (Xiamen / Nanshan) fica no armazém separado e tem a sua própria
+// suficiência em computeSuficienciaMetalChines() — somá-lo aqui misturava 5 UN da rua
+// com centenas de toneladas do outro armazém no mesmo card.
 function computeSuficiencia(mb52proc, mediaConsumoMap){
   const estoqueKgPorMetal=new Map();
   for(const r of mb52proc){
-    if(r.status!=='LIVRE' || !r.metal) continue;
+    if(r.status!=='LIVRE' || !r.metal || ehMetalChines(r)) continue;
     estoqueKgPorMetal.set(r.metal,(estoqueKgPorMetal.get(r.metal)||0)+r.qtd);
   }
   const result={};
@@ -3370,6 +3374,7 @@ function renderOcupacao(mb52proc){
   const ocup=computeOcupacao(mb52proc, state.capacidadeMap);
   const grupos=computeOcupacaoGrupos(ocup, state.capacidadeMap);
   const suf=computeSuficiencia(mb52proc, state.mediaConsumoMap);
+  const sufImportado=computeSuficienciaMetalChines(mb52proc, state.mediaConsumoMap);
   const grid=document.getElementById('ocupacaoGrid');
   grid.innerHTML='';
 
@@ -3421,6 +3426,12 @@ function renderOcupacao(mb52proc){
     html += `<div class="suf-inline-days ${sufCls}">${fmtDias(s.dias)}</div>
       <div class="suf-nivel-label ${sufCls}">${nivelSuficienciaLabel(sufCls)}</div>
       <div class="suf-inline-meta">${fmtTon(s.estoqueKg)} ÷ <input class="suf-footer-input" data-metal="${metal}" type="number" step="1000" value="${s.mediaConsumo}"> kg/dia</div>`;
+    // metal importado do mesmo formato: só informa (os dias dele estão no card do armazém importado)
+    const imp=sufImportado[metal];
+    if(imp && imp.estoqueKg>0){
+      const diasTotal = s.mediaConsumo ? (s.estoqueKg+imp.estoqueKg)/s.mediaConsumo : null;
+      html += `<div class="suf-pausado-note">+ ${fmtTon(imp.estoqueKg)} no armazém Xiamen/Nanshan · total com importado: <b>${fmtDias(diasTotal)}</b></div>`;
+    }
     card.innerHTML = html;
     card.querySelectorAll('.suf-footer-input').forEach(inp=>{
       inp.addEventListener('change', function(){
