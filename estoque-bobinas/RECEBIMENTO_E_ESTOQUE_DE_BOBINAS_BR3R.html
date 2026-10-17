@@ -1059,18 +1059,20 @@ button.mb52-kpi.sel{background:var(--brand-bg);outline:2px solid var(--brand);ou
 .mb52-kpi-hint{font-size:11.5px;color:var(--ink-faint);margin-top:8px;}
 .mb52-kpi.status{grid-column:span 2;}
 @media (max-width:760px){ .mb52-kpi.status{grid-column:auto;} }
-.mb52-st-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.mb52-st-btns{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
 .mb52-st-btn{font-family:var(--font);font-size:12px;font-weight:800;padding:7px 6px;border:1px solid var(--border);background:var(--surface);color:var(--ink-soft);cursor:pointer;text-align:center;line-height:1.2;}
 .mb52-st-btn b{display:block;font-family:var(--mono);font-size:20px;margin-top:3px;}
 .mb52-st-btn.st-bloqueado{color:var(--crit);border-color:var(--crit);}
 .mb52-st-btn.st-nochao{color:var(--warn);border-color:var(--warn);}
 .mb52-st-btn.st-mandril{color:var(--ok);border-color:var(--ok);}
+.mb52-st-btn.st-rma{color:#1D4ED8;border-color:#1D4ED8;}
 .mb52-st-btn.st-bloqueado.active{background:var(--crit);color:#fff;}
 .mb52-st-btn.st-nochao.active{background:var(--warn);color:#fff;}
 .mb52-st-btn.st-mandril.active{background:var(--ok);color:#fff;}
+.mb52-st-btn.st-rma.active{background:#1D4ED8;color:#fff;}
 .mb52-st-btn.st-sem.active{background:var(--ink-soft);color:var(--surface);border-color:var(--ink-soft);}
 .mb52-st-btn:hover{filter:brightness(.95);}
-@media (max-width:500px){ .mb52-st-btns{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:500px){ .mb52-st-btns{grid-template-columns:repeat(3,1fr);} }
 .mb52-kpi.ok{border-top-color:var(--ok);} .mb52-kpi.warn{border-top-color:#EAB308;} .mb52-kpi.crit{border-top-color:var(--crit);} .mb52-kpi.status{border-top-color:#7C3AED;}
 .mb52-kpis{grid-template-columns:repeat(auto-fit,minmax(165px,1fr));}
 .mb52-kpi-label{font-size:11.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;}
@@ -1127,6 +1129,8 @@ button.mb52-kpi.sel{background:var(--brand-bg);outline:2px solid var(--brand);ou
 .mb52-status-sel.st-bloqueado{background:var(--crit-bg);color:var(--crit);border-color:var(--crit);}
 .mb52-status-sel.st-nochao{background:var(--warn-bg);color:var(--warn);border-color:var(--warn);}
 .mb52-status-sel.st-mandril{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);}
+.mb52-status-sel.st-rma{background:var(--brand-bg);color:#1D4ED8;border-color:#1D4ED8;}
+html[data-theme="dark"] .mb52-status-sel.st-rma,html[data-theme="dark"] .mb52-st-btn.st-rma:not(.active){color:#8FA6FF;border-color:#8FA6FF;}
 .mb52-cls{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;color:#fff;min-width:34px;}
 @media (max-width:760px){ .topbar{flex-wrap:wrap;} }
 /* detalhamento por formato — barras horizontais empilhadas */
@@ -4464,11 +4468,11 @@ document.getElementById('processBtn').addEventListener('click', async ()=>{
    - Espessura Real / Class Espessura → PROCV do LOTE na planilha NOVELIS
      (mesmo buildNovelisMap usado no dashboard; lote não encontrado = #N/D, como no Excel)
    - Formato        → pela descrição (detectarFormatoPorDescricao); se não achar, pelo CADASTRO
-   - STATUS         → seleção manual (BLOQUEADO / NO CHÃO / MANDRIL), gravada por lote
+   - STATUS         → seleção manual (BLOQUEADO / NO CHÃO / MANDRIL / R.M.A), gravada por lote
                       neste navegador, e mantida quando um MB52 novo é carregado.
    ============================================================ */
-const MB52TAB_STATUS_OPCOES = ['BLOQUEADO','NO CHÃO','MANDRIL'];
-const MB52TAB_STATUS_CLASSE = { 'BLOQUEADO':'st-bloqueado', 'NO CHÃO':'st-nochao', 'MANDRIL':'st-mandril' };
+const MB52TAB_STATUS_OPCOES = ['BLOQUEADO','NO CHÃO','MANDRIL','R.M.A'];
+const MB52TAB_STATUS_CLASSE = { 'BLOQUEADO':'st-bloqueado', 'NO CHÃO':'st-nochao', 'MANDRIL':'st-mandril', 'R.M.A':'st-rma' };
 const MB52TAB_SEM_STATUS = '(sem status)';
 const MB52TAB_ND = '#N/D';
 const MB52TAB_CACHE_KEY = 'br3r_mb52_tabela';
@@ -4635,7 +4639,7 @@ function mb52TabRenderKpis(){
   mb52TabFiltrar('status').forEach(l=>{ cont[mb52TabStatusDe(l)||MB52TAB_SEM_STATUS]++; });
   const sel = k => mb52Tab.cardFiltro===k ? ' sel' : '';
   const stSel = mb52Tab.filtros.status;
-  const stCls = { 'BLOQUEADO':'st-bloqueado', 'NO CHÃO':'st-nochao', 'MANDRIL':'st-mandril' };
+  const stCls = { ...MB52TAB_STATUS_CLASSE };
   stCls[MB52TAB_SEM_STATUS]='st-sem';
   const stLabel = s => s===MB52TAB_SEM_STATUS ? 'SEM STATUS' : s;
   const nenhumFiltro = !mb52Tab.cardFiltro && !stSel.size && !mb52Tab.filtros.formato.size && !mb52Tab.filtros.classe.size && !mb52Tab.filtros.origem.size && !mb52Tab.busca && !Object.keys(mb52Tab.colFiltros).length;
@@ -4926,7 +4930,7 @@ document.getElementById('mb52Search').addEventListener('input', e=>{
 document.getElementById('mb52ExportBtn').addEventListener('click', mb52TabExportar);
 document.getElementById('mb52ClearStatusBtn').addEventListener('click', ()=>{
   if(!Object.keys(mb52Tab.status).length){ showToast('Nenhum status marcado.'); return; }
-  if(!confirm('Apagar todos os STATUS marcados (BLOQUEADO / NO CHÃO / MANDRIL)?')) return;
+  if(!confirm('Apagar todos os STATUS marcados (BLOQUEADO / NO CHÃO / MANDRIL / R.M.A)?')) return;
   mb52Tab.status = {}; mb52TabSalvarStatus(); mb52TabRender();
 });
 
