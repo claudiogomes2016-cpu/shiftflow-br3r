@@ -1078,7 +1078,22 @@ button.mb52-kpi.sel{background:var(--brand-bg);outline:2px solid var(--brand);ou
 .mb52-kpi-value small{font-size:13px;font-weight:700;color:var(--ink-faint);margin-left:4px;}
 .mb52-kpi-status-row{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;font-weight:700;color:var(--ink-soft);}
 .mb52-kpi-status-row b{font-family:var(--mono);font-size:20px;color:var(--ink);margin-left:4px;}
-.mb52-toolbar{margin:0 0 16px;}
+.mb52-toolbar{margin:0 0 16px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:stretch;}
+.mb52-toolbar-rows{display:flex;flex-direction:column;gap:13px;min-width:0;}
+@media (max-width:1100px){ .mb52-toolbar{grid-template-columns:1fr;} }
+.mb52-origem{border-left:1px solid var(--border-soft);padding-left:18px;display:flex;flex-direction:column;gap:8px;}
+@media (max-width:1100px){ .mb52-origem{border-left:none;padding-left:0;border-top:1px solid var(--border-soft);padding-top:12px;} }
+.mb52-origem-title{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-faint);}
+.mb52-origem-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1;}
+.mb52-origem-btn{font-family:var(--font);text-align:left;padding:12px 14px;border:1px solid var(--border);border-left:5px solid var(--og-cor);background:var(--surface);color:var(--ink);cursor:pointer;display:flex;flex-direction:column;gap:3px;transition:background .15s, box-shadow .15s;}
+.mb52-origem-btn:hover{box-shadow:0 3px 10px rgba(0,0,0,.10);}
+.mb52-origem-btn.active{background:var(--og-cor);border-color:var(--og-cor);color:#fff;}
+.mb52-origem-nome{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;}
+.mb52-origem-num{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1.05;}
+.mb52-origem-num small{font-size:12px;font-weight:700;opacity:.75;margin-left:4px;}
+.mb52-origem-sub{font-size:12px;opacity:.8;}
+.mb52-origem-outros{grid-column:1/-1;padding:7px 12px;}
+.mb52-origem-outros .mb52-origem-num{font-size:16px;}
 .mb52-toolbar .filter-row-label{min-width:170px;}
 .mb52-toolbar .filter-row-label .mb52-slicer-clear{margin-left:4px;text-transform:none;letter-spacing:0;font-weight:600;}
 .mb52-slicer-clear{background:none;border:none;color:var(--ink-faint);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;font-family:var(--font);}
@@ -1468,6 +1483,7 @@ button.mb52-kpi.sel{background:var(--brand-bg);outline:2px solid var(--brand);ou
     <div class="mb52-kpis" id="mb52Kpis"></div>
 
     <div class="filter-toolbar mb52-toolbar">
+     <div class="mb52-toolbar-rows">
       <div class="filter-row">
         <div class="filter-row-label"><span class="dot" style="background:#1140FE"></span>Formato <button class="mb52-slicer-clear" data-clear="formato">limpar</button></div>
         <div class="filter-pillgroup" id="mb52SlicerFormato"></div>
@@ -1481,6 +1497,11 @@ button.mb52-kpi.sel{background:var(--brand-bg);outline:2px solid var(--brand);ou
         <input type="search" class="mb52-search" id="mb52Search" placeholder="Lote, material ou texto…">
         <button class="mb52-tool-btn" id="mb52LimparTudoBtn">Limpar todos os filtros</button>
       </div>
+     </div>
+     <div class="mb52-origem">
+       <div class="mb52-origem-title">Origem do metal</div>
+       <div class="mb52-origem-btns" id="mb52Origem"></div>
+     </div>
     </div>
 
       <div class="mb52-tablecard">
@@ -4473,7 +4494,7 @@ const mb52Tab = {
   novelisMap: null,
   mb52Nome: null, novelisNome: null, carregadoEm: null,
   status: {},             // lote -> 'BLOQUEADO' | 'NO CHÃO' | 'MANDRIL'
-  filtros: { formato:new Set(), classe:new Set(), status:new Set() },
+  filtros: { formato:new Set(), classe:new Set(), status:new Set(), origem:new Set() },
   cardFiltro: null,       // card clicado: 'livre' | 'cq' | 'bloq' | 'nd' (null = todos)
   colFiltros: {},         // coluna -> Set com os valores marcados na lupa (igual ao filtro do Excel)
   lupaAberta: null,
@@ -4560,6 +4581,26 @@ const MB52TAB_CARD_FILTROS = {
   bloq:  l=>l.bloq>0,
   nd:    l=>l.espReal==null
 };
+// origem do metal: NOVELIS (lote achado no PROCV) · CHINES (Xiamen / Nanshan pelo texto breve) · OUTROS
+function mb52TabOrigem(l){
+  if(l.classe===FORN_XIAMEN || l.classe===FORN_NANSHAN) return 'CHINES';
+  return l.espReal!=null ? 'NOVELIS' : 'OUTROS';
+}
+function mb52TabRenderOrigem(){
+  const el=document.getElementById('mb52Origem'); if(!el) return;
+  const base=mb52TabFiltrar('origem');
+  const sel=mb52Tab.filtros.origem;
+  const ton=ls=>fmtTon(ls.reduce((a,l)=>a+(l.livre||0)+(l.cq||0)+(l.bloq||0),0));
+  const nov=base.filter(l=>mb52TabOrigem(l)==='NOVELIS'), chi=base.filter(l=>mb52TabOrigem(l)==='CHINES'), out=base.filter(l=>mb52TabOrigem(l)==='OUTROS');
+  const x=chi.filter(l=>l.classe===FORN_XIAMEN).length, n=chi.length-x;
+  const btn=(k,nome,cor,ls,sub,extra)=>`<button type="button" class="mb52-origem-btn${extra||''}${sel.has(k)?' active':''}" data-origem="${k}" style="--og-cor:${cor}">
+      <span class="mb52-origem-nome">${nome}</span>
+      <span class="mb52-origem-num">${ls.length}<small>lotes</small></span>
+      <span class="mb52-origem-sub">${sub}</span></button>`;
+  el.innerHTML = btn('NOVELIS','Novelis','#1140FE',nov,`${ton(nov)} · PROCV encontrado`)
+    + btn('CHINES','Metal Chinês','#B91C1C',chi,`Xiamen ${x} · Nanshan ${n} · ${ton(chi)}`)
+    + (out.length ? btn('OUTROS','Sem identificação','#78716C',out,`sem PROCV e sem fornecedor no texto · ${ton(out)}`,' mb52-origem-outros') : '');
+}
 function mb52TabFiltrar(ignorar, ignorarCol, ignorarCard){
   const f = mb52Tab.filtros, q = mb52Tab.busca, cf = mb52Tab.colFiltros;
   const cols = Object.keys(cf).filter(c=>c!==ignorarCol && cf[c]);
@@ -4570,6 +4611,7 @@ function mb52TabFiltrar(ignorar, ignorarCol, ignorarCard){
     if(ignorar!=='formato' && f.formato.size && !f.formato.has(l.formato)) return false;
     if(ignorar!=='classe' && f.classe.size && !f.classe.has(l.classe)) return false;
     if(ignorar!=='status' && f.status.size && !f.status.has(mb52TabStatusDe(l)||MB52TAB_SEM_STATUS)) return false;
+    if(ignorar!=='origem' && f.origem.size && !f.origem.has(mb52TabOrigem(l))) return false;
     if(q){
       const alvo = (l.lote+' '+l.material+' '+l.texto+' '+l.formato).toUpperCase();
       if(!alvo.includes(q)) return false;
@@ -4596,7 +4638,7 @@ function mb52TabRenderKpis(){
   const stCls = { 'BLOQUEADO':'st-bloqueado', 'NO CHÃO':'st-nochao', 'MANDRIL':'st-mandril' };
   stCls[MB52TAB_SEM_STATUS]='st-sem';
   const stLabel = s => s===MB52TAB_SEM_STATUS ? 'SEM STATUS' : s;
-  const nenhumFiltro = !mb52Tab.cardFiltro && !stSel.size && !mb52Tab.filtros.formato.size && !mb52Tab.filtros.classe.size && !mb52Tab.busca && !Object.keys(mb52Tab.colFiltros).length;
+  const nenhumFiltro = !mb52Tab.cardFiltro && !stSel.size && !mb52Tab.filtros.formato.size && !mb52Tab.filtros.classe.size && !mb52Tab.filtros.origem.size && !mb52Tab.busca && !Object.keys(mb52Tab.colFiltros).length;
   document.getElementById('mb52Kpis').innerHTML = `
     <button type="button" class="mb52-kpi${nenhumFiltro?'':' '}" data-card="todos" title="Mostrar todos (limpa os filtros)"><div class="mb52-kpi-label">Unidades</div><div class="mb52-kpi-value">${linhas.length.toLocaleString('pt-BR')}</div><div class="mb52-kpi-hint">${nenhumFiltro?'todos os lotes':'clique para limpar filtros'}</div></button>
     <button type="button" class="mb52-kpi ok${sel('livre')}" data-card="livre" title="Filtrar lotes com utilização livre"><div class="mb52-kpi-label">Livre</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('livre'))}<small>TON</small></div><div class="mb52-kpi-hint">${linhas.filter(MB52TAB_CARD_FILTROS.livre).length} lotes</div></button>
@@ -4628,7 +4670,7 @@ function mb52TabRender(){
   const sub = document.getElementById('mb52Sub');
   if(!mb52Tab.linhas){
     document.getElementById('mb52Kpis').innerHTML='';
-    ['mb52SlicerFormato','mb52SlicerClasse'].forEach(id=>document.getElementById(id).innerHTML='');
+    ['mb52SlicerFormato','mb52SlicerClasse','mb52Origem'].forEach(id=>document.getElementById(id).innerHTML='');
     document.getElementById('mb52Count').textContent='';
     wrap.innerHTML = '<div class="mb52-empty">Nenhum dado carregado. Na tela inicial, carregue <b>MB52</b>, <b>MB51</b> e <b>NOVELIS</b> e clique em <b>Processar dados</b> — o relatório é montado automaticamente.</div>';
     return;
@@ -4645,6 +4687,7 @@ function mb52TabRender(){
   const classes = ORDEM_CLASSIFICACAO.filter(c=>classesPresentes.has(c)).concat(ordenarTexto([...classesPresentes].filter(c=>!ORDEM_CLASSIFICACAO.includes(c))));
   mb52TabRenderSlicer('formato','mb52SlicerFormato',formatos);
   mb52TabRenderSlicer('classe','mb52SlicerClasse',classes);
+  mb52TabRenderOrigem();
 
   let linhas = mb52TabFiltrar(null);
   const { col, dir } = mb52Tab.ordem;
@@ -4843,6 +4886,12 @@ document.getElementById('mb52View').addEventListener('click', e=>{
     if(k==='todos') mb52TabLimparTudo();
     else { mb52Tab.cardFiltro = mb52Tab.cardFiltro===k ? null : k; mb52TabRender(); }
     return;
+  }
+  const ogBtn = e.target.closest('.mb52-origem-btn');
+  if(ogBtn){
+    const set = mb52Tab.filtros.origem, v = ogBtn.dataset.origem;
+    if(set.has(v)) set.delete(v); else set.add(v);
+    mb52TabRender(); return;
   }
   const stBtn = e.target.closest('.mb52-st-btn');
   if(stBtn){
