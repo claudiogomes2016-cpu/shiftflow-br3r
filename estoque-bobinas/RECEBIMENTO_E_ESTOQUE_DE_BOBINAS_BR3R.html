@@ -1136,8 +1136,9 @@ html[data-theme="dark"] .mb52-status-sel.st-rma,html[data-theme="dark"] .mb52-st
 /* Visão geral — cards clicáveis + origem do metal */
 button.kpi-hero-card{font-family:var(--font);text-align:left;color:inherit;cursor:pointer;transition:transform .08s ease, box-shadow .15s ease;}
 button.kpi-hero-card:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.12);}
-.kpi-hero-link{font-size:12px;font-weight:700;color:var(--brand);margin-top:8px;opacity:0;transition:opacity .15s;}
-button.kpi-hero-card:hover .kpi-hero-link{opacity:1;}
+.kpi-hero-link{font-size:12px;font-weight:700;color:var(--brand);margin-top:8px;min-height:15px;opacity:.55;transition:opacity .15s;}
+button.kpi-hero-card:hover .kpi-hero-link,button.kpi-hero-card.sel .kpi-hero-link{opacity:1;}
+button.kpi-hero-card.sel{background:var(--brand-bg);outline:2px solid var(--brand);outline-offset:-2px;}
 .kpi-origem-row{display:grid;grid-template-columns:auto 1fr 1fr;gap:14px;align-items:stretch;margin:-6px 0 20px;}
 @media (max-width:760px){ .kpi-origem-row{grid-template-columns:1fr;} }
 .kpi-origem-title{writing-mode:vertical-rl;transform:rotate(180deg);font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-faint);text-align:center;}
@@ -2324,7 +2325,8 @@ const state={
   lastUpdate: null,
   activeFilter: null,   // null = Todos; string = formato selecionado
   activeClassFilter: null,
-  activeOrigem: null,   // null = todas; 'NOVELIS' | 'CHINES' (Xiamen + Nanshan) — cards de origem da Visão geral  // null = Todos; 'L'/'M'/'H' (grupo) ou 'L1'/'L2'/'L3'/'M'/'H1'/'H2'/'H3' (detalhado)
+  activeOrigem: null,
+  activeStatusCard: null,   // card da Visão geral clicado: null | 'LIVRE' | 'CONT QUAL' | 'HFI' — filtra o painel inteiro   // null = todas; 'NOVELIS' | 'CHINES' (Xiamen + Nanshan) — cards de origem da Visão geral  // null = Todos; 'L'/'M'/'H' (grupo) ou 'L1'/'L2'/'L3'/'M'/'H1'/'H2'/'H3' (detalhado)
   // Linha 02 é conversível — roda 9.1 OZ OU 12 OZ SLEEK, nunca os dois ao mesmo tempo.
   // O formato que não está rodando fica sem entrada prevista; isso não é um problema
   // operacional, é esperado, então os alertas/KPIs de cobertura crítica não devem
@@ -3651,27 +3653,39 @@ function renderKPIHero(mb52Fmt, mb52){
   const suf = suficienciaDoPainel(mb52Fmt);
   const pausado = linha02FormatoPausado();
   let piorFormato=null, piorDias=null;
-  FORMATOS_BOBINA.forEach(m=>{
-    if(m===pausado) return;   // sem entrada prevista agora — não é um problema, é esperado
+  // com um formato filtrado, o card mostra a cobertura desse formato (e fica marcado como ativo)
+  (state.activeFilter ? [state.activeFilter] : FORMATOS_BOBINA).forEach(m=>{
+    if(m===pausado && !state.activeFilter) return;   // sem entrada prevista agora — não é um problema, é esperado
     const d = suf[m] && suf[m].dias;
     if(d!=null && (piorDias==null || d<piorDias)){ piorDias=d; piorFormato=m; }
   });
 
-  // cada card abre o Relatório (tabela por lote) já filtrado: card -> filtro de status do Relatório
+  // cards clicáveis: filtram o próprio painel (status ou formato); clicar de novo limpa.
+  // "Ocupação geral" volta a mostrar todos os status.
+  const algumFiltro = state.activeStatusCard || state.activeFilter || state.activeClassFilter || state.activeOrigem;
   const cards = [
-    { label:ocupLabel, value:fmtPct(geralPct), cls:ocupacaoClasse(geralPct), sub:ocupSub, card:'livre', formato:null },
-    { label:'Estoque livre', value:livre.totalBobinas+' bobinas', cls:'', sub:fmtTon(livre.totalKg), card:'livre', formato:null },
-    { label:'Controle de qualidade', value:cq.totalBobinas+' bobinas', cls: cq.totalBobinas>0?'warn':'ok', sub:fmtTon(cq.totalKg), card:'cq', formato:null },
-    { label:'HFI bloqueado', value:hfi.totalBobinas+' bobinas', cls: hfi.totalBobinas>0?'crit':'ok', sub:fmtTon(hfi.totalKg), card:'bloq', formato:null },
-    { label: piorDias!=null?nivelSuficienciaLabel(suficienciaClasse(piorDias)):'Menor cobertura', value: piorDias!=null?fmtDias(piorDias):'—', cls: suficienciaClasse(piorDias), sub: piorFormato?labelMetal(piorFormato):'sem dados de consumo', card:'livre', formato:piorFormato }
+    { label:ocupLabel, value:fmtPct(geralPct), cls:ocupacaoClasse(geralPct), sub:ocupSub, acao:'todos', ativo:false },
+    { label:'Estoque livre', value:livre.totalBobinas+' bobinas', cls:'', sub:fmtTon(livre.totalKg), acao:'LIVRE', ativo:state.activeStatusCard==='LIVRE' },
+    { label:'Controle de qualidade', value:cq.totalBobinas+' bobinas', cls: cq.totalBobinas>0?'warn':'ok', sub:fmtTon(cq.totalKg), acao:'CONT QUAL', ativo:state.activeStatusCard==='CONT QUAL' },
+    { label:'HFI bloqueado', value:hfi.totalBobinas+' bobinas', cls: hfi.totalBobinas>0?'crit':'ok', sub:fmtTon(hfi.totalKg), acao:'HFI', ativo:state.activeStatusCard==='HFI' },
+    { label: piorDias!=null?nivelSuficienciaLabel(suficienciaClasse(piorDias)):'Menor cobertura', value: piorDias!=null?fmtDias(piorDias):'—', cls: suficienciaClasse(piorDias), sub: piorFormato?labelMetal(piorFormato):'sem dados de consumo', acao:'formato', formato:piorFormato, ativo:!!piorFormato && state.activeFilter===piorFormato }
   ];
+  const dica = c => c.acao==='todos'
+    ? (algumFiltro ? 'clique para limpar os filtros' : 'mostrando tudo')
+    : c.ativo ? '✓ filtrando o painel · clique para limpar'
+    : c.acao==='formato' ? (c.formato ? `filtrar ${labelMetal(c.formato)} ›` : '') : 'filtrar o painel ›';
   el.innerHTML = cards.map(c=>`
-    <button type="button" class="kpi-hero-card kpi-click ${c.cls}" data-kpi-card="${c.card}" data-kpi-formato="${c.formato||''}" title="Clique para ver os lotes no Relatório">
+    <button type="button" class="kpi-hero-card kpi-click ${c.cls}${c.ativo?' sel':''}" data-kpi-acao="${c.acao}" data-kpi-formato="${c.formato||''}">
       <div class="kpi-hero-label">${c.label}</div>
       <div class="kpi-hero-value ${c.cls}">${c.value}</div>
       <div class="kpi-hero-sub">${c.sub}</div>
-      <div class="kpi-hero-link">ver lotes ›</div>
+      <div class="kpi-hero-link">${dica(c)}</div>
     </button>`).join('');
+}
+// marca o botão certo nas barras de filtro (formato / classe) depois de mudar o filtro por um card
+function sincronizarBotoesFiltro(){
+  document.querySelectorAll('.filter-btn[data-filtergroup="formato"]').forEach(b=>b.classList.toggle('active', (b.dataset.filter||null)===state.activeFilter));
+  if(!state.activeClassFilter) document.querySelectorAll('.filter-btn[data-filtergroup="classe"]').forEach(b=>b.classList.toggle('active', !b.dataset.filter));
 }
 
 // Origem do registro (mesma regra do Relatório): Xiamen/Nanshan pelo texto breve = CHINES;
@@ -3712,18 +3726,20 @@ document.getElementById('kpiOrigemRow').addEventListener('click', e=>{
   state.activeOrigem = state.activeOrigem===k ? null : k;
   renderAll();
 });
-// card da Visão geral -> Relatório já filtrado (status do card + formato/classe/origem ativos no painel)
+// card da Visão geral -> filtra o próprio painel (não muda de tela)
 document.getElementById('kpiHeroGrid').addEventListener('click', e=>{
-  const b=e.target.closest('[data-kpi-card]'); if(!b) return;
-  if(!mb52Tab.linhas || !mb52Tab.linhas.length){ showToast('Carregue os arquivos do dia para abrir o Relatório.'); return; }
-  mb52TabLimparTudo();
-  mb52Tab.cardFiltro = b.dataset.kpiCard || null;
-  const fmt = b.dataset.kpiFormato || state.activeFilter;
-  if(fmt) mb52Tab.filtros.formato.add(fmt);
-  const cf = state.activeClassFilter;
-  if(cf) (cf.length===1 ? ORDEM_CLASSIFICACAO.filter(c=>c.startsWith(cf)) : [cf]).forEach(c=>mb52Tab.filtros.classe.add(c));
-  if(state.activeOrigem) mb52Tab.filtros.origem.add(state.activeOrigem);
-  showMb52View();
+  const b=e.target.closest('[data-kpi-acao]'); if(!b) return;
+  const acao=b.dataset.kpiAcao;
+  if(acao==='todos'){
+    state.activeStatusCard=null; state.activeFilter=null; state.activeClassFilter=null; state.activeOrigem=null;
+  }else if(acao==='formato'){
+    const fmt=b.dataset.kpiFormato||null; if(!fmt) return;
+    state.activeFilter = state.activeFilter===fmt ? null : fmt;
+  }else{
+    state.activeStatusCard = state.activeStatusCard===acao ? null : acao;
+  }
+  sincronizarBotoesFiltro();
+  renderAll();
 });
 
 /* ============================================================
@@ -3788,8 +3804,12 @@ function renderAll(){
   // aplica também o filtro de classificação (L/M/H ou L1..H3), em cima do filtro de formato.
   // As seções de Ocupação física (capacidade por rua) usam só o filtro de formato — a capacidade
   // do armazém não muda por classificação, então essas seções continuam com o mb52Fmt/mb51Fmt.
-  const mb52 = mb52Fmt.filter(r=>matchesClassFilter(r.classificacao));
+  const mb52TodosStatus = mb52Fmt.filter(r=>matchesClassFilter(r.classificacao));
   const mb51 = mb51Fmt.filter(r=>matchesClassFilter(r.classificacao));
+  // card de status clicado na Visão geral (Estoque livre / CQ / HFI): filtra as seções de estoque.
+  // Ocupação física e cobertura continuam na base completa (elas já são calculadas só com o livre).
+  const stCard = state.activeStatusCard;
+  const mb52 = stCard ? mb52TodosStatus.filter(r=>r.status===stCard) : mb52TodosStatus;
 
   const sections=[
     ['Ocupação',                ()=>renderOcupacao(mb52Fmt)],
@@ -3800,7 +3820,7 @@ function renderAll(){
     ['HFI',                     ()=>renderHFI(mb52)],
     ['Ocupação HFI/CQ',         ()=>renderOcupacaoHFI(mb52Fmt)],
     ['Valor Agregado Operacional', ()=>renderIVAO(mb52, mb51)],
-    ['Visão Geral (KPIs)',      ()=>renderKPIHero(mb52Fmt, mb52)],
+    ['Visão Geral (KPIs)',      ()=>renderKPIHero(mb52Fmt, mb52TodosStatus)],
     ['Origem do metal',         ()=>renderKPIOrigem(mb52FmtTodasOrigens.filter(r=>matchesClassFilter(r.classificacao)))],
     ['Alertas Operacionais',    ()=>renderAlertasOperacionais(mb52Fmt, mb52)]
   ];
@@ -3827,6 +3847,7 @@ function renderAll(){
   if(state.activeFilter) filterParts.push(labelMetal(state.activeFilter));
   if(state.activeClassFilter) filterParts.push('Classe '+state.activeClassFilter);
   if(state.activeOrigem) filterParts.push(state.activeOrigem==='CHINES'?'Metal Chinês':'Novelis');
+  if(state.activeStatusCard) filterParts.push({ 'LIVRE':'Estoque livre', 'CONT QUAL':'Controle de qualidade', 'HFI':'HFI bloqueado' }[state.activeStatusCard]);
   const filterLabel = filterParts.length ? filterParts.join(' · ') : null;
   const filterBadgeEl = document.getElementById('filterActiveBadge');
   if(filterLabel){
