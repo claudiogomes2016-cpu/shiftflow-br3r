@@ -1133,6 +1133,24 @@ button.mb52-kpi.sel{background:var(--brand-bg);outline:2px solid var(--brand);ou
 html[data-theme="dark"] .mb52-status-sel.st-rma,html[data-theme="dark"] .mb52-st-btn.st-rma:not(.active){color:#8FA6FF;border-color:#8FA6FF;}
 .mb52-cls{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;color:#fff;min-width:34px;}
 @media (max-width:760px){ .topbar{flex-wrap:wrap;} }
+/* Visão geral — cards clicáveis + origem do metal */
+button.kpi-hero-card{font-family:var(--font);text-align:left;color:inherit;cursor:pointer;transition:transform .08s ease, box-shadow .15s ease;}
+button.kpi-hero-card:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.12);}
+.kpi-hero-link{font-size:12px;font-weight:700;color:var(--brand);margin-top:8px;opacity:0;transition:opacity .15s;}
+button.kpi-hero-card:hover .kpi-hero-link{opacity:1;}
+.kpi-origem-row{display:grid;grid-template-columns:auto 1fr 1fr;gap:14px;align-items:stretch;margin:-6px 0 20px;}
+@media (max-width:760px){ .kpi-origem-row{grid-template-columns:1fr;} }
+.kpi-origem-title{writing-mode:vertical-rl;transform:rotate(180deg);font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-faint);text-align:center;}
+@media (max-width:760px){ .kpi-origem-title{writing-mode:horizontal-tb;transform:none;text-align:left;} }
+.kpi-origem-card{font-family:var(--font);text-align:left;cursor:pointer;background:var(--surface);color:var(--ink);border:1px solid var(--border-soft);border-left:6px solid var(--og-cor);box-shadow:var(--shadow-card);padding:14px 18px;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"nome acao" "num sub";align-items:end;column-gap:18px;row-gap:4px;transition:background .15s, box-shadow .15s;}
+.kpi-origem-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.12);}
+.kpi-origem-card.active{background:var(--og-cor);color:#fff;border-color:var(--og-cor);}
+.kpi-origem-nome{grid-area:nome;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;}
+.kpi-origem-num{grid-area:num;font-family:var(--mono);font-size:30px;font-weight:700;line-height:1;}
+.kpi-origem-num small{font-size:13px;margin-left:6px;opacity:.75;}
+.kpi-origem-sub{grid-area:sub;font-size:13.5px;font-weight:600;opacity:.85;padding-bottom:3px;}
+.kpi-origem-acao{grid-area:acao;font-size:11.5px;font-weight:700;opacity:.7;text-align:right;}
+.capturing .kpi-hero-link,.capturing .kpi-origem-acao{display:none!important;}
 /* detalhamento por formato — barras horizontais empilhadas */
 .det-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin:0 0 16px;}
 .det-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;}
@@ -1265,6 +1283,7 @@ html[data-theme="dark"] .mb52-status-sel.st-rma,html[data-theme="dark"] .mb52-st
     <span class="linha02-picker-note">o outro formato fica sem entrada prevista enquanto durar a conversão</span>
   </div>
   <div class="kpi-hero-grid" id="kpiHeroGrid"></div>
+  <div class="kpi-origem-row" id="kpiOrigemRow"></div>
 
   <div class="alerts-strip" id="alertsStrip"></div>
 
@@ -2065,6 +2084,13 @@ function validarOcupacao(){
 // o metal importado (Xiamen / Nanshan) fica no armazém separado e tem a sua própria
 // suficiência em computeSuficienciaMetalChines() — somá-lo aqui misturava 5 UN da rua
 // com centenas de toneladas do outro armazém no mesmo card.
+// Com o card "Metal Chinês" selecionado, a cobertura mostrada é a do armazém importado
+// (o metal importado não entra em computeSuficiencia, por isso daria 0 dias em tudo).
+function suficienciaDoPainel(registros){
+  return state.activeOrigem==='CHINES'
+    ? computeSuficienciaMetalChines(registros, state.mediaConsumoMap)
+    : computeSuficiencia(registros, state.mediaConsumoMap);
+}
 function computeSuficiencia(mb52proc, mediaConsumoMap){
   const estoqueKgPorMetal=new Map();
   for(const r of mb52proc){
@@ -2297,7 +2323,8 @@ const state={
   mb51proc: null,
   lastUpdate: null,
   activeFilter: null,   // null = Todos; string = formato selecionado
-  activeClassFilter: null,  // null = Todos; 'L'/'M'/'H' (grupo) ou 'L1'/'L2'/'L3'/'M'/'H1'/'H2'/'H3' (detalhado)
+  activeClassFilter: null,
+  activeOrigem: null,   // null = todas; 'NOVELIS' | 'CHINES' (Xiamen + Nanshan) — cards de origem da Visão geral  // null = Todos; 'L'/'M'/'H' (grupo) ou 'L1'/'L2'/'L3'/'M'/'H1'/'H2'/'H3' (detalhado)
   // Linha 02 é conversível — roda 9.1 OZ OU 12 OZ SLEEK, nunca os dois ao mesmo tempo.
   // O formato que não está rodando fica sem entrada prevista; isso não é um problema
   // operacional, é esperado, então os alertas/KPIs de cobertura crítica não devem
@@ -3398,7 +3425,7 @@ function renderSuficiencia(mb52proc){
 function renderOcupacao(mb52proc){
   const ocup=computeOcupacao(mb52proc, state.capacidadeMap);
   const grupos=computeOcupacaoGrupos(ocup, state.capacidadeMap);
-  const suf=computeSuficiencia(mb52proc, state.mediaConsumoMap);
+  const suf=suficienciaDoPainel(mb52proc);
   const sufImportado=computeSuficienciaMetalChines(mb52proc, state.mediaConsumoMap);
   const grid=document.getElementById('ocupacaoGrid');
   grid.innerHTML='';
@@ -3453,7 +3480,7 @@ function renderOcupacao(mb52proc){
       <div class="suf-inline-meta">${fmtTon(s.estoqueKg)} ÷ <input class="suf-footer-input" data-metal="${metal}" type="number" step="1000" value="${s.mediaConsumo}"> kg/dia</div>`;
     // metal importado do mesmo formato: só informa (os dias dele estão no card do armazém importado)
     const imp=sufImportado[metal];
-    if(imp && imp.estoqueKg>0){
+    if(imp && imp.estoqueKg>0 && state.activeOrigem!=='CHINES'){
       const diasTotal = s.mediaConsumo ? (s.estoqueKg+imp.estoqueKg)/s.mediaConsumo : null;
       html += `<div class="suf-pausado-note">+ ${fmtTon(imp.estoqueKg)} no armazém Xiamen/Nanshan · total com importado: <b>${fmtDias(diasTotal)}</b></div>`;
     }
@@ -3609,13 +3636,19 @@ function renderKPIHero(mb52Fmt, mb52){
   const gruposComDados = gruposVisiveis.map(g=>grupos[g]).filter(g=>g && g.capacidade);
   const estoqueSoma=sumArr(gruposComDados.map(g=>g.estoqueUN));
   const capSoma=sumArr(gruposComDados.map(g=>g.capacidade||0));
-  const geralPct = capSoma ? estoqueSoma/capSoma : null;
+  let geralPct = capSoma ? estoqueSoma/capSoma : null;
+  let ocupLabel = 'Ocupação geral', ocupSub = `${estoqueSoma} UN / ${capSoma} UN`;
+  if(state.activeOrigem==='CHINES'){
+    // metal importado fica no armazém próprio — mostra a ocupação dele, não a das ruas
+    const imp = computeOcupacaoMetalChinesNovoArmazem(mb52Fmt);
+    geralPct = imp.percentual; ocupLabel = 'Ocupação armazém Xiamen/Nanshan'; ocupSub = `${imp.estoqueUN} UN / ${imp.capacidade} UN`;
+  }
 
   const livre = computeValorAgregado(mb52.filter(r=>r.status==='LIVRE'));
   const cq = computeValorAgregado(mb52.filter(r=>r.status==='CONT QUAL'));
   const hfi = computeValorAgregado(mb52.filter(r=>r.status==='HFI'));
 
-  const suf = computeSuficiencia(mb52Fmt, state.mediaConsumoMap);
+  const suf = suficienciaDoPainel(mb52Fmt);
   const pausado = linha02FormatoPausado();
   let piorFormato=null, piorDias=null;
   FORMATOS_BOBINA.forEach(m=>{
@@ -3624,20 +3657,74 @@ function renderKPIHero(mb52Fmt, mb52){
     if(d!=null && (piorDias==null || d<piorDias)){ piorDias=d; piorFormato=m; }
   });
 
+  // cada card abre o Relatório (tabela por lote) já filtrado: card -> filtro de status do Relatório
   const cards = [
-    { label:'Ocupação geral', value:fmtPct(geralPct), cls:ocupacaoClasse(geralPct), sub:`${estoqueSoma} UN / ${capSoma} UN` },
-    { label:'Estoque livre', value:livre.totalBobinas+' bobinas', cls:'', sub:fmtTon(livre.totalKg) },
-    { label:'Controle de qualidade', value:cq.totalBobinas+' bobinas', cls: cq.totalBobinas>0?'warn':'ok', sub:fmtTon(cq.totalKg) },
-    { label:'HFI bloqueado', value:hfi.totalBobinas+' bobinas', cls: hfi.totalBobinas>0?'crit':'ok', sub:fmtTon(hfi.totalKg) },
-    { label: piorDias!=null?nivelSuficienciaLabel(suficienciaClasse(piorDias)):'Menor cobertura', value: piorDias!=null?fmtDias(piorDias):'—', cls: suficienciaClasse(piorDias), sub: piorFormato?labelMetal(piorFormato):'sem dados de consumo' }
+    { label:ocupLabel, value:fmtPct(geralPct), cls:ocupacaoClasse(geralPct), sub:ocupSub, card:'livre', formato:null },
+    { label:'Estoque livre', value:livre.totalBobinas+' bobinas', cls:'', sub:fmtTon(livre.totalKg), card:'livre', formato:null },
+    { label:'Controle de qualidade', value:cq.totalBobinas+' bobinas', cls: cq.totalBobinas>0?'warn':'ok', sub:fmtTon(cq.totalKg), card:'cq', formato:null },
+    { label:'HFI bloqueado', value:hfi.totalBobinas+' bobinas', cls: hfi.totalBobinas>0?'crit':'ok', sub:fmtTon(hfi.totalKg), card:'bloq', formato:null },
+    { label: piorDias!=null?nivelSuficienciaLabel(suficienciaClasse(piorDias)):'Menor cobertura', value: piorDias!=null?fmtDias(piorDias):'—', cls: suficienciaClasse(piorDias), sub: piorFormato?labelMetal(piorFormato):'sem dados de consumo', card:'livre', formato:piorFormato }
   ];
   el.innerHTML = cards.map(c=>`
-    <div class="kpi-hero-card ${c.cls}">
+    <button type="button" class="kpi-hero-card kpi-click ${c.cls}" data-kpi-card="${c.card}" data-kpi-formato="${c.formato||''}" title="Clique para ver os lotes no Relatório">
       <div class="kpi-hero-label">${c.label}</div>
       <div class="kpi-hero-value ${c.cls}">${c.value}</div>
       <div class="kpi-hero-sub">${c.sub}</div>
-    </div>`).join('');
+      <div class="kpi-hero-link">ver lotes ›</div>
+    </button>`).join('');
 }
+
+// Origem do registro (mesma regra do Relatório): Xiamen/Nanshan pelo texto breve = CHINES;
+// lote com classificação da Novelis (L1..H3) = NOVELIS; o resto (sem PROCV) = OUTROS.
+function origemDoRegistro(r){
+  if(ehMetalChines(r)) return 'CHINES';
+  return ORDEM_CLASSIFICACAO.includes(r.classificacao) ? 'NOVELIS' : 'OUTROS';
+}
+function renderKPIOrigem(registros){
+  const el=document.getElementById('kpiOrigemRow');
+  if(!el) return;
+  // conta bobinas físicas (lotes distintos) de todo o estoque de corpo de lata (livre + CQ + HFI)
+  const resumo = og => {
+    const lotes=new Map(); let kg=0, x=0, n=0;
+    registros.forEach(r=>{
+      if(!ehMetalBobina(r.metal) || origemDoRegistro(r)!==og) return;
+      kg+=r.qtd||0;
+      const k=r.lote||(r.sku+'|'+r.status+'|'+r.qtd);
+      if(!lotes.has(k)) lotes.set(k, r.classificacao);
+    });
+    for(const c of lotes.values()){ if(c===FORN_XIAMEN) x++; else if(c===FORN_NANSHAN) n++; }
+    return { bobinas:lotes.size, kg, x, n };
+  };
+  const nov=resumo('NOVELIS'), chi=resumo('CHINES');
+  const card=(k,nome,cor,d,sub)=>`<button type="button" class="kpi-origem-card${state.activeOrigem===k?' active':''}" data-origem-dash="${k}" style="--og-cor:${cor}" title="${state.activeOrigem===k?'Clique para voltar a ver todas as origens':'Clique para filtrar o painel inteiro por '+nome}">
+      <div class="kpi-origem-nome">${nome}</div>
+      <div class="kpi-origem-num">${d.bobinas}<small>bobinas</small></div>
+      <div class="kpi-origem-sub">${sub}</div>
+      <div class="kpi-origem-acao">${state.activeOrigem===k?'✓ filtrando o painel · clique para limpar':'clique para filtrar o painel'}</div>
+    </button>`;
+  el.innerHTML = `<div class="kpi-origem-title">Origem do metal</div>`
+    + card('NOVELIS','Metal Novelis','#1140FE',nov,`${fmtTon(nov.kg)} em estoque`)
+    + card('CHINES','Metal Chinês','#B91C1C',chi,`Xiamen ${chi.x} · Nanshan ${chi.n} · ${fmtTon(chi.kg)}`);
+}
+document.getElementById('kpiOrigemRow').addEventListener('click', e=>{
+  const b=e.target.closest('[data-origem-dash]'); if(!b) return;
+  const k=b.dataset.origemDash;
+  state.activeOrigem = state.activeOrigem===k ? null : k;
+  renderAll();
+});
+// card da Visão geral -> Relatório já filtrado (status do card + formato/classe/origem ativos no painel)
+document.getElementById('kpiHeroGrid').addEventListener('click', e=>{
+  const b=e.target.closest('[data-kpi-card]'); if(!b) return;
+  if(!mb52Tab.linhas || !mb52Tab.linhas.length){ showToast('Carregue os arquivos do dia para abrir o Relatório.'); return; }
+  mb52TabLimparTudo();
+  mb52Tab.cardFiltro = b.dataset.kpiCard || null;
+  const fmt = b.dataset.kpiFormato || state.activeFilter;
+  if(fmt) mb52Tab.filtros.formato.add(fmt);
+  const cf = state.activeClassFilter;
+  if(cf) (cf.length===1 ? ORDEM_CLASSIFICACAO.filter(c=>c.startsWith(cf)) : [cf]).forEach(c=>mb52Tab.filtros.classe.add(c));
+  if(state.activeOrigem) mb52Tab.filtros.origem.add(state.activeOrigem);
+  showMb52View();
+});
 
 /* ============================================================
    ALERTAS OPERACIONAIS
@@ -3649,7 +3736,7 @@ function renderAlertasOperacionais(mb52Fmt, mb52){
   const el=document.getElementById('alertsStrip');
   if(!el) return;
   const ocup = computeOcupacao(mb52Fmt, state.capacidadeMap);
-  const suf = computeSuficiencia(mb52Fmt, state.mediaConsumoMap);
+  const suf = suficienciaDoPainel(mb52Fmt);
   const pausado = linha02FormatoPausado();
   const alerts=[];
 
@@ -3691,8 +3778,13 @@ function renderAll(){
 
   // aplica filtro por formato (null = Todos)
   const f = state.activeFilter;
-  const mb52Fmt = f ? state.mb52proc.filter(r=>r.metal===f) : state.mb52proc;
-  const mb51Fmt = f ? state.mb51proc.filter(r=>r.metal===f) : state.mb51proc;
+  const mb52FmtTodasOrigens = f ? state.mb52proc.filter(r=>r.metal===f) : state.mb52proc;
+  const mb51FmtTodasOrigens = f ? state.mb51proc.filter(r=>r.metal===f) : state.mb51proc;
+  // filtro de origem (cards Novelis / Metal Chinês da Visão geral), em cima do filtro de formato
+  const og = state.activeOrigem;
+  const porOrigem = r => !og || origemDoRegistro(r)===og;
+  const mb52Fmt = og ? mb52FmtTodasOrigens.filter(porOrigem) : mb52FmtTodasOrigens;
+  const mb51Fmt = og ? mb51FmtTodasOrigens.filter(porOrigem) : mb51FmtTodasOrigens;
   // aplica também o filtro de classificação (L/M/H ou L1..H3), em cima do filtro de formato.
   // As seções de Ocupação física (capacidade por rua) usam só o filtro de formato — a capacidade
   // do armazém não muda por classificação, então essas seções continuam com o mb52Fmt/mb51Fmt.
@@ -3709,6 +3801,7 @@ function renderAll(){
     ['Ocupação HFI/CQ',         ()=>renderOcupacaoHFI(mb52Fmt)],
     ['Valor Agregado Operacional', ()=>renderIVAO(mb52, mb51)],
     ['Visão Geral (KPIs)',      ()=>renderKPIHero(mb52Fmt, mb52)],
+    ['Origem do metal',         ()=>renderKPIOrigem(mb52FmtTodasOrigens.filter(r=>matchesClassFilter(r.classificacao)))],
     ['Alertas Operacionais',    ()=>renderAlertasOperacionais(mb52Fmt, mb52)]
   ];
   const erros=[];
@@ -3733,6 +3826,7 @@ function renderAll(){
   const filterParts = [];
   if(state.activeFilter) filterParts.push(labelMetal(state.activeFilter));
   if(state.activeClassFilter) filterParts.push('Classe '+state.activeClassFilter);
+  if(state.activeOrigem) filterParts.push(state.activeOrigem==='CHINES'?'Metal Chinês':'Novelis');
   const filterLabel = filterParts.length ? filterParts.join(' · ') : null;
   const filterBadgeEl = document.getElementById('filterActiveBadge');
   if(filterLabel){
