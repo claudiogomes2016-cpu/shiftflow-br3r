@@ -1082,7 +1082,10 @@ body {
       <div style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.5px">Disciplina <span style="color:var(--blue)">BR3R</span></div>
       <div style="font-size:13px;color:var(--text3);margin-top:3px">Gestão de ocorrências disciplinares</div>
     </div>
-    <button onclick="app.openDiscModal()" style="background:var(--blue);border:none;color:#fff;border-radius:10px;padding:10px 18px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">+ Nova Ocorrência</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="app.exportDiscCSV()" style="background:var(--bg4);border:1px solid var(--border);color:var(--text2);border-radius:10px;padding:10px 18px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">📊 Exportar CSV</button>
+      <button onclick="app.openDiscModal()" style="background:var(--blue);border:none;color:#fff;border-radius:10px;padding:10px 18px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">+ Nova Ocorrência</button>
+    </div>
   </div>
   <div id="disc-periodo-btns" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap"></div>
   <div class="g2" style="margin-bottom:16px">
@@ -2603,6 +2606,22 @@ const app = {
     const link = document.createElement('a');
     link.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
     link.download = 'BALL_BR3R_' + new Date().toISOString().slice(0,10) + '.csv';
+    link.click();
+  },
+
+  exportDiscCSV() {
+    const esc = v => '"' + String(v||'').replace(/"/g,"'") + '"';
+    const h = ['Data','Conferente','Tipo','Descrição','Ação','Data da Ação','Registrado Por'];
+    let csv = '﻿' + h.join(';') + '\n';
+    (this._discData || []).forEach(r => {
+      const dt = r.data_ocorrencia
+        ? new Date(r.data_ocorrencia + 'T12:00:00Z').toLocaleDateString('pt-BR')
+        : new Date(r.created_at).toLocaleDateString('pt-BR');
+      csv += [dt, esc(r.conferente), esc(r.tipo), esc(r.descricao), esc(r.acao || 'Sem ação'), esc(r.acao_data || ''), esc(r.registrado_por || '')].join(';') + '\n';
+    });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+    link.download = 'BALL_BR3R_Ocorrencias_' + new Date().toISOString().slice(0,10) + '.csv';
     link.click();
   },
 
