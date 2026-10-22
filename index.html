@@ -2924,10 +2924,16 @@ const app = {
       options: {
         responsive:true, maintainAspectRatio:false,
         onClick: (evt, els) => {
-          if(!els.length) { this._discFiltroTipo = null; this.renderDiscConfList(this._discData); return; }
+          if(!els.length) {
+            this._discFiltroTipo = null;
+            this.renderDiscConfChart(data);
+            this.renderDiscConfList(this._discData);
+            return;
+          }
           const tipo = tipoLabels[els[0].index];
           this._discFiltroTipo = tipo;
           this._discFiltroConf = null;
+          this.renderDiscConfChart(data.filter(r => r.tipo === tipo));
           this.renderDiscConfList(this._discData);
         },
         plugins: {
@@ -2962,10 +2968,16 @@ const app = {
       options: {
         responsive:true, maintainAspectRatio:false,
         onClick: (evt, els) => {
-          if(!els.length) { this._discFiltroConf = null; this.renderDiscConfList(this._discData); return; }
+          if(!els.length) {
+            this._discFiltroConf = null;
+            this.renderDiscTipoChart(data);
+            this.renderDiscConfList(this._discData);
+            return;
+          }
           const conf = confLabels[els[0].index];
           this._discFiltroConf = conf;
           this._discFiltroTipo = null;
+          this.renderDiscTipoChart(data.filter(r => this.normConf(r.conferente) === conf));
           this.renderDiscConfList(this._discData);
         },
         plugins: {
