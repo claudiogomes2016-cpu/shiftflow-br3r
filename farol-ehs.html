@@ -6,27 +6,40 @@
 <title>Farol EHS Atrasados</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&family=Yellowtail&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#eef1f6; --card:#fff; --ink:#111827; --muted:#5b6474; --line:#dde2ea; --field:#eef1f6;
-  --blue:#3b6cf6; --navy:#05070d;
-  --red:#d63a2f; --red-bg:#fdecea; --yel:#d49b00; --yel-bg:#fff6dc; --grn:#1f9d55; --grn-bg:#e6f6ec;
-  --wa:#e7f8dc;
+  --blue:#4f7cff; --navy:#000;
+  --red:#d63a2f; --red-bg:#fdecea; --yel:#d49b00; --yel-bg:#fff6dc;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Barlow,system-ui,sans-serif;font-size:15px}
-header{background:var(--navy);color:#fff;border-bottom:4px solid var(--blue)}
-.hd{max-width:1180px;margin:0 auto;padding:18px 16px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.hd h1{margin:0;font:800 34px/1 'Barlow Condensed',sans-serif;letter-spacing:.5px}
-.hd h1 span{color:var(--blue)}
-.hd .sub{font:700 13px 'Barlow Condensed';letter-spacing:1px;margin-top:4px}
-.hd .tag{font:600 11px 'Barlow Condensed';letter-spacing:3px;color:#aab3c5;margin-top:10px;border-top:1px solid #2a3142;padding-top:8px}
-.hd .ref{margin-left:auto;text-align:right}
-.hd .ref small{display:block;font:700 10px 'Barlow Condensed';letter-spacing:3px;color:#8d97ab}
-.hd .ref b{font:800 26px 'Barlow Condensed'}
-.hd .ref b i{font-style:normal;font-weight:600;font-size:17px;color:#aab3c5}
-main{max-width:1180px;margin:0 auto;padding:20px 16px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:20px}
+
+/* ---------- banner padrão (estático) ---------- */
+.topo{padding:10px 6px 0}
+.hdr{display:flex;align-items:center;background:linear-gradient(90deg,#000 55%,#0a1124);color:#fff;border-radius:8px;border-bottom:4px solid var(--blue);padding:14px 18px;gap:18px;font-family:Montserrat,sans-serif}
+.hdr .emb{width:46px;height:56px;flex:none}
+.hdr .sep{width:1px;align-self:stretch;background:#2b3243}
+.hdr .tit{flex:1;min-width:0}
+.hdr h1{margin:0;font-weight:800;font-size:24px;line-height:1.05;letter-spacing:.3px}
+.hdr h1 span{color:var(--blue)}
+.hdr .sub{font-weight:700;font-size:11px;margin-top:3px}
+.hdr .tag{display:inline-block;white-space:nowrap;font-weight:600;font-size:10.5px;letter-spacing:2.6px;margin-top:8px;padding-top:7px;border-top:1px solid #2b3243}
+.hdr .ref{text-align:right;padding-right:4px}
+.hdr .ref small{display:block;font-weight:600;font-size:9px;letter-spacing:3px;color:#9aa3b6}
+.hdr .ref b{font-weight:800;font-size:22px}
+.hdr .ref b i{font-style:normal;font-weight:500;font-size:16px;color:#c9cfdb}
+.hdr .ref em{display:block;font-style:normal;font-family:Barlow;font-size:12.5px;color:#c9cfdb;margin-top:2px}
+.hdr .ball{font-family:Yellowtail,cursive;font-size:34px;line-height:1;padding:0 6px}
+@media (max-width:760px){
+  .hdr{flex-wrap:wrap;gap:12px}
+  .hdr .tag{letter-spacing:1.2px;white-space:normal}
+  .hdr .ref{text-align:left}
+  .hdr .sep.r{display:none}
+}
+
+main{padding:20px 16px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:20px}
 @media (max-width:860px){main{grid-template-columns:1fr}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
 .card+.card{margin-top:20px}
@@ -35,23 +48,23 @@ h2 .n{width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff
 p.hint{color:var(--muted);font-size:13.5px;margin:0 0 12px}
 label{display:block;color:var(--muted);font-size:13px;margin:12px 0 4px}
 textarea,input{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
-textarea{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-height:200px;resize:vertical}
+textarea{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-height:240px;resize:vertical}
 .row{display:grid;grid-template-columns:110px 1fr;gap:10px}
-.legend{font-size:12.5px;color:var(--muted);margin-top:10px}
+.legend{font-size:12.5px;color:var(--muted);margin-top:10px;display:flex;gap:14px;align-items:center}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 button{font:600 14.5px Barlow,sans-serif;border-radius:8px;padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
 button:hover{border-color:#b8c0cd}
 button.pri{background:var(--blue);border-color:var(--blue);color:#fff}
 button.wa{background:#1fa855;border-color:#1fa855;color:#fff}
 .status{font-size:13px;color:var(--muted);margin-top:10px;min-height:18px}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.kpi{border:2px solid var(--line);border-radius:10px;padding:10px 4px;text-align:center;cursor:pointer;background:#f3f5f9;transition:transform .1s}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kpi{border:2px solid var(--line);border-radius:10px;padding:10px 4px;text-align:center;cursor:pointer;background:#f3f5f9}
 .kpi b{display:block;font:800 30px/1 'Barlow Condensed'}
 .kpi small{font:600 11px 'Barlow Condensed';letter-spacing:1.5px}
 .kpi.all{border-color:#1a1f2b}
 .kpi.r{background:var(--red-bg);border-color:#efb3ad;color:var(--red)}
 .kpi.y{background:var(--yel-bg);border-color:#f0d27a;color:var(--yel)}
-.kpi.g{background:var(--grn-bg);border-color:#9fd8b4;color:var(--grn)}
 .kpi.on{outline:3px solid var(--blue);outline-offset:1px}
 .list{margin-top:6px}
 .item{display:grid;grid-template-columns:14px 1fr 120px 30px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
@@ -60,38 +73,47 @@ button.wa{background:#1fa855;border-color:#1fa855;color:#fff}
 .bar i{display:block;height:100%;border-radius:4px}
 .item b{text-align:right;font:700 19px 'Barlow Condensed'}
 .empty{color:var(--muted);padding:16px 0}
-.msg{background:var(--wa);border:1px solid #c8e8b4;border-radius:10px;padding:12px 14px;white-space:pre-wrap;font-size:14.5px;line-height:1.5}
 .banner-wrap{background:#0b0e16;border-radius:10px;padding:8px}
 #banner{display:block;width:100%;height:auto;border-radius:6px}
 </style>
 </head>
 <body>
-<header><div class="hd">
-  <div>
-    <h1>FAROL EHS <span>ATRASADOS</span></h1>
-    <div class="sub">PLANO DE AÇÃO FÁBRICA · SEGURANÇA</div>
-    <div class="tag">PESSOAS | PROCESSOS | RESULTADOS · PLANTA TRÊS RIOS – BR3R</div>
-  </div>
-  <div class="ref"><small>REFERÊNCIA</small><b id="refTop">--/--</b></div>
-</div></header>
+<div class="topo">
+  <header class="hdr">
+    <svg class="emb" viewBox="0 0 46 56" aria-hidden="true">
+      <path d="M3 4h40v30c0 11-9 17-20 20C12 51 3 45 3 34z" fill="#1d3f8f" stroke="#c9d6f5" stroke-width="2"/>
+      <path d="M5 30c8-6 14-2 19-6s10-6 17-3v13c0 9-8 15-18 18C13 49 5 43 5 34z" fill="#2f7a4d"/>
+      <path d="M6 36c9-4 17 2 34-4" stroke="#9fd0ff" stroke-width="2.5" fill="none"/>
+      <circle cx="33" cy="13" r="4" fill="#f5f7ff"/>
+    </svg>
+    <div class="sep"></div>
+    <div class="tit">
+      <h1>FAROL EHS <span>ATRASADOS</span></h1>
+      <div class="sub">PLANO DE AÇÃO FÁBRICA · SEGURANÇA</div>
+      <div class="tag">PESSOAS | PROCESSOS | RESULTADOS · PLANTA TRÊS RIOS – BR3R</div>
+    </div>
+    <div class="sep r"></div>
+    <div class="ref">
+      <small>REFERÊNCIA</small>
+      <b id="refTop">--/--</b>
+      <em>cole a dinâmica de atrasados</em>
+    </div>
+    <div class="sep r"></div>
+    <div class="ball">Ball</div>
+  </header>
+</div>
 
 <main>
 <section>
   <div class="card">
     <h2><span class="n">1</span>Cole os dados</h2>
-    <p class="hint">No Excel, selecione a tabela dinâmica filtrada em <b>Atrasado</b> (nomes + quantidades), copie (Ctrl+C) e cole aqui (Ctrl+V). Linhas como "Total Geral" e "(vazio)" são ignoradas.</p>
+    <p class="hint">No Excel, selecione a tabela dinâmica filtrada em <b>Atrasado</b> (nomes + quantidades), copie (Ctrl+C) e cole aqui (Ctrl+V). Linhas como "Status", cabeçalho e "Total Geral" são ignoradas.</p>
     <textarea id="dados" spellcheck="false" placeholder="Rótulos de Linha&#9;Contagem de Responsável(Who)&#10;Fulano&#9;3&#10;Total Geral&#9;3"></textarea>
     <div class="row">
       <div><label for="lim">Amarelo até</label><input id="lim" type="number" min="1" value="2"></div>
-      <div><label for="titulo">Título da mensagem</label><input id="titulo" value="Farol EHS – Ações Atrasadas"></div>
+      <div><label for="dataRef">Data de referência</label><input id="dataRef" type="date"></div>
     </div>
-    <label for="dataRef">Data de referência</label>
-    <input id="dataRef" type="date">
-    <label for="saud">Saudação (o "Bom dia / Boa tarde / Boa noite" muda sozinho pelo horário)</label>
-    <input id="saud" value="Segue o farol das ações atrasadas do Plano de Ação EHS.">
-    <label for="fech">Fechamento</label>
-    <input id="fech" value="Peço aos responsáveis em vermelho que atualizem suas ações no sistema até o fim do dia. 🙏">
-    <div class="legend">🟢 0 atrasos · 🟡 1 até o limite · 🔴 acima do limite</div>
+    <div class="legend"><span><i style="background:var(--yel)"></i>1 até o limite</span><span><i style="background:var(--red)"></i>acima do limite</span></div>
     <div class="btns">
       <button class="pri" id="bSalvar">Salvar dados</button>
       <button id="bLimpar">Limpar</button>
@@ -108,33 +130,28 @@ button.wa{background:#1fa855;border-color:#1fa855;color:#fff}
       <div class="kpi all" data-f="all"><b id="kAll">0</b><small>ATRASOS</small></div>
       <div class="kpi r" data-f="r"><b id="kR">0</b><small>VERMELHO</small></div>
       <div class="kpi y" data-f="y"><b id="kY">0</b><small>AMARELO</small></div>
-      <div class="kpi g" data-f="g"><b id="kG">0</b><small>VERDE</small></div>
     </div>
     <p class="hint" style="margin:10px 0 0" id="filtroTxt"></p>
     <div class="list" id="lista"></div>
   </div>
 
   <div class="card">
-    <h2><span class="n">3</span>Banner + mensagem para o WhatsApp</h2>
+    <h2><span class="n">3</span>Banner para o WhatsApp</h2>
     <div class="banner-wrap"><canvas id="banner" width="1080" height="1080"></canvas></div>
     <div class="btns">
-      <button class="wa" id="bTudo">Copiar banner + mensagem</button>
-      <button id="bImg">Copiar só o banner</button>
-      <button id="bTxt">Copiar só a mensagem</button>
+      <button class="wa" id="bImg">Copiar banner</button>
       <button id="bShare">Compartilhar</button>
       <button id="bPng">Baixar PNG</button>
     </div>
-    <div class="status" id="st2">Dica: cole o banner no WhatsApp (Ctrl+V) e, na legenda, cole a mensagem.</div>
-    <div class="msg" id="msg" style="margin-top:12px"></div>
+    <div class="status" id="st2">Clique em "Copiar banner" e cole no WhatsApp (Ctrl+V).</div>
   </div>
 </section>
 </main>
 
 <script>
 const $ = id => document.getElementById(id);
-const KEY = 'farolEHS.v1';
-const COR = { r:'#d63a2f', y:'#e0a800', g:'#1f9d55' };
-const EMO = { r:'🔴', y:'🟡', g:'🟢' };
+const KEY = 'farolEHS.v2';
+const COR = { r:'#d63a2f', y:'#e0a800' };
 const EXEMPLO = `Rótulos de Linha\tContagem de Responsável(Who)
 EHS Corporativo\t2
 Luana Barbara\t1
@@ -148,7 +165,8 @@ let filtro = 'all';
 
 function hojeISO(){ const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
 function refDate(){ const v=$('dataRef').value||hojeISO(); const [y,m,d]=v.split('-'); return {dm:`${d}/${m}`, y}; }
-function saudacao(){ const h=new Date().getHours(); return h<12?['Bom dia','☀️']:h<18?['Boa tarde','👋']:['Boa noite','🌙']; }
+function saudacao(){ const h=new Date().getHours(); return h<12?'Bom dia':h<18?'Boa tarde':'Boa noite'; }
+function limite(){ return Math.max(1, +$('lim').value || 2); }
 
 function parse(txt){
   const map = new Map();
@@ -159,38 +177,25 @@ function parse(txt){
     const name = m[1].replace(/\s+/g,' ').trim();
     if (!name || /^(total|soma|r[óo]tulos|\(vazio\)|\(em branco\)|em branco)/i.test(name)) continue;
     const n = Math.round(parseFloat(m[2].replace(',','.')));
-    map.set(name, (map.get(name)||0) + n);
+    if (n > 0) map.set(name, (map.get(name)||0) + n);
   }
   return [...map].map(([name,n])=>({name,n})).sort((a,b)=>b.n-a.n || a.name.localeCompare(b.name));
 }
-function nivel(n){ const lim=Math.max(1,+$('lim').value||2); return n<=0?'g':n<=lim?'y':'r'; }
 
 function estado(){
-  const itens = parse($('dados').value).map(i=>({...i, c:nivel(i.n)}));
+  const lim = limite();
+  const itens = parse($('dados').value).map(i=>({...i, c: i.n<=lim ? 'y' : 'r'}));
   const vis = filtro==='all' ? itens : itens.filter(i=>i.c===filtro);
-  return { itens, vis, total: itens.reduce((s,i)=>s+i.n,0), visTotal: vis.reduce((s,i)=>s+i.n,0) };
-}
-
-function mensagem(s){
-  const [ola, emo] = saudacao();
-  const {dm} = refDate();
-  const L = [`${ola}, pessoal! ${emo}`];
-  if ($('saud').value.trim()) L.push($('saud').value.trim());
-  L.push('', `🚦 *${$('titulo').value.trim()||'Farol EHS'}* (${dm})`, '');
-  if (!s.vis.length) L.push('✅ Nenhuma ação atrasada!');
-  for (const i of s.vis) L.push(`${EMO[i.c]} ${i.name}: ${i.n}`);
-  if (s.vis.length) L.push('', `*Total: ${s.visTotal} ${s.visTotal===1?'ação atrasada':'ações atrasadas'}*`);
-  if ($('fech').value.trim()) L.push('', $('fech').value.trim());
-  return L.join('\n');
+  return { itens, vis, total: itens.reduce((s,i)=>s+i.n,0) };
 }
 
 function render(){
   const s = estado();
   const cnt = c => s.itens.filter(i=>i.c===c).length;
-  $('kAll').textContent = s.total; $('kR').textContent = cnt('r'); $('kY').textContent = cnt('y'); $('kG').textContent = cnt('g');
+  $('kAll').textContent = s.total; $('kR').textContent = cnt('r'); $('kY').textContent = cnt('y');
   document.querySelectorAll('.kpi').forEach(k=>k.classList.toggle('on', k.dataset.f===filtro && filtro!=='all'));
-  const nomes = {all:'todos', r:'só vermelho', y:'só amarelo', g:'só verde'};
-  $('filtroTxt').innerHTML = `Mostrando <b>${nomes[filtro]}</b>. Clique num farol para filtrar a lista, o banner e a mensagem.`;
+  const nomes = {all:'todos', r:'só vermelho', y:'só amarelo'};
+  $('filtroTxt').innerHTML = `Mostrando <b>${nomes[filtro]}</b>. Clique num farol para filtrar a lista e o banner.`;
   const max = Math.max(1, ...s.itens.map(i=>i.n));
   $('lista').innerHTML = s.vis.length ? s.vis.map(i=>`
     <div class="item"><span class="dot" style="background:${COR[i.c]}"></span><span>${esc(i.name)}</span>
@@ -198,53 +203,67 @@ function render(){
     : '<div class="empty">Nenhum dado. Cole a tabela dinâmica no passo 1.</div>';
   const {dm,y} = refDate();
   $('refTop').innerHTML = `${dm} <i>/${y}</i>`;
-  $('msg').textContent = mensagem(s);
   desenhar(s);
 }
 function esc(t){ return t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
 /* ---------- banner (canvas) ---------- */
 function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.roundRect(x,y,w,h,r); }
+function escudo(ctx,x,y,s){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  const sh = new Path2D('M3 4h40v30c0 11-9 17-20 20C12 51 3 45 3 34z');
+  ctx.fillStyle='#1d3f8f'; ctx.fill(sh); ctx.lineWidth=2; ctx.strokeStyle='#c9d6f5'; ctx.stroke(sh);
+  ctx.fillStyle='#2f7a4d'; ctx.fill(new Path2D('M5 30c8-6 14-2 19-6s10-6 17-3v13c0 9-8 15-18 18C13 49 5 43 5 34z'));
+  ctx.strokeStyle='#9fd0ff'; ctx.lineWidth=2.5; ctx.stroke(new Path2D('M6 36c9-4 17 2 34-4'));
+  ctx.fillStyle='#f5f7ff'; ctx.beginPath(); ctx.arc(33,13,4,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+}
 function desenhar(s){
   const cv = $('banner'), ctx = cv.getContext('2d');
-  const W = 1080, P = 56;
+  const W = 1080, P = 48;
   const rows = Math.max(1, s.vis.length);
   const rowH = rows>14 ? 50 : 66, fs = rows>14 ? 27 : 32;
-  const H = 250 + 200 + rows*rowH + 40 + 90;
+  const HH = 200;                       // altura do cabeçalho
+  const ky = HH + 40, kh = 140;
+  const ly = ky + kh + 50;
+  const H = ly + rows*rowH + 40 + 80;
   cv.width = W; cv.height = H;
-  const C = f => `${f}`;
 
-  // fundo
   ctx.fillStyle = '#f2f4f8'; ctx.fillRect(0,0,W,H);
-  // cabeçalho
-  const g = ctx.createLinearGradient(0,0,W,0); g.addColorStop(0,'#05070d'); g.addColorStop(1,'#101a33');
-  ctx.fillStyle = g; ctx.fillRect(0,0,W,230);
-  ctx.fillStyle = '#3b6cf6'; ctx.fillRect(0,230,W,10);
 
+  // cabeçalho padrão
+  const g = ctx.createLinearGradient(0,0,W,0); g.addColorStop(.55,'#000'); g.addColorStop(1,'#0a1124');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,HH);
+  ctx.fillStyle = '#4f7cff'; ctx.fillRect(0,HH,W,8);
+  escudo(ctx, P, 52, 1.75);
+  ctx.fillStyle = '#2b3243'; ctx.fillRect(P+100, 36, 2, 128);
+
+  const tx = P+130;
   ctx.textBaseline = 'alphabetic';
-  ctx.fillStyle = '#fff'; ctx.font = C("800 76px 'Barlow Condensed'");
-  ctx.fillText('FAROL EHS', P, 108);
+  ctx.font = "800 40px Montserrat"; ctx.fillStyle = '#fff';
+  ctx.fillText('FAROL EHS', tx, 84);
   const wF = ctx.measureText('FAROL EHS ').width;
-  ctx.fillStyle = '#5b86ff'; ctx.fillText('ATRASADOS', P+wF, 108);
-  ctx.fillStyle = '#fff'; ctx.font = C("700 26px 'Barlow Condensed'");
-  ctx.fillText('PLANO DE AÇÃO FÁBRICA · SEGURANÇA', P, 148);
-  ctx.fillStyle = '#2a3142'; ctx.fillRect(P,168,600,2);
-  ctx.fillStyle = '#aab3c5'; ctx.font = C("600 20px 'Barlow Condensed'");
-  spaced(ctx,'PESSOAS | PROCESSOS | RESULTADOS · PLANTA TRÊS RIOS – BR3R', P, 200, 2);
+  ctx.fillStyle = '#4f7cff'; ctx.fillText('ATRASADOS', tx+wF, 84);
+  ctx.fillStyle = '#fff'; ctx.font = "700 17px Montserrat";
+  ctx.fillText('PLANO DE AÇÃO FÁBRICA · SEGURANÇA', tx, 112);
+  ctx.fillStyle = '#2b3243'; ctx.fillRect(tx,132,490,2);
+  ctx.fillStyle = '#fff'; ctx.font = "600 12px Montserrat";
+  spaced(ctx,'PESSOAS | PROCESSOS | RESULTADOS · PLANTA TRÊS RIOS – BR3R', tx, 160, 1.3);
 
-  const {dm,y} = refDate();
+  // referência + Ball
+  const bx = W-P;
   ctx.textAlign = 'right';
-  ctx.fillStyle = '#8d97ab'; ctx.font = C("700 18px 'Barlow Condensed'");
-  spacedR(ctx,'REFERÊNCIA', W-P, 92, 4);
-  ctx.fillStyle = '#fff'; ctx.font = C("800 58px 'Barlow Condensed'");
-  const yTxt = '/'+y; ctx.font = C("600 30px 'Barlow Condensed'");
-  const wy = ctx.measureText(yTxt).width;
-  ctx.fillStyle = '#aab3c5'; ctx.fillText(yTxt, W-P, 152);
-  ctx.fillStyle = '#fff'; ctx.font = C("800 58px 'Barlow Condensed'");
-  ctx.fillText(dm, W-P-wy-6, 152);
-  const [ola] = saudacao();
-  ctx.fillStyle = '#aab3c5'; ctx.font = C("500 22px Barlow");
-  ctx.fillText(ola + ', pessoal!', W-P, 196);
+  ctx.font = "48px Yellowtail"; ctx.fillStyle = '#fff'; ctx.fillText('Ball', bx, 118);
+  ctx.fillStyle = '#2b3243'; ctx.fillRect(bx-112, 36, 2, 128);
+  const rx = bx-136;
+  ctx.fillStyle = '#9aa3b6'; ctx.font = "600 13px Montserrat";
+  spacedR(ctx,'REFERÊNCIA', rx, 70, 4);
+  const {dm,y} = refDate();
+  ctx.font = "500 24px Montserrat"; const yTxt = '/'+y, wy = ctx.measureText(yTxt).width;
+  ctx.fillStyle = '#c9cfdb'; ctx.fillText(yTxt, rx, 116);
+  ctx.font = "800 40px Montserrat"; ctx.fillStyle = '#fff'; ctx.fillText(dm, rx-wy-8, 116);
+  ctx.font = "500 20px Barlow"; ctx.fillStyle = '#c9cfdb';
+  ctx.fillText(saudacao()+', pessoal!', rx, 150);
   ctx.textAlign = 'left';
 
   // KPIs
@@ -253,49 +272,51 @@ function desenhar(s){
     {v:s.total, l:'ATRASOS', bg:'#ffffff', bd:'#1a1f2b', fg:'#111827', f:'all'},
     {v:cnt('r'), l:'VERMELHO', bg:'#fdecea', bd:'#efb3ad', fg:'#d63a2f', f:'r'},
     {v:cnt('y'), l:'AMARELO', bg:'#fff6dc', bd:'#f0d27a', fg:'#c48f00', f:'y'},
-    {v:cnt('g'), l:'VERDE', bg:'#e6f6ec', bd:'#9fd8b4', fg:'#1f9d55', f:'g'},
   ];
-  const ky = 280, kh = 140, gap = 20, kw = (W-2*P-3*gap)/4;
+  const gap = 24, kw = (W-2*P-2*gap)/3;
   kp.forEach((k,i)=>{
-    const x = P + i*(kw+gap);
+    const x = P + i*(kw+gap), on = filtro===k.f && filtro!=='all';
     ctx.fillStyle = k.bg; rr(ctx,x,ky,kw,kh,16); ctx.fill();
-    ctx.lineWidth = (filtro===k.f && filtro!=='all') ? 6 : 3;
-    ctx.strokeStyle = (filtro===k.f && filtro!=='all') ? '#3b6cf6' : k.bd; ctx.stroke();
+    ctx.lineWidth = on ? 6 : 3; ctx.strokeStyle = on ? '#4f7cff' : k.bd; ctx.stroke();
     ctx.textAlign = 'center'; ctx.fillStyle = k.fg;
-    ctx.font = C("800 66px 'Barlow Condensed'"); ctx.fillText(k.v, x+kw/2, ky+82);
-    ctx.font = C("700 20px 'Barlow Condensed'"); spacedC(ctx,k.l, x+kw/2, ky+116, 3);
+    ctx.font = "800 70px 'Barlow Condensed'"; ctx.fillText(k.v, x+kw/2, ky+84);
+    ctx.font = "700 21px 'Barlow Condensed'"; spacedC(ctx,k.l, x+kw/2, ky+118, 3);
     ctx.textAlign = 'left';
   });
 
   // lista
-  const ly = 460, max = Math.max(1,...s.itens.map(i=>i.n));
+  const max = Math.max(1,...s.itens.map(i=>i.n));
   ctx.fillStyle = '#fff'; rr(ctx,P-16,ly-16,W-2*P+32,rows*rowH+32,18); ctx.fill();
   if (!s.vis.length){
-    ctx.fillStyle = '#1f9d55'; ctx.font = C("700 32px Barlow");
-    ctx.fillText('✅ Nenhuma ação atrasada!', P+10, ly+44);
+    ctx.fillStyle = '#5b6474'; ctx.font = "600 30px Barlow"; ctx.textBaseline='middle';
+    ctx.fillText('Nenhuma ação atrasada.', P+10, ly+rowH/2); ctx.textBaseline='alphabetic';
   }
   s.vis.forEach((it,i)=>{
     const yy = ly + i*rowH, cy = yy + rowH/2;
     if (i) { ctx.fillStyle = '#e6e9ef'; ctx.fillRect(P, yy, W-2*P, 2); }
     ctx.fillStyle = COR[it.c]; ctx.beginPath(); ctx.arc(P+14, cy, rowH>60?12:10, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#111827'; ctx.font = C(`500 ${fs}px Barlow`); ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#111827'; ctx.font = `500 ${fs}px Barlow`; ctx.textBaseline = 'middle';
     ctx.fillText(fit(ctx,it.name,500), P+44, cy+1);
-    const bx = W-P-330, bw = 260;
-    ctx.fillStyle = '#e9edf3'; rr(ctx,bx,cy-7,bw,14,7); ctx.fill();
-    ctx.fillStyle = COR[it.c]; rr(ctx,bx,cy-7,Math.max(14,bw*it.n/max),14,7); ctx.fill();
-    ctx.textAlign = 'right'; ctx.fillStyle = '#111827'; ctx.font = C(`800 ${fs+8}px 'Barlow Condensed'`);
+    const barx = W-P-330, bw = 260;
+    ctx.fillStyle = '#e9edf3'; rr(ctx,barx,cy-7,bw,14,7); ctx.fill();
+    ctx.fillStyle = COR[it.c]; rr(ctx,barx,cy-7,Math.max(14,bw*it.n/max),14,7); ctx.fill();
+    ctx.textAlign = 'right'; ctx.fillStyle = '#111827'; ctx.font = `800 ${fs+8}px 'Barlow Condensed'`;
     ctx.fillText(it.n, W-P, cy+2); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
   });
 
   // rodapé
-  const fy = H-90;
-  ctx.fillStyle = '#05070d'; ctx.fillRect(0,fy,W,90);
-  ctx.fillStyle = '#3b6cf6'; ctx.fillRect(0,fy,W,6);
-  ctx.font = C("600 22px Barlow"); ctx.fillStyle = '#cfd6e4';
-  const lim = Math.max(1,+$('lim').value||2);
-  ctx.fillText(`🟢 0 atrasos   🟡 1 a ${lim}   🔴 acima de ${lim}`, P, fy+56);
-  ctx.textAlign = 'right'; ctx.fillStyle = '#fff'; ctx.font = C("700 24px 'Barlow Condensed'");
-  ctx.fillText('SEGURANÇA EM PRIMEIRO LUGAR', W-P, fy+56); ctx.textAlign = 'left';
+  const fy = H-80, lim = limite();
+  ctx.fillStyle = '#000'; ctx.fillRect(0,fy,W,80);
+  ctx.fillStyle = '#4f7cff'; ctx.fillRect(0,fy,W,6);
+  ctx.font = "600 22px Barlow"; ctx.fillStyle = '#cfd6e4'; ctx.textBaseline = 'middle';
+  let x = P; const cyF = fy+44;
+  [['#e0a800', `1 a ${lim} atrasos`], ['#d63a2f', `acima de ${lim}`]].forEach(([c,t])=>{
+    ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x+9, cyF, 9, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#cfd6e4'; ctx.fillText(t, x+26, cyF); x += 26 + ctx.measureText(t).width + 34;
+  });
+  ctx.textAlign = 'right'; ctx.fillStyle = '#fff'; ctx.font = "700 20px Montserrat";
+  ctx.fillText('SEGURANÇA EM PRIMEIRO LUGAR', W-P, cyF);
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
 }
 function fit(ctx,t,w){ if (ctx.measureText(t).width<=w) return t; while(t.length && ctx.measureText(t+'…').width>w) t=t.slice(0,-1); return t+'…'; }
 function spaced(ctx,t,x,y,sp){ for (const ch of t){ ctx.fillText(ch,x,y); x += ctx.measureText(ch).width + sp; } }
@@ -306,34 +327,17 @@ function spacedC(ctx,t,x,y,sp){ const a=ctx.textAlign; ctx.textAlign='left'; spa
 /* ---------- copiar / compartilhar ---------- */
 const pngBlob = () => new Promise(r => $('banner').toBlob(r, 'image/png'));
 const st = t => $('st2').textContent = t;
-async function copiarTudo(){
-  render();
-  const txt = $('msg').textContent;
-  try {
-    await navigator.clipboard.write([new ClipboardItem({
-      'image/png': pngBlob(),
-      'text/plain': new Blob([txt], {type:'text/plain'})
-    })]);
-    st('✅ Banner + mensagem copiados. Cole no WhatsApp (Ctrl+V). Se só a imagem aparecer, use "Copiar só a mensagem" e cole na legenda.');
-  } catch(e){ await copiarImg(); }
-}
 async function copiarImg(){
-  try { await navigator.clipboard.write([new ClipboardItem({'image/png': pngBlob()})]); st('✅ Banner copiado. Cole no WhatsApp e depois copie a mensagem para a legenda.'); }
+  render();
+  try { await navigator.clipboard.write([new ClipboardItem({'image/png': pngBlob()})]); st('✅ Banner copiado. Cole no WhatsApp (Ctrl+V).'); }
   catch(e){ st('⚠️ Seu navegador não permite copiar imagem. Use "Baixar PNG" ou "Compartilhar".'); }
-}
-async function copiarTxt(){
-  const txt = $('msg').textContent;
-  try { await navigator.clipboard.writeText(txt); }
-  catch(e){ const t=document.createElement('textarea'); t.value=txt; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
-  st('✅ Mensagem copiada.');
 }
 async function compartilhar(){
   render();
   const file = new File([await pngBlob()], nomeArq(), {type:'image/png'});
-  const data = { files:[file], text: $('msg').textContent };
-  if (navigator.canShare && navigator.canShare(data)){
-    try { await navigator.share(data); } catch(e){}
-  } else { st('⚠️ Compartilhar não está disponível neste navegador (funciona no celular). Use os botões de copiar.'); }
+  if (navigator.canShare && navigator.canShare({files:[file]})){
+    try { await navigator.share({files:[file]}); } catch(e){}
+  } else { st('⚠️ Compartilhar não está disponível neste navegador (funciona no celular). Use "Copiar banner".'); }
 }
 async function baixar(){
   render();
@@ -343,7 +347,7 @@ async function baixar(){
 function nomeArq(){ return `farol-ehs-${($('dataRef').value||hojeISO())}.png`; }
 
 /* ---------- persistência ---------- */
-const CAMPOS = ['dados','lim','titulo','saud','fech'];
+const CAMPOS = ['dados','lim'];
 function salvar(){
   try { localStorage.setItem(KEY, JSON.stringify(Object.fromEntries(CAMPOS.map(c=>[c,$(c).value])))); $('st1').textContent='✅ Dados salvos neste navegador.'; }
   catch(e){ $('st1').textContent='⚠️ Não foi possível salvar neste navegador.'; }
@@ -356,10 +360,9 @@ function carregar(){
 $('bSalvar').onclick = salvar;
 $('bLimpar').onclick = () => { $('dados').value=''; filtro='all'; render(); $('st1').textContent='Dados limpos.'; };
 $('bExemplo').onclick = () => { $('dados').value=EXEMPLO; filtro='all'; render(); $('st1').textContent='Exemplo carregado. Cole os dados reais e clique em Salvar.'; };
-$('bTudo').onclick = copiarTudo; $('bImg').onclick = copiarImg; $('bTxt').onclick = copiarTxt;
-$('bShare').onclick = compartilhar; $('bPng').onclick = baixar;
+$('bImg').onclick = copiarImg; $('bShare').onclick = compartilhar; $('bPng').onclick = baixar;
 document.querySelectorAll('.kpi').forEach(k => k.onclick = () => { filtro = (filtro===k.dataset.f) ? 'all' : k.dataset.f; render(); });
-['dados','lim','titulo','saud','fech','dataRef'].forEach(c => $(c).addEventListener('input', render));
+['dados','lim','dataRef'].forEach(c => $(c).addEventListener('input', render));
 
 $('dataRef').value = hojeISO();
 if (!carregar()) { $('dados').value = EXEMPLO; $('st1').textContent = 'Exemplo carregado. Cole os dados reais e clique em Salvar.'; }
