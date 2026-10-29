@@ -134,6 +134,11 @@
   if (window.BRAND_LOGO) {
     const img = $('#brand-logo');
     img.src = window.BRAND_LOGO; img.hidden = false;
+    $('#brand-name').hidden = true;
+  }
+  if (window.SITE_BADGE) {
+    const img = $('#site-badge');
+    img.src = window.SITE_BADGE; img.hidden = false;
   }
   $('#year').textContent = new Date().getFullYear();
   render();

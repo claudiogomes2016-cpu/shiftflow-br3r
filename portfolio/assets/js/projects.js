@@ -14,6 +14,9 @@
 // Leave empty until the file is provided — the header then shows the text name only.
 window.BRAND_LOGO = '';
 
+// Path to the Três Rios site badge shown at the left of the banner (e.g. 'assets/images/tres-rios.png').
+window.SITE_BADGE = '';
+
 window.DEVELOPERS = {
   claudio: { name: 'Claudio Gomes', role: { en: 'Logistics Supervisor', pt: 'Supervisor de Logística' } },
   rickson: { name: 'Rickson', role: { en: 'Shipping Analyst', pt: 'Analista de Expedição' } }
