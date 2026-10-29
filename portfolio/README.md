@@ -25,8 +25,7 @@ portfolio/
    and (optionally) `tech` with facts verified in the code.
 
 Projects open in a new tab, so the portfolio stays available and the dashboards run
-exactly as they were built. ShiftFlow BR3R is linked at `../index.html` (the root of
-this repository) and is not duplicated.
+exactly as they were built.
 
 ## Official logo
 
