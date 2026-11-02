@@ -27,10 +27,29 @@ portfolio/
 Projects open in a new tab, so the portfolio stays available and the dashboards run
 exactly as they were built.
 
-## Official logo
+## Dashboards and distribution
 
-Place the authorized file in `assets/images/` and set `window.BRAND_LOGO` in
-`projects.js`. Until then the header shows the company name as text.
+The dashboards in `projects/` hold real operational data (sales history,
+customer master, warehouse layout). This repository is public, so they are
+listed in `.gitignore` and never pushed here. The complete portfolio
+(this folder + `projects/`) is distributed as a ZIP, to be placed in a
+location approved by Ball IT (SharePoint, OneDrive or internal server).
+
+| Folder | Original file |
+|---|---|
+| projects/grade-carregamento | Grade_de_Embarque_Latas_e_Tampas_BR3R.html |
+| projects/projecao-transferencia | Projeção_Transferência_BR3R.html |
+| projects/projecao-ocupacao | Projeção_de_Ocupação_BR3R.html |
+| projects/relatorio-vendas | Relatório_de_Vendas_BR3R.html |
+| projects/metal | Recebimento_e_Estoque_de_Metal_BR3R.html |
+| projects/mapa-calor-ehs | Mapa_de_Calor_Armazem_BR3R.html |
+
+The files are byte-identical copies of the originals.
+
+## Banner and logo
+
+The banner follows the standard of the BR3R Logistics dashboards. The Ball logo
+and the Três Rios badge in `assets/images/` were taken from those dashboards.
 
 ## Security notes
 

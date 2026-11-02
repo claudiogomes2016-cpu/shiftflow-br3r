@@ -1,0 +1,6 @@
+# The dashboards contain real operational and customer data (sales history,
+# customer master, warehouse layout). This repository is public, so they are
+# kept out of git. Distribute the full portfolio through an IT-approved
+# internal location instead (see README).
+projects/*/
+!projects/.gitkeep

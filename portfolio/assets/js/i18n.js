@@ -3,6 +3,7 @@
 window.I18N = {
   en: {
     skip: 'Skip to projects',
+    motto: 'PEOPLE | PROCESSES | RESULTS',
     themeToggle: 'Toggle dark mode',
     eyebrow: 'Logistics · Três Rios, Rio de Janeiro',
     subtitle: 'Digital solutions for operational visibility, warehouse management and logistics performance.',
@@ -25,6 +26,7 @@ window.I18N = {
       dataSources: 'Data sources',
       technologies: 'Technologies',
       businessRules: 'Business rules implemented',
+      operation: 'How it runs',
       integration: 'Current integrations',
       evolution: 'Evolution opportunities toward a corporate architecture'
     },
@@ -33,6 +35,7 @@ window.I18N = {
   },
   pt: {
     skip: 'Ir para os projetos',
+    motto: 'PESSOAS | PROCESSOS | RESULTADOS',
     themeToggle: 'Alternar modo escuro',
     eyebrow: 'Logística · Três Rios, Rio de Janeiro',
     subtitle: 'Soluções digitais para visibilidade operacional, gestão de armazém e desempenho logístico.',
@@ -55,6 +58,7 @@ window.I18N = {
       dataSources: 'Fontes de dados',
       technologies: 'Tecnologias',
       businessRules: 'Regras de negócio implementadas',
+      operation: 'Como funciona',
       integration: 'Integrações atuais',
       evolution: 'Oportunidades de evolução para arquitetura corporativa'
     },

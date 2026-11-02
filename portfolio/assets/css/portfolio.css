@@ -1,22 +1,24 @@
 /* Logistics Digital Innovation — Ball Três Rios portfolio */
 
 :root {
-  --brand: #1140FE;
-  --brand-strong: #0A2FC4;
-  --brand-soft: #E9EEFF;
-  --accent-on-dark: #5B7BFF;
-  --banner-bg: #000000;
-  --bg: #F4F6F9;
+  /* Palette of the BR3R Logistics dashboards */
+  --brand: #2F54EB;
+  --brand-strong: #2340C4;
+  --brand-soft: #E9EDFE;
+  --accent-on-dark: #5B84FF;
+  --banner-bg: linear-gradient(100deg, #000 0%, #000 55%, #05112E 100%);
+  --banner-line: #1F4FFF;
+  --bg: #ECEEF3;
   --surface: #FFFFFF;
-  --surface-2: #F8FAFC;
-  --text: #0F1B2D;
-  --text-2: #4A5568;
-  --text-3: #718096;
-  --border: #E2E8F0;
-  --live: #0F7B4F;
-  --live-soft: #E3F4EC;
-  --prep: #8A5A00;
-  --prep-soft: #FBF1DC;
+  --surface-2: #F6F7FA;
+  --text: #141A2E;
+  --text-2: #3D4560;
+  --text-3: #6B7290;
+  --border: #E5E8EF;
+  --live: #1E7041;
+  --live-soft: #E2F4E9;
+  --prep: #7F5A00;
+  --prep-soft: #FCF1D3;
   --shadow: 0 1px 2px rgba(15, 27, 45, .04), 0 6px 20px rgba(15, 27, 45, .06);
   --shadow-hover: 0 2px 4px rgba(15, 27, 45, .06), 0 14px 32px rgba(0, 71, 187, .12);
   --radius: 12px;
@@ -27,20 +29,20 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --brand: #5B7BFF; --brand-strong: #8199FF; --brand-soft: #151F45;
-    --bg: #0B1220; --surface: #121B2E; --surface-2: #0F1828;
-    --text: #E8EDF5; --text-2: #A9B4C6; --text-3: #7D899C; --border: #22304A;
-    --live: #4ADE9B; --live-soft: #0F2E22; --prep: #F2C46B; --prep-soft: #2E2410;
+    --brand: #5B7BFF; --brand-strong: #A9B8FF; --brand-soft: #1F2950;
+    --bg: #0E1220; --surface: #171C2C; --surface-2: #131828;
+    --text: #E9ECF5; --text-2: #C3C8DA; --text-3: #8E95AD; --border: #262C40;
+    --live: #7FE0A8; --live-soft: #16352A; --prep: #F2CF73; --prep-soft: #3A2F12;
     --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
     --shadow-hover: 0 2px 4px rgba(0,0,0,.3), 0 14px 32px rgba(0,0,0,.4);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --brand: #5B7BFF; --brand-strong: #8199FF; --brand-soft: #151F45;
-  --bg: #0B1220; --surface: #121B2E; --surface-2: #0F1828;
-  --text: #E8EDF5; --text-2: #A9B4C6; --text-3: #7D899C; --border: #22304A;
-  --live: #4ADE9B; --live-soft: #0F2E22; --prep: #F2C46B; --prep-soft: #2E2410;
+  --brand: #5B7BFF; --brand-strong: #A9B8FF; --brand-soft: #1F2950;
+  --bg: #0E1220; --surface: #171C2C; --surface-2: #131828;
+  --text: #E9ECF5; --text-2: #C3C8DA; --text-3: #8E95AD; --border: #262C40;
+  --live: #7FE0A8; --live-soft: #16352A; --prep: #F2CF73; --prep-soft: #3A2F12;
   --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
   --shadow-hover: 0 2px 4px rgba(0,0,0,.3), 0 14px 32px rgba(0,0,0,.4);
   color-scheme: dark;
@@ -65,23 +67,22 @@ svg .fill { fill: currentColor; fill-opacity: .35; }
 :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 
 /* Banner — Ball dashboard standard: black bar, white title, blue accent, blue base line */
-.banner { background: var(--banner-bg); color: #fff; border-bottom: 4px solid var(--brand); position: sticky; top: 0; z-index: 5; }
-:root[data-theme="dark"] .banner { border-bottom-color: #1140FE; }
-.banner-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 12px 32px; min-height: 92px; }
-.banner-left, .banner-right { display: flex; align-items: center; gap: 20px; min-width: 0; }
-.site-badge { height: 64px; width: auto; padding-right: 20px; border-right: 1px solid rgba(255,255,255,.25); }
-.banner-title h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(18px, 2.3vw, 28px); letter-spacing: .01em; line-height: 1.15; }
+.banner { background: var(--banner-bg); color: #fff; border-bottom: 4px solid var(--banner-line); position: sticky; top: 0; z-index: 5; }
+.banner-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 14px 32px; min-height: 96px; }
+.banner-left, .banner-right { display: flex; align-items: center; gap: 18px; min-width: 0; }
+.site-badge { height: 64px; width: auto; flex: none; padding-right: 18px; border-right: 2px solid rgba(255,255,255,.28); }
+.banner-title h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(20px, 2vw, 28px); letter-spacing: .01em; line-height: 1.05; }
 .banner-title .accent { color: var(--accent-on-dark); }
-.banner-site { font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: .04em; margin-top: 6px; }
-.banner-code { font-family: var(--font-display); font-weight: 600; font-size: 11px; letter-spacing: .14em; color: rgba(255,255,255,.6); margin-top: 2px; }
+.banner-site { font-family: var(--font-display); font-weight: 800; font-size: 13px; letter-spacing: .02em; margin-top: 4px; }
+.banner-line { display: inline-block; font-family: var(--font-display); font-weight: 600; font-size: 11px; color: #D6DBEA; letter-spacing: .28em; margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,.28); }
 .banner-brand { display: flex; align-items: center; gap: 16px; }
-.brand-logo { height: 44px; width: auto; }
+.brand-logo { height: 48px; width: auto; flex: none; }
 .brand-name { font-family: var(--font-display); font-weight: 800; font-size: 15px; letter-spacing: .08em; }
 .banner-tagline { font-family: var(--font-display); font-weight: 700; font-size: 10.5px; letter-spacing: .14em; line-height: 1.5; padding-left: 16px; border-left: 1px solid rgba(255,255,255,.3); white-space: nowrap; }
 .banner-controls { display: flex; align-items: center; gap: 8px; }
 .lang-switch { display: flex; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; overflow: hidden; }
 .lang-switch button { border: 0; background: transparent; color: rgba(255,255,255,.75); font: 600 12px var(--font); padding: 6px 10px; cursor: pointer; }
-.lang-switch button[aria-pressed="true"] { background: #1140FE; color: #fff; }
+.lang-switch button[aria-pressed="true"] { background: #1F4FFF; color: #fff; }
 .banner .icon-btn { color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.25); }
 .banner .icon-btn:hover { color: #fff; border-color: var(--accent-on-dark); }
 .icon-btn { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-2); cursor: pointer; }
@@ -107,8 +108,8 @@ svg .fill { fill: currentColor; fill-opacity: .35; }
 .team-list strong { display: block; font-size: 15px; }
 .team-list small { display: block; color: var(--text-3); font-size: 13px; }
 .avatar { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: #000; color: #fff; font-family: var(--font-display); font-weight: 800; flex-shrink: 0; }
-:root[data-theme="dark"] .avatar { background: #1140FE; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .avatar { background: #1140FE; } }
+:root[data-theme="dark"] .avatar { background: #2F54EB; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .avatar { background: #2F54EB; } }
 .avatar.sm { width: 28px; height: 28px; font-size: 12px; background: var(--brand-soft); color: var(--brand); }
 
 /* Projects */
@@ -176,7 +177,9 @@ main { padding-top: 48px; padding-bottom: 64px; }
 }
 @media (max-width: 560px) {
   .wrap { padding-left: 16px; padding-right: 16px; }
-  .site-badge { height: 48px; padding-right: 12px; }
+  .site-badge { height: 46px; padding-right: 12px; }
+  .banner-line { letter-spacing: .14em; }
+  .brand-logo { height: 36px; }
   .grid { grid-template-columns: 1fr; }
   .card { padding: 18px; }
   .btn { flex: 1 1 100%; }
