@@ -7,6 +7,8 @@
    url:    path to the original dashboard, relative to portfolio/index.html.
            Keep originals untouched (e.g. projects/<name>/index.html).
    tech:   optional. Fill ONLY with facts verified in the source code.
+   banner: title / accent (blue word) / sub — copied from the dashboard's own banner.
+   pitch:  presentation slide — purpose, what it improved (3 points), a line "in practice".
    Text fields accept a string or { en, pt }.
    ───────────────────────────────────────────────────────────── */
 
@@ -51,6 +53,21 @@ window.PROJECTS = [
     url: 'projects/grade-carregamento/Grade_de_Embarque_Latas_e_Tampas_BR3R.html',
     icon: 'truck',
     developer: 'claudio',
+    banner: { title: 'LOGÍSTICA', accent: 'INFORMA', sub: 'GRADE DE CARREGAMENTO' },
+    pitch: {
+      purpose: {
+        en: 'Shows, order by order, whether the loading schedule has stock at the plant or at the AG warehouse.',
+        pt: 'Mostra, pedido a pedido, se a grade de carregamento tem estoque na planta ou no AG.'
+      },
+      improved: {
+        en: ['Stock shortages show up before loading, not at the dock.', 'Customer restrictions checked automatically by exact format.', 'One screen instead of crossing SAP reports by hand.'],
+        pt: ['A falta de estoque aparece antes do carregamento, e não na doca.', 'Restrições de cliente conferidas automaticamente pelo formato exato.', 'Uma tela só, no lugar de cruzar relatórios do SAP na mão.']
+      },
+      practice: {
+        en: 'Before loading, I know which orders have stock and where it is — plant or AG.',
+        pt: 'Antes de carregar, eu sei quais pedidos têm estoque e onde ele está: planta ou AG.'
+      }
+    },
     name: { en: 'Loading Schedule · Cans & Ends', pt: 'Grade de Carregamento · Latas e Tampas' },
     category: { en: 'Transportation', pt: 'Transporte' },
     description: {
@@ -89,6 +106,21 @@ window.PROJECTS = [
     url: 'projects/projecao-transferencia/Projecao_Transferencia_BR3R.html',
     icon: 'transfer',
     developer: 'claudio',
+    banner: { title: 'PROJEÇÃO', accent: 'TRANSFERÊNCIA', sub: 'RELATÓRIO DE PROJEÇÃO DE CARGAS · MB52 + VL10D' },
+    pitch: {
+      purpose: {
+        en: 'Builds the transfer loads from free stock and pending orders.',
+        pt: 'Monta as cargas de transferência a partir do estoque livre e dos pedidos pendentes.'
+      },
+      improved: {
+        en: ['Trucks of 25 pallets calculated automatically, with 1, 2 or 3 SKUs.', 'Updates by itself from SAP every 15 seconds.', 'Shows which trucks can leave now with immediate stock.'],
+        pt: ['Carretas de 25 paletes calculadas automaticamente, com 1, 2 ou 3 SKUs.', 'Atualiza sozinho a partir do SAP a cada 15 segundos.', 'Mostra quais carretas podem sair agora com estoque imediato.']
+      },
+      practice: {
+        en: 'I open the panel and already see how many trucks I can build now, and with which SKUs.',
+        pt: 'Abro o painel e já vejo quantas carretas consigo montar agora, e com quais SKUs.'
+      }
+    },
     name: { en: 'Transfer Projection', pt: 'Projeção de Transferência' },
     category: { en: 'Transportation', pt: 'Transporte' },
     description: {
@@ -127,6 +159,21 @@ window.PROJECTS = [
     url: 'projects/projecao-ocupacao/Projecao_de_Ocupacao_BR3R.html',
     icon: 'warehouse',
     developer: 'claudio',
+    banner: { title: 'PROJEÇÃO DE', accent: 'OCUPAÇÃO', sub: 'SIMULADOR LOGÍSTICO · D+7' },
+    pitch: {
+      purpose: {
+        en: 'Shows warehouse occupancy from today to 7 days ahead — plant, NSA and BRJC.',
+        pt: 'Mostra a ocupação do depósito de hoje até 7 dias à frente — planta, NSA e BRJC.'
+      },
+      improved: {
+        en: ['Decisions are made in advance: transfers, production on line-stop days.', 'Occupancy is kept at a healthy level, never a dangerous one.', 'A safer warehouse for the people who work in it.'],
+        pt: ['As decisões são tomadas com antecedência: transferências, produção nos dias de parada.', 'A ocupação é mantida em nível saudável, nunca perigoso.', 'Um armazém mais seguro para as pessoas que trabalham nele.']
+      },
+      practice: {
+        en: 'I see the next 7 days today and decide what to do to keep occupancy at a level that guarantees people\'s safety.',
+        pt: 'Enxergo hoje os próximos 7 dias e decido o que fazer para manter a ocupação em um nível que garanta a segurança das pessoas.'
+      }
+    },
     name: { en: 'Occupancy Projection · D+7', pt: 'Projeção de Ocupação · D+7' },
     category: { en: 'Warehouse Management', pt: 'Gestão de Armazém' },
     description: {
@@ -165,6 +212,21 @@ window.PROJECTS = [
     url: 'projects/relatorio-vendas/Relatorio_de_Vendas_BR3R.html',
     icon: 'chart',
     developer: 'claudio',
+    banner: { title: 'LOGÍSTICA', accent: 'INFORMA', sub: 'RELATÓRIO DIÁRIO DE VENDAS' },
+    pitch: {
+      purpose: {
+        en: 'The plant\'s daily logistics report on one screen.',
+        pt: 'O relatório diário de logística da planta em uma tela.'
+      },
+      improved: {
+        en: ['Sales, production, occupancy, pending loads and blocked SKUs together.', 'Occupancy alert against the 90% limit.', 'Ready to copy or e-mail — the same report for everyone, every day.'],
+        pt: ['Vendas, produção, ocupação, pendências e SKUs bloqueados juntos.', 'Alerta de ocupação contra o limite de 90%.', 'Pronto para copiar ou enviar por e-mail — o mesmo relatório para todos, todo dia.']
+      },
+      practice: {
+        en: 'One report a day, the same for everyone, with sales, production and occupancy.',
+        pt: 'Um relatório por dia, igual para todos, com vendas, produção e ocupação.'
+      }
+    },
     name: { en: 'Daily Sales Report', pt: 'Relatório Diário de Vendas' },
     category: { en: 'Operational Intelligence', pt: 'Inteligência Operacional' },
     description: {
@@ -203,6 +265,21 @@ window.PROJECTS = [
     url: 'projects/metal/Recebimento_e_Estoque_de_Metal_BR3R.html',
     icon: 'coil',
     developer: 'claudio',
+    banner: { title: 'LOGÍSTICA', accent: 'INFORMA', sub: 'RECEBIMENTO E ESTOQUE DE METAL' },
+    pitch: {
+      purpose: {
+        en: 'Controls receiving and stock of coils and ends metal.',
+        pt: 'Controla o recebimento e o estoque de bobinas e de metal de tampas.'
+      },
+      improved: {
+        en: ['Separates what we have from what we can use: free × quality × blocked (HFI).', 'Coverage in days for each material.', 'Press scenario simulator to plan consumption.'],
+        pt: ['Separa o que eu tenho do que eu posso usar: livre × qualidade × bloqueado (HFI).', 'Cobertura em dias para cada material.', 'Simulador de prensas para planejar o consumo.']
+      },
+      practice: {
+        en: 'I know how many days of free metal I have per material, and the impact of changing the presses.',
+        pt: 'Sei quantos dias de metal livre eu tenho por material, e o impacto de mudar as prensas.'
+      }
+    },
     name: { en: 'Metal Receiving & Stock', pt: 'Recebimento e Estoque de Metal' },
     category: { en: 'Inventory Control', pt: 'Controle de Estoque' },
     description: {
@@ -241,6 +318,21 @@ window.PROJECTS = [
     url: 'projects/mapa-calor-ehs/Mapa_de_Calor_Armazem_BR3R.html',
     icon: 'shield',
     developer: 'claudio',
+    banner: { title: 'MAPA DE CALOR', accent: 'EHS', after: '– ARMAZÉM DE PRODUTO ACABADO', sub: 'TRÊS RIOS' },
+    pitch: {
+      purpose: {
+        en: 'Maps where people and forklifts cross paths in the finished goods warehouse.',
+        pt: 'Mapeia onde pessoas e empilhadeiras se cruzam no armazém de produto acabado.'
+      },
+      improved: {
+        en: ['Risks ranked by probability × severity.', 'Action plan with owner and deadline in the same place.', '2D/3D view and A3 report for safety meetings.'],
+        pt: ['Riscos priorizados por probabilidade × severidade.', 'Plano de ação com responsável e prazo no mesmo lugar.', 'Visão 2D/3D e relatório A3 para as reuniões de segurança.']
+      },
+      practice: {
+        en: 'The highest-risk points come first, each with action, owner and deadline.',
+        pt: 'Os pontos de maior risco aparecem primeiro, cada um com ação, responsável e prazo.'
+      }
+    },
     name: { en: 'EHS Heat Map · Finished Goods Warehouse', pt: 'Mapa de Calor EHS · Armazém de Produto Acabado' },
     category: { en: 'EHS · Warehouse Safety', pt: 'EHS · Segurança no Armazém' },
     description: {

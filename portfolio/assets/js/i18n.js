@@ -3,6 +3,7 @@
 window.I18N = {
   en: {
     skip: 'Skip to projects',
+    presentation: 'PRESENTATION',
     motto: 'PEOPLE | PROCESSES | RESULTS',
     themeToggle: 'Toggle dark mode',
     eyebrow: 'Logistics · Três Rios, Rio de Janeiro',
@@ -31,10 +32,28 @@ window.I18N = {
       evolution: 'Evolution opportunities toward a corporate architecture'
     },
     techPending: 'To be documented after the source code is reviewed.',
+    deck: {
+      back: '← Portfolio',
+      kicker: 'BALL CORPORATION · TRÊS RIOS – BR3R',
+      coverText: 'Digital solutions built by the Logistics team for operational visibility, warehouse management and safety.',
+      overviewTitle: 'The solutions',
+      overviewSub: 'Six dashboards in daily use by Logistics in Três Rios',
+      purpose: 'What it is for',
+      improved: 'What it improved',
+      practice: 'In practice',
+      developer: 'Developed by',
+      open: 'OPEN PROJECT',
+      closingKicker: 'Next steps',
+      closingTitle: 'From the plant floor <span>to the corporate architecture</span>',
+      closingLead: 'All dashboards run today in the browser with data exported from SAP. The next step is to take them to an environment approved by Ball IT.',
+      closingSteps: ['Hosting on an IT-approved internal environment, with corporate sign-in.', 'Scheduled SAP extraction in place of the desktop scripts.', 'Reference data moved out of the HTML into a governed source.'],
+      thanks: 'Thank you'
+    },
     footerNote: 'Internal portfolio. Projects open in a new tab; original dashboards are kept unchanged and run independently.'
   },
   pt: {
     skip: 'Ir para os projetos',
+    presentation: 'APRESENTAÇÃO',
     motto: 'PESSOAS | PROCESSOS | RESULTADOS',
     themeToggle: 'Alternar modo escuro',
     eyebrow: 'Logística · Três Rios, Rio de Janeiro',
@@ -63,6 +82,23 @@ window.I18N = {
       evolution: 'Oportunidades de evolução para arquitetura corporativa'
     },
     techPending: 'A ser documentado após a análise do código-fonte.',
+    deck: {
+      back: '← Portfólio',
+      kicker: 'BALL CORPORATION · TRÊS RIOS – BR3R',
+      coverText: 'Soluções digitais desenvolvidas pela equipe de Logística para visibilidade operacional, gestão de armazém e segurança.',
+      overviewTitle: 'As soluções',
+      overviewSub: 'Seis dashboards em uso diário pela Logística de Três Rios',
+      purpose: 'Para que serve',
+      improved: 'O que melhorou',
+      practice: 'Na prática',
+      developer: 'Desenvolvido por',
+      open: 'ABRIR PROJETO',
+      closingKicker: 'Próximos passos',
+      closingTitle: 'Do chão da planta <span>para a arquitetura corporativa</span>',
+      closingLead: 'Todos os dashboards rodam hoje no navegador, com dados exportados do SAP. O próximo passo é levá-los para um ambiente aprovado pela TI da Ball.',
+      closingSteps: ['Hospedagem em ambiente interno aprovado pela TI, com login corporativo.', 'Extração agendada do SAP no lugar dos scripts no desktop.', 'Dados de referência fora do HTML, em uma fonte governada.'],
+      thanks: 'Obrigado'
+    },
     footerNote: 'Portfólio interno. Os projetos abrem em nova aba; os dashboards originais são mantidos sem alteração e funcionam de forma independente.'
   }
 };

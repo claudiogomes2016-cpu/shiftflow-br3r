@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Apresentação | Logistics Digital Innovation · Ball Três Rios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/presentation.css">
+</head>
+<body>
+<div class="viewport" id="viewport">
+  <div class="deck" id="deck" aria-live="polite"></div>
+</div>
+
+<nav class="controls" aria-label="Slides">
+  <a class="ctl ctl-text" href="index.html" data-i18n="back">← Portfolio</a>
+  <div class="ctl-group">
+    <button type="button" class="ctl" id="prev" aria-label="Previous">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <span class="counter" id="counter"></span>
+    <button type="button" class="ctl" id="next" aria-label="Next">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+  <div class="ctl-group">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" data-lang="pt" aria-pressed="true">PT</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+    <button type="button" class="ctl" id="fullscreen" aria-label="Fullscreen" title="Tela cheia (F)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+    </button>
+  </div>
+</nav>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/projects.js"></script>
+<script src="assets/js/presentation.js"></script>
+</body>
+</html>

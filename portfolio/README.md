@@ -27,6 +27,13 @@ portfolio/
 Projects open in a new tab, so the portfolio stays available and the dashboards run
 exactly as they were built.
 
+## Presentation
+
+`apresentacao.html` is a slide presentation (one slide per project, with the
+project's own banner): what it is for, what it improved, and an example in
+practice. Arrow keys or space to move, F for full screen, PT/EN switch.
+Slide text lives in the `banner` and `pitch` fields of `projects.js`.
+
 ## Dashboards and distribution
 
 The dashboards in `projects/` hold real operational data (sales history,
@@ -44,7 +51,8 @@ location approved by Ball IT (SharePoint, OneDrive or internal server).
 | projects/metal | Recebimento_e_Estoque_de_Metal_BR3R.html |
 | projects/mapa-calor-ehs | Mapa_de_Calor_Armazem_BR3R.html |
 
-The files are byte-identical copies of the originals.
+The files are byte-identical copies of the originals, except that the Cloudflare
+analytics script was removed from the Grade de Carregamento (authorized by the author).
 
 ## Banner and logo
 
