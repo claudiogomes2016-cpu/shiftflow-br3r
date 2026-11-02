@@ -54,14 +54,17 @@ location approved by Ball IT (SharePoint, OneDrive or internal server).
 The files are byte-identical copies of the originals, except that the Cloudflare
 analytics script was removed from the Grade de Carregamento (authorized by the author).
 
-## Building the package
+## Building the files to share
 
     python build.py <output-folder>
+    node tools/pdf.js <output-folder>/Apresentacao_Logistica_BR3R.html Portfolio_Logistica_BR3R.pdf pt
 
-Creates `<output-folder>/portfolio` with `index.html` and `apresentacao.html`
-as single self-contained files (CSS, JS and images inlined) plus `projects/`.
-Single files keep working on network drives where the `assets` folder may be
-blocked or not copied. Distribute that folder (zipped), not the source tree.
+- `Portfolio_Logistica_BR3R.html` and `Apresentacao_Logistica_BR3R.html`:
+  single self-contained files, no folders and no ZIP. Put them in the same
+  folder as the dashboards; ABRIR PROJETO opens the dashboard found next to
+  them (also tried: parent folder, then `projects/`).
+- `Portfolio_Logistica_BR3R.pdf`: the presentation for e-mail (opens in
+  Outlook and on phones). Use `en` for the English version.
 
 ## Banner and logo
 

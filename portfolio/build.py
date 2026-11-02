@@ -1,18 +1,21 @@
-"""Build the shareable package: index.html and apresentacao.html as single
-self-contained files (CSS, JS and images inlined), plus the dashboards.
+"""Build the shareable files, flat (no folders, no ZIP):
 
-Single files keep working when the folder is opened from a network drive or
-when only some files get copied.
+    Portfolio_Logistica_BR3R.html     portfolio (cards, technical details)
+    Apresentacao_Logistica_BR3R.html  presentation (one slide per project)
+
+Each is a single self-contained file (CSS, JS and images inlined). Put them
+in the same folder as the dashboards; ABRIR PROJETO opens the dashboard
+found next to them. For e-mail, use the PDF made by tools/pdf.js.
 
     python build.py <output-folder>
 """
 import base64
 import pathlib
 import re
-import shutil
 import sys
 
 SRC = pathlib.Path(__file__).resolve().parent
+PAGES = {'index.html': 'Portfolio_Logistica_BR3R.html', 'apresentacao.html': 'Apresentacao_Logistica_BR3R.html'}
 
 
 def data_uri(path):
@@ -35,20 +38,18 @@ def inline(html):
 
     html = re.sub(r'<link rel="stylesheet" href="(assets/css/[^"]+)">', css, html)
     html = re.sub(r'<script src="(assets/js/[^"]+)"></script>', js, html)
+    for src, dst in PAGES.items():
+        html = html.replace(f'href="{src}"', f'href="{dst}"')
     assert 'href="assets/' not in html and 'src="assets/' not in html
     return html
 
 
 def main(out):
-    out = pathlib.Path(out) / 'portfolio'
-    if out.exists():
-        shutil.rmtree(out)
-    out.mkdir(parents=True)
-    for page in ('index.html', 'apresentacao.html'):
-        (out / page).write_text(inline((SRC / page).read_text(encoding='utf-8')), encoding='utf-8')
-    shutil.copytree(SRC / 'projects', out / 'projects', ignore=shutil.ignore_patterns('.gitkeep'))
-    shutil.copy(SRC / 'README.md', out / 'README.md')
-    print('built', out)
+    out = pathlib.Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    for src, dst in PAGES.items():
+        (out / dst).write_text(inline((SRC / src).read_text(encoding='utf-8')), encoding='utf-8')
+        print('built', out / dst)
 
 
 if __name__ == '__main__':

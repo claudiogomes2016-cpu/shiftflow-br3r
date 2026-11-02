@@ -16,8 +16,7 @@
 
   function candidates(p) {
     const names = p.files || [];
-    const list = [p.url]
-      .concat(names, names.map((n) => '../' + n), names.map((n) => 'projects/' + n))
+    const list = names.concat(names.map((n) => '../' + n), [p.url], names.map((n) => 'projects/' + n))
       .filter(Boolean);
     return list.filter((u, i) => list.indexOf(u) === i);
   }
@@ -83,9 +82,8 @@
     if (tab) tab.close();
     if (url) { window.open(url, '_blank', 'noopener'); return; }
     const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    const file = (p.files && p.files[0]) || p.url.split('/').pop();
-    const folder = p.url.slice(0, p.url.lastIndexOf('/') + 1);
-    toast(`<strong>${esc(text.title)}</strong><br>${esc(text.body)}<br><code style="color:#A9B8FF">${esc(folder + file)}</code>`);
+    const names = (p.files && p.files.length ? p.files : [p.url.split('/').pop()]).map(esc).join('<br>');
+    toast(`<strong>${esc(text.title)}</strong><br>${esc(text.body)}<br><code style="color:#A9B8FF">${names}</code>`);
   };
 
   document.addEventListener('click', (e) => {
