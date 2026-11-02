@@ -15,7 +15,10 @@
   const d = () => ui().deck;
   const tr = (v) => (v == null ? '' : typeof v === 'string' || Array.isArray(v) ? v : v[state.lang] ?? v.en);
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const projects = () => window.PROJECTS.filter((p) => p.status === 'live' && p.url && p.pitch);
+  const PITCH = window.PITCH || {};
+  const projects = () => window.PROJECTS
+    .filter((p) => p.status === 'live' && p.url && PITCH[p.id])
+    .map((p) => Object.assign({}, p, { pitch: PITCH[p.id] }));
 
   function banner(b) {
     return `
@@ -85,7 +88,7 @@
         <a class="open" href="${esc(p.url)}" target="_blank" rel="noopener" style="margin-left:24px">${esc(d().open)} ${ARROW}</a>
       </div>`;
     return `
-      <section class="slide">
+      <section class="slide${tr(p.pitch.improved).length > 3 ? ' dense' : ''}">
         ${banner(p.banner)}
         <div class="body">
           <div>

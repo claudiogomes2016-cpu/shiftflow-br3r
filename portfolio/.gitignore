@@ -4,3 +4,6 @@
 # internal location instead (see README).
 projects/*/
 !projects/.gitkeep
+
+# Presentation text with internal business information (sales mix, incidents).
+assets/js/pitch.js
