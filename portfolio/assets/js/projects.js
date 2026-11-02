@@ -5,6 +5,8 @@
    status: 'live'  → shows OPEN PROJECT (url is required)
            'prep'  → shows "In preparation", no link
    url:    path to the original dashboard, relative to portfolio/index.html.
+   files:  the dashboard's file names; if url is missing, the file is also
+           looked for next to the portfolio and in its parent folder.
            Keep originals untouched (e.g. projects/<name>/index.html).
    tech:   optional. Fill ONLY with facts verified in the source code.
    banner: title / accent (blue word) / sub — copied from the dashboard's own banner.
@@ -51,6 +53,7 @@ window.PROJECTS = [
     id: 'grade-carregamento',
     status: 'live',
     url: 'projects/grade-carregamento/Grade_de_Embarque_Latas_e_Tampas_BR3R.html',
+    files: ['Grade_de_Embarque_Latas_e_Tampas_BR3R.html'],
     icon: 'truck',
     developer: 'claudio',
     banner: { title: 'LOGÍSTICA', accent: 'INFORMA', sub: 'GRADE DE CARREGAMENTO' },
@@ -90,6 +93,7 @@ window.PROJECTS = [
     id: 'projecao-transferencia',
     status: 'live',
     url: 'projects/projecao-transferencia/Projecao_Transferencia_BR3R.html',
+    files: ['Projecao_Transferencia_BR3R.html', 'Projeção_Transferência_BR3R.html'],
     icon: 'transfer',
     developer: 'claudio',
     banner: { title: 'PROJEÇÃO', accent: 'TRANSFERÊNCIA', sub: 'RELATÓRIO DE PROJEÇÃO DE CARGAS · MB52 + VL10D' },
@@ -129,6 +133,7 @@ window.PROJECTS = [
     id: 'projecao-ocupacao',
     status: 'live',
     url: 'projects/projecao-ocupacao/Projecao_de_Ocupacao_BR3R.html',
+    files: ['Projecao_de_Ocupacao_BR3R.html', 'Projeção_de_Ocupação_BR3R.html'],
     icon: 'warehouse',
     developer: 'claudio',
     banner: { title: 'PROJEÇÃO DE', accent: 'OCUPAÇÃO', sub: 'SIMULADOR LOGÍSTICO · D+7' },
@@ -168,6 +173,7 @@ window.PROJECTS = [
     id: 'relatorio-vendas',
     status: 'live',
     url: 'projects/relatorio-vendas/Relatorio_de_Vendas_BR3R.html',
+    files: ['Relatorio_de_Vendas_BR3R.html', 'Relatório_de_Vendas_BR3R.html'],
     icon: 'chart',
     developer: 'claudio',
     banner: { title: 'LOGÍSTICA', accent: 'INFORMA', sub: 'RELATÓRIO DIÁRIO DE VENDAS' },
@@ -207,6 +213,7 @@ window.PROJECTS = [
     id: 'metal',
     status: 'live',
     url: 'projects/metal/Recebimento_e_Estoque_de_Metal_BR3R.html',
+    files: ['Recebimento_e_Estoque_de_Metal_BR3R.html'],
     icon: 'coil',
     developer: 'claudio',
     banner: { title: 'LOGÍSTICA', accent: 'INFORMA', sub: 'RECEBIMENTO E ESTOQUE DE METAL' },
@@ -246,6 +253,7 @@ window.PROJECTS = [
     id: 'mapa-calor-ehs',
     status: 'live',
     url: 'projects/mapa-calor-ehs/Mapa_de_Calor_Armazem_BR3R.html',
+    files: ['Mapa_de_Calor_Armazem_BR3R.html', 'Mapa_de_Calor_Armazém_BR3R.html'],
     icon: 'shield',
     developer: 'claudio',
     banner: { title: 'MAPA DE CALOR', accent: 'EHS', after: '– ARMAZÉM DE PRODUTO ACABADO', sub: 'TRÊS RIOS' },

@@ -4,6 +4,8 @@ window.I18N = {
   en: {
     skip: 'Skip to projects',
     presentation: 'PRESENTATION',
+    notFoundTitle: 'Dashboard file not found',
+    notFoundBody: 'Copy the dashboard file to this place, inside the portfolio folder:',
     motto: 'PEOPLE | PROCESSES | RESULTS',
     themeToggle: 'Toggle dark mode',
     eyebrow: 'Logistics · Três Rios, Rio de Janeiro',
@@ -54,6 +56,8 @@ window.I18N = {
   pt: {
     skip: 'Ir para os projetos',
     presentation: 'APRESENTAÇÃO',
+    notFoundTitle: 'Arquivo do dashboard não encontrado',
+    notFoundBody: 'Copie o arquivo do dashboard para este local, dentro da pasta do portfólio:',
     motto: 'PESSOAS | PROCESSOS | RESULTADOS',
     themeToggle: 'Alternar modo escuro',
     eyebrow: 'Logística · Três Rios, Rio de Janeiro',

@@ -62,7 +62,7 @@
          ${p.problem ? `<p class="card-problem">${esc(tr(p.problem))}</p>` : ''}`
       : `<p class="card-desc muted">${esc(ui().prepNote)}</p>`;
     const actions = live
-      ? `<a class="btn btn-primary" href="${esc(p.url)}" target="_blank" rel="noopener">${esc(ui().open)} ${ARROW}<span class="sr-only"> (${esc(ui().openHint)})</span></a>
+      ? `<a class="btn btn-primary" href="${esc(p.url)}" target="_blank" rel="noopener" data-open="${esc(p.id)}">${esc(ui().open)} ${ARROW}<span class="sr-only"> (${esc(ui().openHint)})</span></a>
          ${p.tech ? `<button type="button" class="btn btn-ghost" data-tech="${esc(p.id)}">${CODE} ${esc(ui().tech)}</button>` : ''}`
       : '';
     return `
@@ -104,6 +104,8 @@
     const dlg = $('#tech-dialog');
     if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
   }
+
+  window.openProjectText = () => ({ title: ui().notFoundTitle, body: ui().notFoundBody });
 
   function render() { applyStaticText(); renderTeam(); renderFilters(); renderGrid(); }
 

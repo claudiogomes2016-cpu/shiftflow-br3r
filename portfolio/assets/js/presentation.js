@@ -85,7 +85,7 @@
     const devHtml = `
       <div class="dev"><span class="avatar">${esc(dev.name.charAt(0))}</span>
         <span>${esc(d().developer)} <strong>${esc(dev.name)}</strong> · ${esc(tr(dev.role))}</span>
-        <a class="open" href="${esc(p.url)}" target="_blank" rel="noopener" style="margin-left:24px">${esc(d().open)} ${ARROW}</a>
+        <a class="open" href="${esc(p.url)}" target="_blank" rel="noopener" data-open="${esc(p.id)}" style="margin-left:24px">${esc(d().open)} ${ARROW}</a>
       </div>`;
     return `
       <section class="slide${tr(p.pitch.improved).length > 3 ? ' dense' : ''}">
@@ -127,6 +127,8 @@
         ${foot(n, total)}
       </section>`;
   }
+
+  window.openProjectText = () => ({ title: ui().notFoundTitle, body: ui().notFoundBody });
 
   function render() {
     document.documentElement.lang = state.lang === 'pt' ? 'pt-BR' : 'en';
