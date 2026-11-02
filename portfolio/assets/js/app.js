@@ -16,7 +16,8 @@
   const ARROW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>';
   const CODE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>';
 
-  const state = { lang: 'en', filter: 'all' };
+  // Default language follows the browser (Portuguese browsers open in PT).
+  const state = { lang: /^pt/i.test(navigator.language || '') ? 'pt' : 'en', filter: 'all' };
   try {
     const saved = localStorage.getItem('pf_lang');
     if (saved && window.I18N[saved]) state.lang = saved;

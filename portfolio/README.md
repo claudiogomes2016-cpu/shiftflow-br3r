@@ -54,6 +54,15 @@ location approved by Ball IT (SharePoint, OneDrive or internal server).
 The files are byte-identical copies of the originals, except that the Cloudflare
 analytics script was removed from the Grade de Carregamento (authorized by the author).
 
+## Building the package
+
+    python build.py <output-folder>
+
+Creates `<output-folder>/portfolio` with `index.html` and `apresentacao.html`
+as single self-contained files (CSS, JS and images inlined) plus `projects/`.
+Single files keep working on network drives where the `assets` folder may be
+blocked or not copied. Distribute that folder (zipped), not the source tree.
+
 ## Banner and logo
 
 The banner follows the standard of the BR3R Logistics dashboards. The Ball logo
