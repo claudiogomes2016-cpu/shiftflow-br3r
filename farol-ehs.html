@@ -105,13 +105,14 @@ button.wa{background:#1fa855;border-color:#1fa855;color:#fff}
   <div class="card">
     <h2><span class="n">1</span>Cole os dados</h2>
     <p class="hint">No Excel, selecione a tabela dinâmica com os <b>responsáveis nas linhas</b> e as <b>datas de vencimento nas colunas</b>, copie (Ctrl+C) e cole aqui (Ctrl+V). Ações com vencimento <b>antes</b> da data de referência contam como <b>atrasadas</b>; a partir dela, <b>no prazo</b>. "Total Geral" é ignorado.</p>
-    <textarea id="dados" spellcheck="false" placeholder="Rótulos de Linha&#9;10/9/2026&#9;11/30/2026&#9;Total Geral&#10;Fulano&#9;1&#9;2&#9;3&#10;Total Geral&#9;1&#9;2&#9;3"></textarea>
+    <textarea id="dados" spellcheck="false" placeholder="Clique aqui e cole (Ctrl+V) a tabela dinâmica do Excel"></textarea>
     <label for="dataRef">Data de referência (hoje)</label>
     <input id="dataRef" type="date">
     <div class="legend"><span><i style="background:var(--red)"></i>Atrasado: venceu antes da referência</span><span><i style="background:var(--grn)"></i>No prazo: vence na referência ou depois</span></div>
     <div class="leitura" id="leitura"></div>
     <div class="btns">
-      <button class="pri" id="bSalvar">Salvar dados</button>
+      <button class="pri" id="bColar">Colar dados</button>
+      <button id="bSalvar">Salvar dados</button>
       <button id="bLimpar">Limpar</button>
       <button id="bExemplo">Carregar exemplo</button>
     </div>
@@ -424,6 +425,21 @@ function carregar(){
 }
 
 $('bSalvar').onclick = salvar;
+function receber(txt){
+  if (!txt || !txt.trim()) { $('st1').textContent = '⚠️ A área de transferência está vazia. Copie a tabela no Excel (Ctrl+C) e tente de novo.'; return; }
+  $('dados').value = txt; filtro = 'all'; render();
+  $('st1').textContent = '✅ Dados colados. Clique em Salvar para guardar.';
+}
+$('bColar').onclick = async () => {
+  try { receber(await navigator.clipboard.readText()); }
+  catch(e){ $('dados').focus(); $('dados').select(); $('st1').textContent = '⚠️ O navegador bloqueou o botão. Clique na caixa acima e aperte Ctrl+V (no celular: segure o dedo e toque em Colar).'; }
+};
+// Ctrl+V em qualquer lugar da página (fora de outro campo) cai na caixa de dados
+document.addEventListener('paste', e => {
+  if (e.target === $('dados') || e.target.closest('input,textarea')) return;
+  e.preventDefault(); receber(e.clipboardData.getData('text/plain'));
+});
+$('dados').addEventListener('paste', () => setTimeout(() => { filtro = 'all'; render(); $('st1').textContent = '✅ Dados colados. Clique em Salvar para guardar.'; }, 0));
 $('bLimpar').onclick = () => { $('dados').value=''; filtro='all'; render(); $('st1').textContent='Dados limpos.'; };
 $('bExemplo').onclick = () => { $('dados').value=EXEMPLO; filtro='all'; render(); $('st1').textContent='Exemplo carregado. Cole os dados reais e clique em Salvar.'; };
 $('bImg').onclick = copiarImg; $('bShare').onclick = compartilhar; $('bPng').onclick = baixar;
