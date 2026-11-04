@@ -45,10 +45,16 @@ window.I18N = {
       practice: 'In practice',
       developer: 'Developed by',
       open: 'OPEN PROJECT',
-      closingKicker: 'Next steps',
-      closingTitle: 'From the plant floor <span>to the corporate architecture</span>',
-      closingLead: 'All dashboards run today in the browser with data exported from SAP. The next step is to take them to an environment approved by Ball IT.',
-      closingSteps: ['Hosting on an IT-approved internal environment, with corporate sign-in.', 'Scheduled SAP extraction in place of the desktop scripts.', 'Reference data moved out of the HTML into a governed source.'],
+      closingTitle: 'THE NEXT STEP',
+      closingSub: 'Expanding the potential of digital innovation.',
+      closingLead: 'The solutions developed by Logistics in Três Rios show how technology, combined with operational knowledge, can transform processes and create new opportunities for the business.',
+      closingLabel: 'Evolution opportunities',
+      closingSteps: [
+        { t: 'Integration and connectivity', d: 'Broaden the connection between systems and information, making processes increasingly integrated.' },
+        { t: 'Automation and operational intelligence', d: 'Advance the automation of routines and the smart use of data to support decisions.' },
+        { t: 'Expansion potential', d: 'Identify opportunities to apply and share these solutions in other Ball operations.' }
+      ],
+      closingSign: 'INNOVATION BORN IN OPERATIONS',
       thanks: 'Thank you'
     },
     footerNote: 'Internal portfolio. Projects open in a new tab; original dashboards are kept unchanged and run independently.'
@@ -97,10 +103,16 @@ window.I18N = {
       practice: 'Na prática',
       developer: 'Desenvolvido por',
       open: 'ABRIR PROJETO',
-      closingKicker: 'Próximos passos',
-      closingTitle: 'Do chão da planta <span>para a arquitetura corporativa</span>',
-      closingLead: 'Todos os dashboards rodam hoje no navegador, com dados exportados do SAP. O próximo passo é levá-los para um ambiente aprovado pela TI da Ball.',
-      closingSteps: ['Hospedagem em ambiente interno aprovado pela TI, com login corporativo.', 'Extração agendada do SAP no lugar dos scripts no desktop.', 'Dados de referência fora do HTML, em uma fonte governada.'],
+      closingTitle: 'O PRÓXIMO PASSO',
+      closingSub: 'Expandir o potencial da inovação digital.',
+      closingLead: 'As soluções desenvolvidas pela Logística de Três Rios demonstram como a tecnologia, aliada ao conhecimento operacional, pode transformar processos e gerar novas oportunidades para o negócio.',
+      closingLabel: 'Oportunidades de evolução',
+      closingSteps: [
+        { t: 'Integração e conectividade', d: 'Ampliar a conexão entre sistemas e informações, tornando os processos cada vez mais integrados.' },
+        { t: 'Automação e inteligência operacional', d: 'Avançar na automatização das rotinas e no uso inteligente dos dados para apoiar decisões.' },
+        { t: 'Potencial de expansão', d: 'Identificar oportunidades de aplicação e compartilhamento dessas soluções em outras operações da Ball.' }
+      ],
+      closingSign: 'INOVAÇÃO QUE NASCE NA OPERAÇÃO',
       thanks: 'Obrigado'
     },
     footerNote: 'Portfólio interno. Os projetos abrem em nova aba; os dashboards originais são mantidos sem alteração e funcionam de forma independente.'

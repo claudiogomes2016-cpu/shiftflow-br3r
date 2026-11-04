@@ -99,9 +99,16 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 
 /* Closing */
 .closing .body { grid-template-columns: 1fr 1fr; align-items: start; }
-.closing h2 { font-family: var(--font-display); font-weight: 900; font-size: 52px; line-height: 1.1; margin-top: 22px; }
-.closing h2 span { color: var(--brand); }
-.closing .lead { font-size: 23px; line-height: 1.5; color: var(--text-2); margin-top: 26px; }
+.closing h2 { font-family: var(--font-display); font-weight: 900; font-size: 64px; line-height: 1.05; letter-spacing: .01em; color: var(--text); }
+.closing .closing-sub { font-family: var(--font-display); font-weight: 800; font-size: 30px; line-height: 1.25; color: var(--brand); margin-top: 16px; }
+.closing .lead { font-size: 23px; line-height: 1.55; color: var(--text-2); margin-top: 30px; padding-left: 22px; border-left: 5px solid var(--banner-line); }
+.closing .improved li { align-items: flex-start; padding: 22px 28px; }
+.closing .improved li .num { margin-top: 2px; }
+.closing .improved li strong { display: block; font-family: var(--font-display); font-weight: 800; font-size: 21px; color: var(--text); }
+.closing .improved li small { display: block; font-size: 18px; line-height: 1.45; color: var(--text-2); margin-top: 6px; }
+.closing .closing-sign { display: flex; align-items: center; gap: 28px; }
+.closing .closing-motto { font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: .28em; color: var(--text-2); }
+.closing .closing-tag { font-family: var(--font-display); font-weight: 900; font-size: 15px; letter-spacing: .16em; color: #fff; background: #000; border-bottom: 3px solid var(--banner-line); padding: 10px 16px; border-radius: 6px; }
 
 /* Bottom controls */
 .controls { position: fixed; left: 0; right: 0; bottom: 0; height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; color: #C3C8DA; font-family: var(--font); }

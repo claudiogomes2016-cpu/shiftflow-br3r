@@ -112,23 +112,30 @@
   }
 
   function closingSlide(n, total) {
-    const steps = d().closingSteps.map((t, i) => `<li><span class="num">${i + 1}</span><span>${esc(t)}</span></li>`).join('');
+    const steps = d().closingSteps.map((x, i) =>
+      `<li><span class="num">${i + 1}</span><span><strong>${esc(x.t)}</strong><small>${esc(x.d)}</small></span></li>`).join('');
+    const sign = `
+      <div class="closing-sign">
+        <span class="closing-motto">${esc(ui().motto)}</span>
+        <span class="closing-tag">${esc(d().closingSign)}</span>
+      </div>`;
     return `
       <section class="slide closing">
         ${banner({ title: 'LOGISTICS', accent: 'DIGITAL', after: 'INNOVATION', sub: d().thanks.toUpperCase() })}
         <div class="body">
           <div>
-            <p class="eyebrow">${esc(d().closingKicker)}</p>
-            <h2>${d().closingTitle}</h2>
+            <h2>${esc(d().closingTitle)}</h2>
+            <p class="closing-sub">${esc(d().closingSub)}</p>
             <p class="lead">${esc(d().closingLead)}</p>
           </div>
-          <div class="improved"><ol>${steps}</ol></div>
+          <div class="improved">
+            <p class="label">${esc(d().closingLabel)}</p>
+            <ol>${steps}</ol>
+          </div>
         </div>
-        ${foot(n, total)}
+        ${foot(n, total, sign)}
       </section>`;
   }
-
-  window.openProjectText = () => ({ title: ui().notFoundTitle, body: ui().notFoundBody });
 
   function render() {
     document.documentElement.lang = state.lang === 'pt' ? 'pt-BR' : 'en';
