@@ -408,6 +408,12 @@ async function compartilhar(){
 }
 async function baixar(){
   render();
+  const dl = window.claude ? await window.claude.use('downloads') : null;
+  if (dl){
+    try { await dl.save({filename: nomeArq(), data: await pngBlob()}); st('✅ Banner salvo.'); }
+    catch(e){ if (e && e.code !== 'declined') st('⚠️ Não foi possível baixar aqui. Use "Copiar banner".'); }
+    return;
+  }
   const a = document.createElement('a'); a.href = URL.createObjectURL(await pngBlob()); a.download = nomeArq(); a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
 }
