@@ -73,7 +73,7 @@
     return `
       <section class="slide overview">
         ${banner({ title: 'LOGISTICS', accent: 'DIGITAL', after: 'INNOVATION', sub: d().overviewSub.toUpperCase() })}
-        <div class="grid">${cards}</div>
+        <div class="grid${projects().length > 6 ? ' g4' : ''}">${cards}</div>
         ${foot(n, total)}
       </section>`;
   }

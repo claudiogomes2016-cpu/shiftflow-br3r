@@ -88,6 +88,9 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 
 /* Overview */
 .overview .grid { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; padding: 40px 64px 24px; }
+.overview .grid.g4 { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.overview .grid.g4 .mini-bnr .t { font-size: 18px; }
+.overview .grid.g4 .mini-body p { font-size: 16.5px; }
 .mini { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 6px 24px rgba(20,26,46,.05); text-decoration: none; color: inherit; }
 .mini-bnr { background: var(--banner-bg); border-bottom: 4px solid var(--banner-line); color: #fff; padding: 18px 22px; }
 .mini-bnr .t { font-family: var(--font-display); font-weight: 900; font-size: 21px; line-height: 1.1; }

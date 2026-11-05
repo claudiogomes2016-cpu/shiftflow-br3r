@@ -299,6 +299,54 @@ window.PROJECTS = [
     }
   },
   {
+    id: 'tmrd',
+    status: 'live',
+    url: 'https://tmrd-app.github.io/',
+    icon: 'alert',
+    developer: 'claudio',
+    banner: { title: 'TAREFA DE', accent: 'MAIOR RISCO', after: 'DO DIA', sub: 'TMRD · LANÇAMENTO PELO CELULAR E PAINEL AO VIVO' },
+    name: { en: 'TMRD · Highest-Risk Task of the Day', pt: 'TMRD · Tarefa de Maior Risco do Dia' },
+    category: { en: 'EHS · Safety', pt: 'EHS · Segurança' },
+    description: {
+      en: 'Supervisors log the highest-risk task of the day from their phones; entries appear live on the TV, in the operations room and for management, with the controls applied and adherence indicators.',
+      pt: 'Os supervisores lançam pelo celular a tarefa de maior risco do dia; os lançamentos aparecem na hora na TV, na sala de operações e para a gerência, com os controles aplicados e indicadores de adesão.'
+    },
+    problem: {
+      en: 'Making the day\'s highest risks visible to everyone, as they are planned.',
+      pt: 'Deixar visível para todos, no momento do planejamento, onde estão os maiores riscos do dia.'
+    },
+    tech: {
+      objective: {
+        en: 'Record the highest-risk task of the day for each area and show it live to the TV, the operations room and management.',
+        pt: 'Registrar a tarefa de maior risco do dia de cada área e mostrar ao vivo na TV, na sala de operações e para a gerência.'
+      },
+      dataSources: {
+        en: ['Entries made by supervisors on their phones (QR code or installed app).', 'Cloud database (Supabase / PostgreSQL), updated in real time.', 'A ready-made view (tmrd_planilha) for Excel and Power BI.'],
+        pt: ['Lançamentos feitos pelos supervisores no celular (QR Code ou app instalado).', 'Banco de dados na nuvem (Supabase / PostgreSQL), atualizado em tempo real.', 'Visão pronta (tmrd_planilha) para Excel e Power BI.']
+      },
+      technologies: {
+        en: ['Installable web app (PWA) for phone, computer and TV', 'HTML, CSS and vanilla JavaScript · supabase-js (real time)', 'Works without signal: entries wait on the phone and are sent when the signal returns', 'QR code for quick access · automatic update to new versions'],
+        pt: ['App web instalável (PWA) para celular, computador e TV', 'HTML, CSS e JavaScript puro · supabase-js (tempo real)', 'Funciona sem sinal: o lançamento fica no celular e é enviado quando o sinal volta', 'QR Code para acesso rápido · atualização automática de versão']
+      },
+      businessRules: {
+        en: ['11 risk topics (chemicals, confined space, hot work, major lifts, hazardous energy, work at height, roof work, equipment intervention, internal logistics, contractors, others).', 'Controls recorded per task: work permit, APR/ART, LOTO, area isolation, watcher, specific PPE, safety talk.', 'Board by topic × day (today and the next 2 days); no entries in past dates.', 'Editing and deleting with an administrator PIN checked on the server; each person edits their own entries.', 'Indicators: adherence by area, tasks per day, most frequent topics, time of entry, risks by area.'],
+        pt: ['11 tópicos de risco (produtos químicos, espaço confinado, trabalho a quente, grandes içamentos, energias perigosas, altura, telhado, intervenção em equipamentos, logística interna, terceirizados, outros).', 'Controles registrados por tarefa: PT, APR/ART, bloqueio LOTO, isolamento de área, vigia, EPI específico, DDS.', 'Painel tópico × dias (hoje e os próximos 2 dias); não aceita lançamento em data passada.', 'Edição e exclusão com PIN de administrador conferido no servidor; cada um edita os próprios lançamentos.', 'Indicadores: adesão por área, tarefas por dia, tópicos mais frequentes, horário do lançamento, riscos por área.']
+      },
+      operation: {
+        en: 'Opens in the browser of the phone, computer or TV through the link or the QR code; installing is optional. TV mode stays on full screen without editing buttons.',
+        pt: 'Abre no navegador do celular, do computador ou da TV pelo link ou pelo QR Code; instalar é opcional. O modo TV fica em tela cheia, sem botões de edição.'
+      },
+      integration: {
+        en: 'Own cloud database (Supabase), with a view ready for Excel and Power BI. Not integrated with SAP or corporate EHS systems.',
+        pt: 'Banco próprio na nuvem (Supabase), com visão pronta para Excel e Power BI. Não integrado a SAP ou a sistemas corporativos de EHS.'
+      },
+      evolution: {
+        en: ['Corporate sign-in for entering and editing tasks.', 'Indicators in the corporate Power BI from the tmrd_planilha view.', 'Use in other Ball operations.'],
+        pt: ['Login corporativo para lançar e editar.', 'Indicadores no Power BI corporativo a partir da visão tmrd_planilha.', 'Uso em outras operações da Ball.']
+      }
+    }
+  },
+  {
     id: 'rickson-01',
     status: 'prep',
     icon: 'inventory',

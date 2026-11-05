@@ -91,6 +91,7 @@
     if (!a || e.ctrlKey || e.metaKey || e.shiftKey) return;
     const p = window.PROJECTS.find((x) => x.id === a.dataset.open);
     if (!p) return;
+    if (/^https?:\/\//i.test(p.url)) return; // projeto publicado na internet: o link abre direto
     e.preventDefault();
     window.openProject(p, window.openProjectText ? window.openProjectText() : { title: 'File not found', body: 'Place the file here, next to this page:' });
   });
