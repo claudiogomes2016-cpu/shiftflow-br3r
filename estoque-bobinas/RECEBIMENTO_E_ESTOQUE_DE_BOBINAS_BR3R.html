@@ -1158,8 +1158,50 @@ html[data-theme="dark"] .mb52-status-sel.st-rma,html[data-theme="dark"] .mb52-st
 .resumo-sec{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-faint);margin:2px 0 -4px;display:flex;align-items:center;gap:8px;}
 .resumo-sec::after{content:"";flex:1;height:1px;background:var(--border);}
 .resumo-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
-.rs-card{--nv:var(--ok);--nv-bg:var(--ok-bg);background:var(--surface);border:1px solid var(--border-soft);box-shadow:var(--shadow-card);padding:16px 18px 14px;position:relative;overflow:hidden;}
+.rs-card{--nv:var(--ok);--nv-bg:var(--ok-bg);background:var(--surface);border:1px solid var(--border-soft);box-shadow:var(--shadow-card);padding:16px 18px 14px;position:relative;min-width:0;}
 .rs-card.warn{--nv:var(--warn);--nv-bg:var(--warn-bg);} .rs-card.crit{--nv:var(--crit);--nv-bg:var(--crit-bg);} .rs-card.neutro{--nv:var(--ink-soft);--nv-bg:var(--border-soft);}
+.rs-card.laranja{--nv:#EA580C;--nv-bg:var(--baixo-bg);} .rs-card.azul{--nv:var(--brand);--nv-bg:var(--brand-bg);}
+button.rs-card{font-family:var(--font);text-align:left;color:inherit;cursor:pointer;width:100%;display:block;transition:transform .08s ease, box-shadow .15s ease;}
+button.rs-card:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.12);}
+.rs-card.sel{outline:2px solid var(--nv);outline-offset:-2px;background:var(--nv-bg);}
+.rs-card-pct small{font-size:14px;font-weight:700;margin-left:5px;color:var(--ink-faint);}
+.rs-card-main{flex-wrap:wrap;row-gap:4px;}
+.rs-card-pct{font-size:clamp(26px,2.3vw,40px);white-space:nowrap;}
+.rs-card-un{margin-left:auto;}
+.mb52-kpis .rs-card-pct,.mb52-origem .rs-card-pct{font-size:clamp(22px,1.7vw,30px);}
+.mb52-toolbar{grid-template-columns:minmax(0,1fr) minmax(360px,32%);}
+.rs-card-label .info-dot{margin-left:6px;vertical-align:1px;}
+.rs-card-hint{font-size:11.5px;font-weight:700;color:var(--ink-faint);margin-top:6px;}
+.rs-rows{display:flex;flex-direction:column;margin-top:10px;border-top:1px solid var(--border-soft);}
+.rs-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--border-soft);font-size:13px;color:var(--ink-soft);}
+.rs-row:last-child{border-bottom:none;}
+.rs-row span{display:flex;align-items:center;gap:7px;}
+.rs-row i{width:9px;height:9px;border-radius:2px;display:inline-block;}
+.rs-row b{font-family:var(--mono);font-size:13.5px;color:var(--ink);}
+.rs-cob{--c:var(--ink-soft);--c-bg:var(--border-soft);display:flex;flex-direction:column;gap:4px;margin-top:12px;padding:10px 12px;background:var(--c-bg);}
+.rs-cob-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.rs-card-tag{max-width:100%;}
+@media (max-width:760px){ .mb52-kpis .mb52-status-card{grid-column:1/-1;} }
+@media (max-width:500px){ .rs-card-pct{white-space:normal;overflow-wrap:anywhere;} }
+.rs-cob.ok{--c:var(--ok);--c-bg:var(--ok-bg);} .rs-cob.warn{--c:var(--warn);--c-bg:var(--warn-bg);} .rs-cob.crit{--c:var(--crit);--c-bg:var(--crit-bg);} .rs-cob.laranja{--c:#EA580C;--c-bg:var(--baixo-bg);} .rs-cob.azul{--c:var(--brand);--c-bg:var(--brand-bg);}
+.rs-cob-ico{color:var(--c);display:flex;}
+.rs-cob-txt{flex:1;min-width:0;}
+.rs-cob-dias{flex:1;font-family:var(--mono);font-size:20px;font-weight:800;color:var(--c);line-height:1.1;white-space:nowrap;}
+.rs-cob-meta{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+.rs-cob-meta .suf-footer-input{width:62px;font-size:12px;}
+.rs-cob-tag{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:3px 8px;border-radius:999px;background:var(--surface);color:var(--c);white-space:nowrap;}
+.rs-note{font-size:11.5px;color:var(--ink-faint);margin-top:8px;padding-top:8px;border-top:1px dashed var(--border-soft);}
+.ui-tit-ico{width:30px;height:30px;border-radius:9px;background:var(--brand-bg);color:var(--brand);display:inline-flex;align-items:center;justify-content:center;flex:none;margin-right:9px;vertical-align:middle;}
+.ui-tit-ico .rs-ico{width:17px;height:17px;}
+.card-title{display:inline-flex;align-items:center;min-width:0;}
+.card-head{flex-wrap:wrap;}
+.card{position:relative;}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--brand);opacity:.85;}
+.hfi-ocup-wrap{margin-bottom:16px;}
+.mb52-kpis .mb52-status-card{grid-column:span 2;}
+@media (max-width:760px){ .mb52-kpis .mb52-status-card{grid-column:1/-1;} }
+.mb52-status-card .mb52-st-btns{margin-top:12px;}
+.ct-card-title .ui-tit-ico{margin-right:9px;}
 .rs-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--nv);}
 .rs-card-top{display:flex;align-items:center;gap:12px;}
 .rs-card-icon{width:44px;height:44px;border-radius:12px;background:var(--nv-bg);color:var(--nv);display:flex;align-items:center;justify-content:center;flex:none;}
@@ -1414,7 +1456,7 @@ button.kpi-hero-card.sel{background:var(--brand-bg);outline:2px solid var(--bran
       <div id="cqInner"></div>
     </div>
     <div class="card" id="hfiCard">
-      <div class="card-head"><span class="card-title">HFI Geral</span></div>
+      <div class="card-head"><span class="card-title"><span class="ui-tit-ico"><svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1.3"/></svg></span>HFI Geral</span></div>
       <div id="hfiInner"></div>
     </div>
   </div>
@@ -1502,11 +1544,11 @@ button.kpi-hero-card.sel{background:var(--brand-bg);outline:2px solid var(--bran
     <div class="section-label" id="ctSuficienciaSectionLabel"><span class="num">4</span><h2>Suficiência por material (dias de cobertura)</h2></div>
     <div class="grid grid-2" id="ctSuficienciaGrid">
       <div class="ct-card" id="ctSuficienciaTabCard">
-        <div class="ct-card-title">TAB — dias de estoque livre</div>
+        <div class="ct-card-title"><span><span class="ui-tit-ico"><svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="7"/><rect x="9" y="6.5" width="6" height="5" rx="2.5"/><path d="M12 15v2.5"/></svg></span>TAB — dias de estoque livre</span></div>
         <div class="chart-wrap" id="ctSuficienciaTabWrap" style="height:280px;"></div>
       </div>
       <div class="ct-card" id="ctSuficienciaShellCard">
-        <div class="ct-card-title">Shell — dias de estoque livre (cenário 2 prensas, mesma cor)</div>
+        <div class="ct-card-title"><span><span class="ui-tit-ico"><svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="9" rx="9" ry="4"/><path d="M3 9v4c0 2.2 4 4 9 4s9-1.8 9-4V9"/><path d="M10 8.5h4"/></svg></span>Shell — dias de estoque livre (cenário 2 prensas, mesma cor)</span></div>
         <div class="chart-wrap" id="ctSuficienciaShellWrap" style="height:280px;"></div>
       </div>
     </div>
@@ -2588,7 +2630,7 @@ function renderEntradas(mb51proc){
     const d=agg[metal];
     const card=document.createElement('div');
     card.className='card chart-card';
-    card.innerHTML=`<div class="card-head"><span class="card-title">${labelMetal(metal)}</span><span class="card-total">${d.totalBobinas} bobinas · ${fmtTon(d.total)}</span></div>
+    card.innerHTML=`<div class="card-head"><span class="card-title">${uiTitulo('entrada', labelMetal(metal))}</span><span class="card-total">${d.totalBobinas} bobinas · ${fmtTon(d.total)}</span></div>
       ${buildHtmlBarList(d.classes, '#1140FE')}`;
     grid.appendChild(card);
   });
@@ -2604,7 +2646,7 @@ function renderEstoque(mb52proc){
     const d=agg[metal];
     const card=document.createElement('div');
     card.className='card chart-card';
-    card.innerHTML=`<div class="card-head"><span class="card-title">${labelMetal(metal)}</span><span class="card-total">${d.totalBobinas} bobinas · ${fmtTon(d.total)}</span></div>
+    card.innerHTML=`<div class="card-head"><span class="card-title">${uiTitulo('bobina', labelMetal(metal))}</span><span class="card-total">${d.totalBobinas} bobinas · ${fmtTon(d.total)}</span></div>
       ${buildHtmlBarList(d.classes, '#15803D')}`;
     grid.appendChild(card);
   });
@@ -2638,17 +2680,12 @@ function renderOcupacaoHFI(mb52proc){
   const d=computeOcupacaoHFI(mb52proc, state.capacidadeMap);
   if(!d.capacidade){ card.innerHTML=''; card.style.display='none'; return; }
   card.style.display='';
-  const cls=ocupacaoClasse(d.percentual);
+  card.className='hfi-ocup-wrap';
   const tooltip='As bobinas com status HFI (bloqueado) e as bobinas em Controle de Qualidade ficam fisicamente na mesma rua do armazém — a capacidade (16 UN) é compartilhada entre os dois status, nunca somada como se fossem áreas independentes.';
-  card.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;">
-    <div style="min-width:260px;">
-      <div class="hero-label">Ocupação da rua de HFI / Controle de Qualidade
-        <span class="info-dot">i<span class="tooltip">${tooltip}</span></span>
-      </div>
-      <div style="font-size:14px;color:var(--ink-faint);margin-top:6px;">${d.hfiUN} UN em HFI + ${d.cqUN} UN em Controle de Qualidade · ${d.capacidade} UN de capacidade física (mesma rua)</div>
-    </div>
-    <div class="semaforo-value ${cls}" style="min-width:130px;padding:10px 22px;">${fmtPct(d.percentual)}</div>
-  </div>`;
+  card.innerHTML = uiCard({ icone:'rua', nivel:ocupacaoClasse(d.percentual)||'ok',
+    label:`Rua de HFI + Controle de Qualidade<span class="info-dot">i<span class="tooltip">${tooltip}</span></span>`, tag:`${uiTagOcupacao(d.percentual)} · mesma rua`,
+    big:fmtPct(d.percentual), un:`${d.estoqueUN} / ${d.capacidade} UN`, unSub:'bobinas / capacidade', meter:{v:d.estoqueUN, cap:d.capacidade},
+    extra:uiVagas(d.estoqueUN, d.capacidade), corpo:uiSplitHfiCq(d.hfiUN, d.cqUN) });
 }
 
 /* ============================================================
@@ -2893,58 +2930,44 @@ function ctRenderTabEstoqueDisponivel(mb52MetalProc){
   if(!mb52MetalProc){ card.innerHTML='<div class="ct-empty-block">Carregue o MB52 — Metal para calcular o estoque de TAB.</div>'; return; }
   const d=ctAggregateEstoqueTab(mb52MetalProc);
   if(!d.classes.length){ card.innerHTML=`<div class="card-head"><span class="card-title">TAB — Estoque disponível (livre)</span></div><div class="empty-note">Sem estoque livre de TAB no momento.</div>`; return; }
-  card.innerHTML=`<div class="card-head"><span class="card-title">TAB — Estoque disponível (livre)</span><span class="card-total">${d.totalCount} bobinas · ${fmtTon(d.totalKg)}</span></div>
+  card.innerHTML=`<div class="card-head"><span class="card-title">${uiTitulo('tab','TAB — Estoque disponível (livre)')}</span><span class="card-total">${d.totalCount} bobinas · ${fmtTon(d.totalKg)}</span></div>
     ${buildHtmlBarList(d.classes, '#1140FE')}`;
 }
 
 function ctTabCard(material, d){
-  if(!d) return `<div class="ct-card"><div class="ct-card-title">${material}</div><div class="ct-empty-block">Aguardando MB52 — Metal</div></div>`;
+  if(!d) return uiCard({ icone:'tab', nivel:'neutro', label:material, tag:'aguardando arquivo', big:'—', det:'Aguardando MB52 — Metal' });
   const nivel=ctNivelSuficiencia(d.suficienciaDias===Infinity?999:d.suficienciaDias, CT_LIMITES_SUFICIENCIA_TAB)||'';
   const diasTxt = d.suficienciaDias===Infinity ? '∞' : (d.suficienciaDias!=null? d.suficienciaDias.toFixed(1).replace('.',',') : '—');
-  return `<div class="ct-card">
-    <div class="ct-card-title"><span><span class="ct-status-dot ${nivel}"></span>${material}</span></div>
-    <div class="ct-suf-big ${nivel}">${diasTxt}</div>
-    <div class="ct-suf-sub ${nivel}">${nivelSuficienciaLabel(nivel)}</div>
-    <div class="ct-metric-row"><span>Estoque livre</span><span class="ct-metric-val">${d.livreTon.toFixed(1).replace('.',',')} t</span></div>
-    <div class="ct-metric-row"><span>Controle de qualidade</span><span class="ct-metric-val">${d.cqTon.toFixed(1).replace('.',',')} t</span></div>
-    <div class="ct-metric-row"><span>Bloqueado</span><span class="ct-metric-val">${d.bloqTon.toFixed(1).replace('.',',')} t</span></div>
-    <div class="ct-metric-row"><span>Consumo neste cenário (prensas)</span><span class="ct-metric-val">${d.consumoDiaTon.toFixed(1).replace('.',',')} t/dia</span></div>
-  </div>`;
+  const t = v => v.toFixed(1).replace('.',',')+' t';
+  return uiCard({ icone:'tab', nivel:nivel||'neutro', label:material, tag:uiTagSuf(nivel)||'suficiência',
+    big:`${diasTxt}<small>dias</small>`, un:t(d.livreTon), unSub:'estoque livre',
+    corpo:`<div class="rs-rows">
+      <div class="rs-row"><span><i style="background:var(--warn)"></i>Controle de qualidade</span><b>${t(d.cqTon)}</b></div>
+      <div class="rs-row"><span><i style="background:var(--crit)"></i>Bloqueado</span><b>${t(d.bloqTon)}</b></div>
+      <div class="rs-row"><span><i style="background:var(--brand)"></i>Consumo (prensas no simulador)</span><b>${d.consumoDiaTon.toFixed(1).replace('.',',')} t/dia</b></div>
+    </div>` });
 }
 // cor fixa por status (não por nível de ocupação): livre=verde, controle de qualidade=amarelo, bloqueado=vermelho
 const CT_STATUS_COR_CLASSE = { livre:'ok', cq:'warn', bloq:'crit' };
+const CT_STATUS_ICO = { livre:'tampa', cq:'lupa', bloq:'cadeado' };
 function ctShellCard(corLabel, statusLabel, key, d){
   const cls = CT_STATUS_COR_CLASSE[key]||'';
-  if(!d) return `<div class="ct-card ct-card-status"><div class="ct-card-accent ${cls}"></div><div class="ct-card-title">${corLabel} — ${statusLabel}</div><div class="ct-empty-block">Aguardando MB52 — Metal</div></div>`;
+  if(!d) return uiCard({ icone:CT_STATUS_ICO[key], nivel:'neutro', label:`${corLabel} — ${statusLabel}`, tag:'aguardando arquivo', big:'—', det:'Aguardando MB52 — Metal' });
   const pallets=d[key+'Pallets'], milhoes=(d[key+'Un'])/1000000;
   const pctCap=pallets/d.capacidadePallets;
-  const sufHTML = key==='livre'
-    ? `<div class="ct-metric-row"><span>Suficiência (2 prensas, mesma cor)</span><span class="ct-metric-val">${d.suficienciaDias!=null? d.suficienciaDias.toFixed(1).replace('.',',')+' dias':'—'}</span></div>`
-    : '';
-  return `<div class="ct-card ct-card-status">
-    <div class="ct-card-accent ${cls}"></div>
-    <div class="ct-card-title"><span><span class="ct-status-dot ${cls}"></span>${corLabel} — ${statusLabel}</span></div>
-    <div class="ct-metric-row"><span>Milhões</span><span class="ct-metric-val">${milhoes.toFixed(2).replace('.',',')} M</span></div>
-    <div class="ct-metric-row"><span>Pallets</span><span class="ct-metric-val">${pallets.toFixed(1).replace('.',',')}</span></div>
-    <div class="ct-metric-row"><span>Capacidade (798, compartilhada Prata+Ouro)</span><span class="ct-metric-val">${d.capacidadePallets}</span></div>
-    <div class="ct-metric-row"><span>Este status ÷ capacidade (798)</span><span class="ct-metric-val">${fmtPct(pctCap)}</span></div>
-    <div class="ct-metric-row"><span>Ocupação combinada Shell (Prata+Ouro)</span><span class="ct-metric-val">${fmtPct(d.ocupacaoPct)}</span></div>
-    ${sufHTML}
-  </div>`;
+  const suf = key==='livre' ? `<div class="rs-rows"><div class="rs-row"><span>${RS_ICO.relogio.replace('class="rs-ico"','class="rs-ico" style="width:15px;height:15px"')}Suficiência (2 prensas, mesma cor)</span><b>${d.suficienciaDias!=null? d.suficienciaDias.toFixed(1).replace('.',',')+' dias':'—'}</b></div></div>` : '';
+  return uiCard({ icone:CT_STATUS_ICO[key], nivel:cls, label:`${corLabel} — ${statusLabel}`, tag:`${fmtPct(pctCap)} da capacidade`,
+    big:`${pallets.toFixed(1).replace('.',',')}<small>pallets</small>`, un:`${milhoes.toFixed(2).replace('.',',')} M`, unSub:'milhões de unidades',
+    meter:{v:pallets, cap:d.capacidadePallets}, det:`Capacidade ${d.capacidadePallets} pal. (Prata + Ouro, rua única) · ocupação combinada Shell ${fmtPct(d.ocupacaoPct)}`, corpo:suf });
 }
 function ctTampaCard(statusLabel, key, d){
   const cls = CT_STATUS_COR_CLASSE[key]||'';
-  if(!d) return `<div class="ct-card ct-card-status"><div class="ct-card-accent ${cls}"></div><div class="ct-card-title">TAMPA ACABADA — ${statusLabel}</div><div class="ct-empty-block">Aguardando MB52 — Tampa Acabada</div></div>`;
+  if(!d) return uiCard({ icone:CT_STATUS_ICO[key], nivel:'neutro', label:`Tampa acabada — ${statusLabel}`, tag:'aguardando arquivo', big:'—', det:'Aguardando MB52 — Tampa Acabada' });
   const pallets=d[key+'Pallets'], milhoes=(d[key+'Un'])/1000000;
   const pctCap=pallets/d.capacidadePallets;
-  return `<div class="ct-card ct-card-status">
-    <div class="ct-card-accent ${cls}"></div>
-    <div class="ct-card-title"><span><span class="ct-status-dot ${cls}"></span>TAMPA ACABADA — ${statusLabel}</span></div>
-    <div class="ct-metric-row"><span>Milhões</span><span class="ct-metric-val">${milhoes.toFixed(2).replace('.',',')} M</span></div>
-    <div class="ct-metric-row"><span>Pallets</span><span class="ct-metric-val">${pallets.toFixed(1).replace('.',',')}</span></div>
-    <div class="ct-metric-row"><span>Capacidade</span><span class="ct-metric-val">${d.capacidadePallets.toLocaleString('pt-BR')}</span></div>
-    <div class="ct-metric-row"><span>Ocupação sobre a capacidade</span><span class="ct-metric-val">${fmtPct(pctCap)}</span></div>
-  </div>`;
+  return uiCard({ icone:CT_STATUS_ICO[key], nivel:cls, label:`Tampa acabada — ${statusLabel}`, tag:`${fmtPct(pctCap)} da capacidade`,
+    big:`${pallets.toFixed(1).replace('.',',')}<small>pallets</small>`, un:`${milhoes.toFixed(2).replace('.',',')} M`, unSub:'milhões de unidades',
+    meter:{v:pallets, cap:d.capacidadePallets}, det:`Capacidade ${d.capacidadePallets.toLocaleString('pt-BR')} pallets` });
 }
 function fmtCtPallets(v){ return v.toFixed(1).replace('.',',')+' pal.'; }
 function ctStackBarHTML(label, livre, cq, bloq){
@@ -3048,23 +3071,12 @@ function ctBuildSuficienciaColChart(items, wrapId, canvasId, emptyMsg){
 }
 /* ---- gráficos de rosca (donut) de ocupação — Shell Prata/Ouro, Tampa Acabada ---- */
 function ctDonutCardHTML(label, d, capacidade, canvasId){
-  if(!d) return `<div class="ct-card"><div class="ct-card-title">${label}</div><div class="ct-empty-block">Aguardando arquivo</div></div>`;
+  if(!d) return uiCard({ icone:'pallet', nivel:'neutro', label, tag:'aguardando arquivo', big:'—' });
   const pct = capacidade ? d.totalPallets/capacidade : null;
-  const nivel = ctNivelOcupacao(pct)||'';
-  return `<div class="ct-card ct-donut-card">
-    <div class="ct-donut-wrap">
-      <canvas id="${canvasId}"></canvas>
-      <div class="ct-donut-center">
-        <div class="ct-donut-pct ${nivel}">${fmtPct(pct)}</div>
-        <div class="ct-donut-caplabel">ocupação</div>
-      </div>
-    </div>
-    <div class="ct-donut-stats">
-      <div class="ct-card-title" style="margin-bottom:10px;">${label}</div>
-      <div class="ct-metric-row"><span>Estoque total</span><span class="ct-metric-val">${d.totalPallets.toFixed(1).replace('.',',')} pal.</span></div>
-      <div class="ct-metric-row"><span>Capacidade</span><span class="ct-metric-val">${capacidade.toLocaleString('pt-BR')} pal.</span></div>
-    </div>
-  </div>`;
+  const nivel = ctNivelOcupacao(pct)||'ok';
+  return uiCard({ icone:'pallet', nivel, label, tag:uiTagOcupacao(pct), big:fmtPct(pct),
+    un:`${d.totalPallets.toFixed(1).replace('.',',')} / ${capacidade.toLocaleString('pt-BR')}`, unSub:'pallets / capacidade',
+    meter:{v:d.totalPallets, cap:capacidade}, extra:uiVagas(Math.round(d.totalPallets*10)/10, capacidade, 'pallet'), det:'livre + controle de qualidade + bloqueado' });
 }
 function ctBuildDonutChart(canvasId, pct, nivel){
   const ctx=document.getElementById(canvasId);
@@ -3211,20 +3223,20 @@ function ctRenderKPIHero(tab, shell, tampaAcabada, lista){
   const prensasDoTab = m => [p1Tab,p2Tab].filter(v=>v===m).length;
   const subCenario = (material, n) => `${material} · ${n} prensa${n!==1?'s':''} no simulador`;
 
+  const nv = n => n||'neutro';
+  const sufTab = n => ctNivelSuficiencia(n, CT_LIMITES_SUFICIENCIA_TAB), sufShell = n => ctNivelSuficiencia(n, CT_LIMITES_SUFICIENCIA_SHELL);
+  const shellPal = shell && shell['SHELL PRATA'] ? shell['SHELL PRATA'].totalPalletsCombinado : null;
   const cards = [
-    { label:'Ocupação Shell (Prata+Ouro)', value:fmtPct(shellPct), cls:ctNivelOcupacao(shellPct)||'', sub:'rua única compartilhada' },
-    { label:'Ocupação Tampa Acabada', value:fmtPct(tampaPct), cls:ctNivelOcupacao(tampaPct)||'', sub: tampaAcabada?`${Math.round(tampaAcabada.totalPallets)} pallets`:'sem dados' },
-    { label: piorTab?nivelSuficienciaLabel(ctNivelSuficiencia(piorTab.dias, CT_LIMITES_SUFICIENCIA_TAB)):'TAB — menor cobertura', value: piorTab?piorTab.dias.toFixed(1).replace('.',',')+' dias':'—', cls: piorTab?ctNivelSuficiencia(piorTab.dias, CT_LIMITES_SUFICIENCIA_TAB):'', sub: piorTab?subCenario(piorTab.material, prensasDoTab(piorTab.material)):'sem dados' },
-    { label: tabGold?nivelSuficienciaLabel(tabGold.nivel):'Suficiência TAB GOLD', value: tabGold?fmtDiasCt(tabGold.dias):'—', cls: tabGold?tabGold.nivel:'', sub:'TAB GOLD' },
-    { label: piorShell?nivelSuficienciaLabel(ctNivelSuficiencia(piorShell.dias, CT_LIMITES_SUFICIENCIA_SHELL)):'Shell — menor cobertura', value: piorShell?piorShell.dias.toFixed(1).replace('.',',')+' dias':'—', cls: piorShell?ctNivelSuficiencia(piorShell.dias, CT_LIMITES_SUFICIENCIA_SHELL):'', sub: piorShell?subCenario(piorShell.material, prensasDoShell(piorShell.material)):'sem dados' },
-    { label: shellOuro?nivelSuficienciaLabel(shellOuro.nivel):'Suficiência SHELL OURO', value: shellOuro?fmtDiasCt(shellOuro.dias):'—', cls: shellOuro?shellOuro.nivel:'', sub:'SHELL OURO' }
+    { icone:'pallet', nivel:nv(ctNivelOcupacao(shellPct)), label:'Ocupação Shell (Prata + Ouro)', tag:uiTagOcupacao(shellPct), big:fmtPct(shellPct),
+      un: shellPal!=null?`${Math.round(shellPal)} / ${CT_CAPACIDADE_SHELL_PALLETS}`:'sem dados', unSub:'pallets / capacidade', meter: shellPal!=null?{v:shellPal, cap:CT_CAPACIDADE_SHELL_PALLETS}:null, det:'rua única compartilhada' },
+    { icone:'tampa', nivel:nv(ctNivelOcupacao(tampaPct)), label:'Ocupação Tampa Acabada', tag:uiTagOcupacao(tampaPct), big:fmtPct(tampaPct),
+      un: tampaAcabada?`${Math.round(tampaAcabada.totalPallets)} / ${CT_CAPACIDADE_TAMPA_ACABADA_PALLETS}`:'sem dados', unSub:'pallets / capacidade', meter: tampaAcabada?{v:tampaAcabada.totalPallets, cap:CT_CAPACIDADE_TAMPA_ACABADA_PALLETS}:null },
+    { icone:'tab', nivel:nv(piorTab&&sufTab(piorTab.dias)), label:'TAB — menor cobertura', tag:piorTab?uiTagSuf(sufTab(piorTab.dias)):'', big: piorTab?`${piorTab.dias.toFixed(1).replace('.',',')}<small>dias</small>`:'—', det: piorTab?subCenario(piorTab.material, prensasDoTab(piorTab.material)):'sem dados' },
+    { icone:'tab', nivel:nv(tabGold&&tabGold.nivel), label:'Suficiência TAB GOLD', tag:tabGold?uiTagSuf(tabGold.nivel):'', big: tabGold?fmtDiasCt(tabGold.dias).replace(' dias','<small>dias</small>'):'—', det:'TAB GOLD' },
+    { icone:'tampa', nivel:nv(piorShell&&sufShell(piorShell.dias)), label:'Shell — menor cobertura', tag:piorShell?uiTagSuf(sufShell(piorShell.dias)):'', big: piorShell?`${piorShell.dias.toFixed(1).replace('.',',')}<small>dias</small>`:'—', det: piorShell?subCenario(piorShell.material, prensasDoShell(piorShell.material)):'sem dados' },
+    { icone:'tampa', nivel:nv(shellOuro&&shellOuro.nivel), label:'Suficiência SHELL OURO', tag:shellOuro?uiTagSuf(shellOuro.nivel):'', big: shellOuro?fmtDiasCt(shellOuro.dias).replace(' dias','<small>dias</small>'):'—', det:'SHELL OURO' }
   ];
-  el.innerHTML = cards.map(c=>`
-    <div class="kpi-hero-card ${c.cls}">
-      <div class="kpi-hero-label">${c.label}</div>
-      <div class="kpi-hero-value ${c.cls}">${c.value}</div>
-      <div class="kpi-hero-sub">${c.sub}</div>
-    </div>`).join('');
+  el.innerHTML = cards.map(uiCard).join('');
 }
 
 function renderControlTower(){
@@ -3445,18 +3457,19 @@ function buildValorBarChart(canvasId, d){
     plugins:[valueLabelPlugin]
   });
 }
+const ICO_POR_SECAO={ 'Entradas':'entrada', 'Estoque (livre)':'bobina', 'Controle de Qualidade':'lupa', 'HFI (Bloqueado)':'cadeado' };
 function buildIvaoDonutCard(titulo, records, canvasId){
   const d=computeValorAgregado(records);
 
   if(d.totalBobinas===0){
     return `<div class="card ivao-card">
-      <div class="card-head"><span class="card-title">${titulo}</span><span class="card-total">0 bobinas</span></div>
+      <div class="card-head"><span class="card-title">${uiTitulo(ICO_POR_SECAO[titulo]||"grafico", titulo)}</span><span class="card-total">0 bobinas</span></div>
       <div class="empty-note">Sem volume suficiente para análise.</div>
     </div>`;
   }
 
   return `<div class="card ivao-card">
-    <div class="card-head"><span class="card-title">${titulo}</span><span class="card-total">${d.totalBobinas} bobinas · ${fmtTon(d.totalKg)}</span></div>
+    <div class="card-head"><span class="card-title">${uiTitulo(ICO_POR_SECAO[titulo]||"grafico", titulo)}</span><span class="card-total">${d.totalBobinas} bobinas · ${fmtTon(d.totalKg)}</span></div>
     <div class="chart-wrap" style="height:180px;"><canvas id="${canvasId}"></canvas></div>
   </div>`;
 }
@@ -3474,7 +3487,7 @@ function buildIvaoDetailCard(titulo, records, chartId){
   const d=computeValorAgregado(records);
   if(d.totalBobinas===0){
     return `<div class="card ivao-card">
-      <div class="card-head"><span class="card-title">${titulo}</span><span class="card-total">0 bobinas</span></div>
+      <div class="card-head"><span class="card-title">${uiTitulo(ICO_POR_SECAO[titulo]||"grafico", titulo)}</span><span class="card-total">0 bobinas</span></div>
       <div class="empty-note">Sem volume suficiente para análise.</div>
     </div>`;
   }
@@ -3493,7 +3506,7 @@ function buildIvaoDetailCard(titulo, records, chartId){
     return `<div class="det-row"><div class="det-label">${nome}</div><div class="det-trackwrap"><div class="det-track" style="width:${t/max*100}%">${segs}</div></div><div class="det-val">${t}</div></div>`;
   }).join('');
   return `<div class="card ivao-card">
-    <div class="card-head"><span class="card-title">${titulo}</span><span class="card-total">${d.totalBobinas} bobinas · ${fmtTon(d.totalKg)}</span></div>
+    <div class="card-head"><span class="card-title">${uiTitulo(ICO_POR_SECAO[titulo]||"grafico", titulo)}</span><span class="card-total">${d.totalBobinas} bobinas · ${fmtTon(d.totalKg)}</span></div>
     ${legenda}<div class="det-rows">${linhas}</div>
   </div>`;
 }
@@ -3539,14 +3552,10 @@ function renderOcupacao(mb52proc){
   const heroTooltip = state.activeFilter
     ? `Ocupação do formato filtrado (${labelMetal(state.activeFilter)}): ${estoqueSoma} UN em estoque ÷ ${capSoma} UN de capacidade física.`
     : `Ocupação física real do armazém: 12 OZ (16 UN) + 9.1 OZ / 12 OZ SLEEK — espaço compartilhado (16 UN) + 16 OZ (8 UN) = ${capSoma} UN de capacidade. ${estoqueSoma} UN em estoque ÷ ${capSoma} UN de capacidade.`;
-  const heroCard=document.createElement('div');
-  heroCard.className='card hero-card';
-  heroCard.innerHTML=`<div class="hero-label">Ocupação geral
-      <span class="info-dot">i<span class="tooltip">${heroTooltip}</span></span>
-    </div>
-    <div class="hero-value" style="color:${geralPct>1?'var(--crit)':geralPct>=0.85?'var(--warn)':'var(--ok)'}">${fmtPct(geralPct)}</div>
-    <div class="hero-foot">${estoqueSoma} UN em estoque · ${capSoma} UN de capacidade</div>`;
-  grid.appendChild(heroCard);
+  grid.appendChild(uiNode(uiCard({ icone:'rua', nivel:ocupacaoClasse(geralPct)||'ok',
+    label:`Ocupação geral<span class="info-dot">i<span class="tooltip">${heroTooltip}</span></span>`, tag:uiTagOcupacao(geralPct),
+    big:fmtPct(geralPct), un:`${estoqueSoma} / ${capSoma} UN`, unSub:'bobinas / capacidade', meter:{v:estoqueSoma, cap:capSoma}, extra:uiVagas(estoqueSoma, capSoma),
+    det:'livre nas ruas 12 OZ · 9.1/SLEEK · 16 OZ' })));
 
   GRUPOS_OCUPACAO_ORDEM.forEach(grupoKey=>{
     const g=grupos[grupoKey];
@@ -3561,27 +3570,22 @@ function renderOcupacao(mb52proc){
 
     const estoqueAtivoUN = compartilhado ? (g.membros.find(x=>x.metal===ativo)?.estoqueUN ?? 0) : g.estoqueUN;
 
-    const card=document.createElement('div');
-    card.className='card semaforo-card';
     const tituloCard = compartilhado ? labelMetal(ativo) : labelGrupo(grupoKey);
-    let html = `<div class="semaforo-label">${tituloCard}${compartilhado?`<span class="info-dot">i<span class="tooltip">${labelMetal(ativo)} e ${labelMetal(pausado)} usam fisicamente a mesma rua de armazenagem (Linha 02, conversível). A capacidade (${g.capacidade??'—'} UN) é compartilhada entre os dois — nunca somada, por isso a % de ocupação usa o total físico da rua (${g.estoqueUN} UN), mas o saldo mostrado abaixo é só do ${labelMetal(ativo)} (${estoqueAtivoUN} UN). Hoje a linha está rodando ${labelMetal(ativo)}; o outro formato (${breakdown}) fica sem entrada prevista até a próxima troca.</span></span>`:''}</div>
-      <div class="semaforo-value ${filtroRelevante?ocupacaoClasse(g.percentual):''}">${filtroRelevante?fmtPct(g.percentual):'—'}</div>
-      <div class="semaforo-foot">${filtroRelevante?`${estoqueAtivoUN} UN / ${g.capacidade??'—'} UN`:'sem dados'}</div>
-      <div class="suf-inline-divider"></div>`;
-
+    const info = compartilhado ? `<span class="info-dot">i<span class="tooltip">${labelMetal(ativo)} e ${labelMetal(pausado)} usam fisicamente a mesma rua de armazenagem (Linha 02, conversível). A capacidade (${g.capacidade??'—'} UN) é compartilhada entre os dois — nunca somada, por isso a % de ocupação usa o total físico da rua (${g.estoqueUN} UN), mas o saldo mostrado abaixo é só do ${labelMetal(ativo)} (${estoqueAtivoUN} UN). Hoje a linha está rodando ${labelMetal(ativo)}; o outro formato (${breakdown}) fica sem entrada prevista até a próxima troca.</span></span>` : '';
     const metal=ativo;
     const s=suf[metal]||{dias:null,estoqueKg:0,mediaConsumo:state.mediaConsumoMap[metal]||0};
-    const sufCls=suficienciaClasse(s.dias)||'';
-    html += `<div class="suf-inline-days ${sufCls}">${fmtDias(s.dias)}</div>
-      <div class="suf-nivel-label ${sufCls}">${nivelSuficienciaLabel(sufCls)}</div>
-      <div class="suf-inline-meta">${fmtTon(s.estoqueKg)} ÷ <input class="suf-footer-input" data-metal="${metal}" type="number" step="1000" value="${s.mediaConsumo}"> kg/dia</div>`;
     // metal importado do mesmo formato: só informa (os dias dele estão no card do armazém importado)
     const imp=sufImportado[metal];
+    let nota='';
     if(imp && imp.estoqueKg>0 && state.activeOrigem!=='CHINES'){
       const diasTotal = s.mediaConsumo ? (s.estoqueKg+imp.estoqueKg)/s.mediaConsumo : null;
-      html += `<div class="suf-pausado-note">+ ${fmtTon(imp.estoqueKg)} no armazém Xiamen/Nanshan · total com importado: <b>${fmtDias(diasTotal)}</b></div>`;
+      nota = `<div class="rs-note">+ ${fmtTon(imp.estoqueKg)} no armazém Xiamen/Nanshan · total com importado: <b>${fmtDias(diasTotal)}</b></div>`;
     }
-    card.innerHTML = html;
+    const card = uiNode(uiCard({ icone:'bobina', nivel: filtroRelevante ? (ocupacaoClasse(g.percentual)||'ok') : 'neutro',
+      label:`Livre — ${tituloCard}${info}`, tag: filtroRelevante ? uiTagOcupacao(g.percentual) : 'fora do filtro',
+      big: filtroRelevante ? fmtPct(g.percentual) : '—', un: filtroRelevante ? `${estoqueAtivoUN} / ${g.capacidade??'—'} UN` : 'sem dados', unSub:'bobinas / capacidade',
+      meter: filtroRelevante ? {v:g.estoqueUN, cap:g.capacidade} : null, extra: filtroRelevante ? uiVagas(g.estoqueUN, g.capacidade) : '',
+      det: compartilhado ? `${breakdown} · mesma rua` : '', corpo: uiCobertura(s, metal) + nota }));
     card.querySelectorAll('.suf-footer-input').forEach(inp=>{
       inp.addEventListener('change', function(){
         state.mediaConsumoMap[this.dataset.metal]=Number(this.value)||0;
@@ -3627,16 +3631,10 @@ function buildChinesFormatoCard(formato, d, s){
   const cls = ocupacaoClasse(d.percentual);
   s = s || { dias:null, estoqueKg:0, mediaConsumo:state.mediaConsumoMap[formato]||0 };
   const sufCls = suficienciaClasse(s.dias)||'';
-  const card=document.createElement('div');
-  card.className='card semaforo-card';
-  card.innerHTML = `<div class="semaforo-label">${labelFornecedoresFormato(d)} · ${labelMetal(formato)}</div>
-    <div class="semaforo-value ${cls}">${fmtPct(d.percentual)}</div>
-    <div class="semaforo-foot">${d.estoqueUN} UN / ${d.capacidade} UN</div>
-    <div class="suf-inline-meta">${quebraFornecedores(d)}</div>
-    <div class="suf-inline-divider"></div>
-    <div class="suf-inline-days ${sufCls}">${fmtDias(s.dias)}</div>
-    <div class="suf-nivel-label ${sufCls}">${nivelSuficienciaLabel(sufCls)}</div>
-    <div class="suf-inline-meta">${fmtTon(s.estoqueKg)} ÷ <input class="suf-footer-input" data-metal="${formato}" type="number" step="1000" value="${s.mediaConsumo}"> kg/dia</div>`;
+  const card = uiNode(uiCard({ icone:'navio', nivel:ocupacaoClasse(d.percentual)||'ok',
+    label:`${labelFornecedoresFormato(d)} · ${labelMetal(formato)}`, tag:'armazém importado',
+    big:fmtPct(d.percentual), un:`${d.estoqueUN} / ${d.capacidade} UN`, unSub:'bobinas / capacidade', meter:{v:d.estoqueUN, cap:d.capacidade},
+    extra:uiVagas(d.estoqueUN, d.capacidade), det:quebraFornecedores(d), corpo:uiCobertura(s, formato) }));
   card.querySelectorAll('.suf-footer-input').forEach(inp=>{
     inp.addEventListener('change', function(){
       state.mediaConsumoMap[this.dataset.metal]=Number(this.value)||0;
@@ -3734,11 +3732,11 @@ function renderKPIHero(mb52Fmt, mb52){
   const estoqueSoma=sumArr(gruposComDados.map(g=>g.estoqueUN));
   const capSoma=sumArr(gruposComDados.map(g=>g.capacidade||0));
   let geralPct = capSoma ? estoqueSoma/capSoma : null;
-  let ocupLabel = 'Ocupação geral', ocupSub = `${estoqueSoma} UN / ${capSoma} UN`;
+  let ocupLabel = 'Ocupação geral', ocupSub = `${estoqueSoma} / ${capSoma} UN`, ocupV=estoqueSoma, ocupCap=capSoma;
   if(state.activeOrigem==='CHINES'){
     // metal importado fica no armazém próprio — mostra a ocupação dele, não a das ruas
     const imp = computeOcupacaoMetalChinesNovoArmazem(mb52Fmt);
-    geralPct = imp.percentual; ocupLabel = 'Ocupação armazém Xiamen/Nanshan'; ocupSub = `${imp.estoqueUN} UN / ${imp.capacidade} UN`;
+    geralPct = imp.percentual; ocupLabel = 'Ocupação armazém Xiamen/Nanshan'; ocupSub = `${imp.estoqueUN} / ${imp.capacidade} UN`; ocupV=imp.estoqueUN; ocupCap=imp.capacidade;
   }
 
   const livre = computeValorAgregado(mb52.filter(r=>r.status==='LIVRE'));
@@ -3758,24 +3756,19 @@ function renderKPIHero(mb52Fmt, mb52){
   // cards clicáveis: filtram o próprio painel (status ou formato); clicar de novo limpa.
   // "Ocupação geral" volta a mostrar todos os status.
   const algumFiltro = state.activeStatusCard || state.activeFilter || state.activeClassFilter || state.activeOrigem;
+  const sufCls = suficienciaClasse(piorDias);
   const cards = [
-    { label:ocupLabel, value:fmtPct(geralPct), cls:ocupacaoClasse(geralPct), sub:ocupSub, acao:'todos', ativo:false },
-    { label:'Estoque livre', value:livre.totalBobinas+' bobinas', cls:'', sub:fmtTon(livre.totalKg), acao:'LIVRE', ativo:state.activeStatusCard==='LIVRE' },
-    { label:'Controle de qualidade', value:cq.totalBobinas+' bobinas', cls: cq.totalBobinas>0?'warn':'ok', sub:fmtTon(cq.totalKg), acao:'CONT QUAL', ativo:state.activeStatusCard==='CONT QUAL' },
-    { label:'HFI bloqueado', value:hfi.totalBobinas+' bobinas', cls: hfi.totalBobinas>0?'crit':'ok', sub:fmtTon(hfi.totalKg), acao:'HFI', ativo:state.activeStatusCard==='HFI' },
-    { label: piorDias!=null?nivelSuficienciaLabel(suficienciaClasse(piorDias)):'Menor cobertura', value: piorDias!=null?fmtDias(piorDias):'—', cls: suficienciaClasse(piorDias), sub: piorFormato?labelMetal(piorFormato):'sem dados de consumo', acao:'formato', formato:piorFormato, ativo:!!piorFormato && state.activeFilter===piorFormato }
+    { acao:'todos', ativo:false, icone:'rua', nivel:ocupacaoClasse(geralPct)||'ok', label:ocupLabel, tag:uiTagOcupacao(geralPct), big:fmtPct(geralPct), un:ocupSub, unSub:'bobinas / capacidade', meter:{v:ocupV, cap:ocupCap}, extra:uiVagas(ocupV, ocupCap) },
+    { acao:'LIVRE', ativo:state.activeStatusCard==='LIVRE', icone:'bobina', nivel:'azul', label:'Estoque livre', tag:'disponível', big:`${livre.totalBobinas}<small>bobinas</small>`, un:fmtTon(livre.totalKg), unSub:'toneladas' },
+    { acao:'CONT QUAL', ativo:state.activeStatusCard==='CONT QUAL', icone:'lupa', nivel:cq.totalBobinas>0?'warn':'ok', label:'Controle de qualidade', tag:'em análise', big:`${cq.totalBobinas}<small>bobinas</small>`, un:fmtTon(cq.totalKg), unSub:'toneladas' },
+    { acao:'HFI', ativo:state.activeStatusCard==='HFI', icone:'cadeado', nivel:hfi.totalBobinas>0?'crit':'ok', label:'HFI bloqueado', tag:'bloqueado', big:`${hfi.totalBobinas}<small>bobinas</small>`, un:fmtTon(hfi.totalKg), unSub:'toneladas' },
+    { acao:'formato', formato:piorFormato, ativo:!!piorFormato && state.activeFilter===piorFormato, icone:'relogio', nivel:sufCls||'neutro', label:state.activeFilter?'Cobertura do formato':'Menor cobertura', tag:uiTagSuf(sufCls), big: piorDias!=null?`${piorDias.toFixed(1).replace('.',',')}<small>dias</small>`:'—', un: piorFormato?labelMetal(piorFormato):'sem dados de consumo', unSub:'estoque livre ÷ consumo' }
   ];
   const dica = c => c.acao==='todos'
     ? (algumFiltro ? 'clique para limpar os filtros' : 'mostrando tudo')
     : c.ativo ? '✓ filtrando o painel · clique para limpar'
-    : c.acao==='formato' ? (c.formato ? `filtrar ${labelMetal(c.formato)} ›` : '') : 'filtrar o painel ›';
-  el.innerHTML = cards.map(c=>`
-    <button type="button" class="kpi-hero-card kpi-click ${c.cls}${c.ativo?' sel':''}" data-kpi-acao="${c.acao}" data-kpi-formato="${c.formato||''}">
-      <div class="kpi-hero-label">${c.label}</div>
-      <div class="kpi-hero-value ${c.cls}">${c.value}</div>
-      <div class="kpi-hero-sub">${c.sub}</div>
-      <div class="kpi-hero-link">${dica(c)}</div>
-    </button>`).join('');
+    : c.acao==='formato' ? (c.formato ? `clique para filtrar ${labelMetal(c.formato)}` : '') : 'clique para filtrar o painel';
+  el.innerHTML = cards.map(c=>uiCard({ ...c, tagName:'button', sel:c.ativo, attrs:`data-kpi-acao="${c.acao}" data-kpi-formato="${c.formato||''}"`, hint:dica(c) })).join('');
 }
 // marca o botão certo nas barras de filtro (formato / classe) depois de mudar o filtro por um card
 function sincronizarBotoesFiltro(){
@@ -3805,15 +3798,13 @@ function renderKPIOrigem(registros){
     return { bobinas:lotes.size, kg, x, n };
   };
   const nov=resumo('NOVELIS'), chi=resumo('CHINES');
-  const card=(k,nome,cor,d,sub)=>`<button type="button" class="kpi-origem-card${state.activeOrigem===k?' active':''}" data-origem-dash="${k}" style="--og-cor:${cor}" title="${state.activeOrigem===k?'Clique para voltar a ver todas as origens':'Clique para filtrar o painel inteiro por '+nome}">
-      <div class="kpi-origem-nome">${nome}</div>
-      <div class="kpi-origem-num">${d.bobinas}<small>bobinas</small></div>
-      <div class="kpi-origem-sub">${sub}</div>
-      <div class="kpi-origem-acao">${state.activeOrigem===k?'✓ filtrando o painel · clique para limpar':'clique para filtrar o painel'}</div>
-    </button>`;
+  const card=(k,nome,cor,d,sub,icone)=>uiCard({ tagName:'button', sel:state.activeOrigem===k, icone, nivel:'neutro',
+    attrs:`data-origem-dash="${k}" style="--nv:${cor};--nv-bg:${cor}1f" title="${state.activeOrigem===k?'Clique para voltar a ver todas as origens':'Clique para filtrar o painel inteiro por '+nome}"`,
+    label:nome, tag: state.activeOrigem===k?'filtrando o painel':'origem', big:`${d.bobinas}<small>bobinas</small>`, un:fmtTon(d.kg), unSub:'em estoque', extra:sub,
+    hint: state.activeOrigem===k?'✓ clique para limpar':'clique para filtrar o painel' });
   el.innerHTML = `<div class="kpi-origem-title">Origem do metal</div>`
-    + card('NOVELIS','Metal Novelis','#1140FE',nov,`${fmtTon(nov.kg)} em estoque`)
-    + card('CHINES','Metal Chinês','#B91C1C',chi,`Xiamen ${chi.x} · Nanshan ${chi.n} · ${fmtTon(chi.kg)}`);
+    + card('NOVELIS','Metal Novelis','#1140FE',nov,'lote com PROCV na planilha Novelis','fabrica')
+    + card('CHINES','Metal Chinês','#B91C1C',chi,`Xiamen ${chi.x} · Nanshan ${chi.n}`,'navio');
 }
 document.getElementById('kpiOrigemRow').addEventListener('click', e=>{
   const b=e.target.closest('[data-origem-dash]'); if(!b) return;
@@ -4809,13 +4800,11 @@ function mb52TabRenderOrigem(){
   const ton=ls=>fmtTon(ls.reduce((a,l)=>a+(l.livre||0)+(l.cq||0)+(l.bloq||0),0));
   const nov=base.filter(l=>mb52TabOrigem(l)==='NOVELIS'), chi=base.filter(l=>mb52TabOrigem(l)==='CHINES'), out=base.filter(l=>mb52TabOrigem(l)==='OUTROS');
   const x=chi.filter(l=>l.classe===FORN_XIAMEN).length, n=chi.length-x;
-  const btn=(k,nome,cor,ls,sub,extra)=>`<button type="button" class="mb52-origem-btn${extra||''}${sel.has(k)?' active':''}" data-origem="${k}" style="--og-cor:${cor}">
-      <span class="mb52-origem-nome">${nome}</span>
-      <span class="mb52-origem-num">${ls.length}<small>lotes</small></span>
-      <span class="mb52-origem-sub">${sub}</span></button>`;
-  el.innerHTML = btn('NOVELIS','Novelis','#1140FE',nov,`${ton(nov)} · PROCV encontrado`)
-    + btn('CHINES','Metal Chinês','#B91C1C',chi,`Xiamen ${x} · Nanshan ${n} · ${ton(chi)}`)
-    + (out.length ? btn('OUTROS','Sem identificação','#78716C',out,`sem PROCV e sem fornecedor no texto · ${ton(out)}`,' mb52-origem-outros') : '');
+  const btn=(k,nome,cor,ls,sub,extra,icone)=>uiCard({ tagName:'button', sel:sel.has(k), cls:(extra||'').trim(), icone, nivel:'neutro',
+    attrs:`data-origem="${k}" style="--nv:${cor};--nv-bg:${cor}1f"`, label:nome, tag:sel.has(k)?'filtrando':'origem', big:`${ls.length}<small>lotes</small>`, un:ton(ls), unSub:'em estoque', det:sub });
+  el.innerHTML = btn('NOVELIS','Novelis','#1140FE',nov,'PROCV encontrado','','fabrica')
+    + btn('CHINES','Metal Chinês','#B91C1C',chi,`Xiamen ${x} · Nanshan ${n}`,'','navio')
+    + (out.length ? btn('OUTROS','Sem identificação','#78716C',out,'sem PROCV e sem fornecedor no texto',' mb52-origem-outros','importado') : '');
 }
 function mb52TabFiltrar(ignorar, ignorarCol, ignorarCard){
   const f = mb52Tab.filtros, q = mb52Tab.busca, cf = mb52Tab.colFiltros;
@@ -4855,15 +4844,19 @@ function mb52TabRenderKpis(){
   stCls[MB52TAB_SEM_STATUS]='st-sem';
   const stLabel = s => s===MB52TAB_SEM_STATUS ? 'SEM STATUS' : s;
   const nenhumFiltro = !mb52Tab.cardFiltro && !stSel.size && !mb52Tab.filtros.formato.size && !mb52Tab.filtros.classe.size && !mb52Tab.filtros.origem.size && !mb52Tab.busca && !Object.keys(mb52Tab.colFiltros).length;
-  document.getElementById('mb52Kpis').innerHTML = `
-    <button type="button" class="mb52-kpi${nenhumFiltro?'':' '}" data-card="todos" title="Mostrar todos (limpa os filtros)"><div class="mb52-kpi-label">Unidades</div><div class="mb52-kpi-value">${linhas.length.toLocaleString('pt-BR')}</div><div class="mb52-kpi-hint">${nenhumFiltro?'todos os lotes':'clique para limpar filtros'}</div></button>
-    <button type="button" class="mb52-kpi ok${sel('livre')}" data-card="livre" title="Filtrar lotes com utilização livre"><div class="mb52-kpi-label">Livre</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('livre'))}<small>TON</small></div><div class="mb52-kpi-hint">${linhas.filter(MB52TAB_CARD_FILTROS.livre).length} lotes</div></button>
-    <button type="button" class="mb52-kpi warn${sel('cq')}" data-card="cq" title="Filtrar lotes em controle de qualidade"><div class="mb52-kpi-label">Cont. qualidade</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('cq'))}<small>TON</small></div><div class="mb52-kpi-hint">${linhas.filter(MB52TAB_CARD_FILTROS.cq).length} lotes</div></button>
-    <button type="button" class="mb52-kpi crit${sel('bloq')}" data-card="bloq" title="Filtrar lotes bloqueados (HFI)"><div class="mb52-kpi-label">HFI (bloqueado)</div><div class="mb52-kpi-value">${fmtMb52Ton(soma('bloq'))}<small>TON</small></div><div class="mb52-kpi-hint">${linhas.filter(MB52TAB_CARD_FILTROS.bloq).length} lotes</div></button>
-    <button type="button" class="mb52-kpi ${semProcv?'warn':'ok'}${sel('nd')}" data-card="nd" title="Filtrar lotes não encontrados na Novelis (Xiamen, Nanshan e outros)"><div class="mb52-kpi-label">Sem PROCV (#N/D)</div><div class="mb52-kpi-value">${semProcv}</div><div class="mb52-kpi-hint">${(()=>{const sp=linhas.filter(MB52TAB_CARD_FILTROS.nd); const x=sp.filter(l=>l.classe===FORN_XIAMEN).length, n=sp.filter(l=>l.classe===FORN_NANSHAN).length; return `Xiamen ${x} · Nanshan ${n} · outros ${sp.length-x-n}`;})()}</div></button>
-    <div class="mb52-kpi status"><div class="mb52-kpi-label">Status</div><div class="mb52-st-btns">${
+  const sp=linhas.filter(MB52TAB_CARD_FILTROS.nd); const nx=sp.filter(l=>l.classe===FORN_XIAMEN).length, nn=sp.filter(l=>l.classe===FORN_NANSHAN).length;
+  const ton = kg => `${fmtMb52Ton(kg)}<small>ton</small>`;
+  const qtd = f => linhas.filter(f).length;
+  const kpi = (k, o) => uiCard({ ...o, tagName:'button', sel:mb52Tab.cardFiltro===k, attrs:`data-card="${k}"`, hint: mb52Tab.cardFiltro===k ? '✓ filtrando · clique para limpar' : (k==='todos' ? (nenhumFiltro?'todos os lotes':'clique para limpar filtros') : 'clique para filtrar') });
+  document.getElementById('mb52Kpis').innerHTML =
+      kpi('todos', { icone:'bobina', nivel:'azul', label:'Unidades', tag:'lotes', big:linhas.length.toLocaleString('pt-BR'), un:fmtTon(soma('livre')+soma('cq')+soma('bloq')), unSub:'em estoque' })
+    + kpi('livre', { icone:'bobina', nivel:'ok', label:'Livre', tag:'disponível', big:ton(soma('livre')), un:`${qtd(MB52TAB_CARD_FILTROS.livre)} lotes` })
+    + kpi('cq', { icone:'lupa', nivel:'warn', label:'Cont. qualidade', tag:'em análise', big:ton(soma('cq')), un:`${qtd(MB52TAB_CARD_FILTROS.cq)} lotes` })
+    + kpi('bloq', { icone:'cadeado', nivel:'crit', label:'HFI (bloqueado)', tag:'bloqueado', big:ton(soma('bloq')), un:`${qtd(MB52TAB_CARD_FILTROS.bloq)} lotes` })
+    + kpi('nd', { icone:'importado', nivel:semProcv?'warn':'ok', label:'Sem PROCV (#N/D)', tag:'fora da Novelis', big:String(semProcv), un:`${nx} / ${nn}`, unSub:`Xiamen / Nanshan · outros ${sp.length-nx-nn}` })
+    + uiCard({ icone:'alvo', nivel:'neutro', cls:'mb52-status-card', label:'Status', tag:'marcação manual', big:'', corpo:`<div class="mb52-st-btns">${
       MB52TAB_STATUS_OPCOES.concat([MB52TAB_SEM_STATUS]).map(s=>`<button type="button" class="mb52-st-btn ${stCls[s]}${stSel.has(s)?' active':''}" data-status="${mb52TabEsc(s)}">${stLabel(s)}<b>${cont[s]}</b></button>`).join('')
-    }</div></div>`;
+    }</div>` });
 }
 
 function mb52TabRenderSlicer(grupo, elId, valores){
@@ -5096,14 +5089,14 @@ document.getElementById('mb52View').addEventListener('click', e=>{
     if(!v) set.clear(); else if(set.has(v)) set.delete(v); else set.add(v);
     mb52TabRender(); return;
   }
-  const card = e.target.closest('button.mb52-kpi');
+  const card = e.target.closest('button[data-card]');
   if(card){
     const k = card.dataset.card;
     if(k==='todos') mb52TabLimparTudo();
     else { mb52Tab.cardFiltro = mb52Tab.cardFiltro===k ? null : k; mb52TabRender(); }
     return;
   }
-  const ogBtn = e.target.closest('.mb52-origem-btn');
+  const ogBtn = e.target.closest('[data-origem]');
   if(ogBtn){
     const set = mb52Tab.filtros.origem, v = ogBtn.dataset.origem;
     if(set.has(v)) set.delete(v); else set.add(v);
@@ -5189,6 +5182,15 @@ function resumoGrupoPadrao(){
 }
 // ícones (traço, herdam a cor do card)
 const RS_ICO = {
+  alvo:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>',
+  relogio:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  fabrica:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21V10l6 4V10l6 4V6l8-3v18z"/><path d="M6 17h2M11 17h2M16 17h2"/></svg>',
+  navio:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l2 4h14l2-4z"/><path d="M5 17V11h14v6"/><path d="M8 11V6h5v5M13 8h3v3"/></svg>',
+  entrada:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M7.5 9.5L12 14l4.5-4.5"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>',
+  tab:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="7"/><rect x="9" y="6.5" width="6" height="5" rx="2.5"/><path d="M12 15v2.5"/></svg>',
+  tampa:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="9" rx="9" ry="4"/><path d="M3 9v4c0 2.2 4 4 9 4s9-1.8 9-4V9"/><path d="M10 8.5h4"/></svg>',
+  pallet:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="10"/><path d="M12 4v10"/><path d="M2 17h20M2 20h20M5 17v3M12 17v3M19 17v3"/></svg>',
+  importado:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg>',
   bobina:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="12" rx="4" ry="8"/><path d="M8 4h9c2.2 0 4 3.6 4 8s-1.8 8-4 8H8"/><ellipse cx="8" cy="12" rx="1.5" ry="3"/></svg>',
   cadeado:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1.3"/></svg>',
   lupa:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.6-4.6"/><path d="M7.8 10.6l1.9 1.9 3.4-3.6"/></svg>',
@@ -5197,6 +5199,44 @@ const RS_ICO = {
   ok:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16.5 9"/></svg>',
   grafico:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg>'
 };
+/* ---- CARD PADRÃO do painel: ícone + etiqueta de situação + número grande + barra de capacidade ----
+   Mesmo modelo dos cards do Resumo, usado em Latas, Relatório e Metal Tampas. */
+function uiNivel(n){ return ({ ok:'ok', warn:'warn', crit:'crit', laranja:'laranja', baixo:'laranja', confortavel:'azul', bom:'azul', azul:'azul', neutro:'neutro' })[n] || 'neutro'; }
+function uiTagOcupacao(p){ return p==null ? 'sem dados' : p>1 ? 'Superlotado' : p>=0.85 ? 'Perto do limite' : 'Com espaço'; }
+function uiTagSuf(cls){ return cls ? nivelSuficienciaLabel(cls).replace(/^\S+\s/,'') : ''; }
+function uiVagas(v, cap, un){ if(cap==null) return ''; const e=Math.round((v-cap)*10)/10; const u=un||'bobina'; const pl=x=>Math.abs(x)!==1?'s':'';
+  return e>0 ? `+${String(e).replace('.',',')} ${u}${pl(e)} acima da capacidade` : e===0 ? 'no limite — nenhuma vaga' : `${String(-e).replace('.',',')} vaga${pl(e)} disponíve${Math.abs(e)!==1?'is':'l'}`; }
+function uiMeter(v, cap){ if(cap==null || !isFinite(cap)) return ''; v=v||0; const esc=Math.max(v,cap)*1.05||1;
+  return `<div class="rs-meter"><div class="rs-meter-fill" style="width:${Math.min(v/esc*100,100)}%"></div><div class="rs-meter-cap" style="left:${cap/esc*100}%" title="capacidade ${cap}"></div></div>`; }
+function uiCard(o){
+  const tag=o.tagName||'div';
+  return `<${tag} ${tag==='button'?'type="button" ':''}class="rs-card ${uiNivel(o.nivel)}${o.cls?' '+o.cls:''}${o.sel?' sel':''}" ${o.attrs||''}>
+    <div class="rs-card-top"><div class="rs-card-icon">${RS_ICO[o.icone]||''}</div><div style="min-width:0"><div class="rs-card-label">${o.label}</div>${o.tag?`<span class="rs-card-tag">${o.tag}</span>`:''}</div></div>
+    <div class="rs-card-main"><div class="rs-card-pct">${o.big}</div>${o.un!=null?`<div class="rs-card-un">${o.un}${o.unSub?`<small>${o.unSub}</small>`:''}</div>`:''}</div>
+    ${o.meter?uiMeter(o.meter.v,o.meter.cap):''}
+    ${o.extra?`<div class="rs-card-extra">${o.extra}</div>`:''}
+    ${o.det?`<div class="rs-card-det">${o.det}</div>`:''}
+    ${o.corpo||''}
+    ${o.hint?`<div class="rs-card-hint">${o.hint}</div>`:''}
+  </${tag}>`;
+}
+function uiNode(html){ const w=document.createElement('div'); w.innerHTML=html.trim(); return w.firstElementChild; }
+function uiTitulo(icone, texto){ return `<span class="ui-tit-ico">${RS_ICO[icone]||''}</span>${texto}`; }
+// bloco de dias de cobertura (com o campo de kg/dia editável) usado dentro dos cards de ocupação
+function uiCobertura(s, metal){
+  const cls=suficienciaClasse(s.dias)||'';
+  return `<div class="rs-cob ${uiNivel(cls)}">
+    <div class="rs-cob-top"><div class="rs-cob-ico">${RS_ICO.relogio}</div><div class="rs-cob-dias">${fmtDias(s.dias)}</div>${cls?`<span class="rs-cob-tag">${uiTagSuf(cls)}</span>`:''}</div>
+    <div class="rs-cob-meta">cobertura · ${fmtTon(s.estoqueKg)} ÷ <input class="suf-footer-input" data-metal="${metal}" type="number" step="1000" value="${s.mediaConsumo}"> kg/dia</div>
+  </div>`;
+}
+function uiSplitHfiCq(hfi, cq){
+  const tot=hfi+cq;
+  return `<div class="rs-split">
+    <div class="rs-split-row"><div class="rs-split-ico" style="background:var(--crit-bg);color:var(--crit)">${RS_ICO.cadeado}</div><div><div class="rs-split-name">HFI (bloqueado)</div><div class="rs-split-bar"><i style="width:${tot?hfi/tot*100:0}%;background:var(--crit)"></i></div></div><div class="rs-split-val">${hfi}</div></div>
+    <div class="rs-split-row"><div class="rs-split-ico" style="background:var(--warn-bg);color:var(--warn)">${RS_ICO.lupa}</div><div><div class="rs-split-name">Controle de qualidade</div><div class="rs-split-bar"><i style="width:${tot?cq/tot*100:0}%;background:var(--warn)"></i></div></div><div class="rs-split-val">${cq}</div></div>
+  </div>`;
+}
 function resumoRender(){
   const sel = resumoState.grupo;
   const grupos = sel==='TODOS' ? GRUPOS_OCUPACAO_ORDEM.slice() : [sel];
