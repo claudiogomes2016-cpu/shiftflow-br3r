@@ -1142,38 +1142,56 @@ html[data-theme="dark"] .mb52-status-sel.st-rma,html[data-theme="dark"] .mb52-st
 .resumo-title span{color:var(--brand);}
 .resumo-sub{font-size:13px;color:var(--ink-faint);margin-top:2px;}
 .resumo-close{background:transparent;border:1px solid var(--border);color:var(--ink-soft);width:34px;height:34px;font-size:16px;cursor:pointer;flex:none;}
-.resumo-fmts{display:flex;gap:6px;flex-wrap:wrap;padding:12px 22px 0;}
-.resumo-fmt-btn{font-family:var(--font);font-size:13px;font-weight:800;padding:8px 14px;border:1px solid var(--border);background:var(--surface);color:var(--ink-soft);cursor:pointer;}
-.resumo-fmt-btn.active{background:var(--brand);border-color:var(--brand);color:#fff;}
+.resumo-fmts{display:flex;align-items:center;gap:10px;padding:14px 22px 0;}
+.resumo-fmts label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-faint);}
+.resumo-fmts select{font-family:var(--font);font-size:15px;font-weight:800;padding:9px 14px;min-width:260px;border:1px solid var(--border);border-left:4px solid var(--brand);background:var(--surface);color:var(--ink);cursor:pointer;}
 .resumo-body{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;padding:16px 22px 22px;}
 @media (max-width:1100px){ .resumo-body{grid-template-columns:1fr;} }
 .resumo-captura{background:var(--bg);display:flex;flex-direction:column;gap:14px;padding:4px;}
-.resumo-alerta{display:flex;align-items:center;gap:14px;padding:16px 20px;color:#fff;font-weight:800;}
-.resumo-alerta.crit{background:#B91C1C;} .resumo-alerta.warn{background:#B45309;} .resumo-alerta.ok{background:#15803D;}
-.resumo-alerta-ico{font-size:28px;line-height:1;}
-.resumo-alerta-tit{font-size:18px;text-transform:uppercase;letter-spacing:.4px;}
+.rs-ico{width:22px;height:22px;flex:none;}
+.resumo-alerta{display:flex;align-items:center;gap:16px;padding:16px 20px;color:#fff;}
+.resumo-alerta.crit{background:linear-gradient(100deg,#991B1B,#DC2626);} .resumo-alerta.warn{background:linear-gradient(100deg,#92400E,#D97706);} .resumo-alerta.ok{background:linear-gradient(100deg,#166534,#16A34A);}
+.resumo-alerta-ico{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex:none;}
+.resumo-alerta-ico .rs-ico{width:30px;height:30px;}
+.resumo-alerta-tit{font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;}
 .resumo-alerta-txt{font-size:13.5px;font-weight:600;opacity:.92;margin-top:2px;}
-.resumo-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
-@media (max-width:760px){ .resumo-cards{grid-template-columns:1fr;} }
-.resumo-card{background:var(--surface);border:1px solid var(--border-soft);border-top:4px solid var(--ok);box-shadow:var(--shadow-card);padding:16px 18px;}
-.resumo-card.warn{border-top-color:var(--warn);} .resumo-card.crit{border-top-color:var(--crit);}
-.resumo-card-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-faint);}
-.resumo-card-pct{font-family:var(--mono);font-size:44px;font-weight:800;line-height:1.05;margin:6px 0 2px;}
-.resumo-card.ok .resumo-card-pct{color:var(--ok);} .resumo-card.warn .resumo-card-pct{color:var(--warn);} .resumo-card.crit .resumo-card-pct{color:var(--crit);}
-.resumo-card-un{font-size:16px;font-weight:700;color:var(--ink);}
-.resumo-card-extra{font-size:13.5px;font-weight:700;margin-top:6px;}
-.resumo-card.crit .resumo-card-extra{color:var(--crit);} .resumo-card.warn .resumo-card-extra{color:var(--warn);} .resumo-card.ok .resumo-card-extra{color:var(--ok);}
-.resumo-card-det{font-size:12.5px;color:var(--ink-faint);margin-top:4px;}
+.resumo-sec{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-faint);margin:2px 0 -4px;display:flex;align-items:center;gap:8px;}
+.resumo-sec::after{content:"";flex:1;height:1px;background:var(--border);}
+.resumo-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
+.rs-card{--nv:var(--ok);--nv-bg:var(--ok-bg);background:var(--surface);border:1px solid var(--border-soft);box-shadow:var(--shadow-card);padding:16px 18px 14px;position:relative;overflow:hidden;}
+.rs-card.warn{--nv:var(--warn);--nv-bg:var(--warn-bg);} .rs-card.crit{--nv:var(--crit);--nv-bg:var(--crit-bg);} .rs-card.neutro{--nv:var(--ink-soft);--nv-bg:var(--border-soft);}
+.rs-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--nv);}
+.rs-card-top{display:flex;align-items:center;gap:12px;}
+.rs-card-icon{width:44px;height:44px;border-radius:12px;background:var(--nv-bg);color:var(--nv);display:flex;align-items:center;justify-content:center;flex:none;}
+.rs-card-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);line-height:1.25;}
+.rs-card-tag{display:inline-block;margin-top:3px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:2px 8px;border-radius:999px;background:var(--nv-bg);color:var(--nv);}
+.rs-card-main{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:12px 0 8px;}
+.rs-card-pct{font-family:var(--mono);font-size:40px;font-weight:800;line-height:1;color:var(--nv);}
+.rs-card-un{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--ink);text-align:right;}
+.rs-card-un small{display:block;font-family:var(--font);font-size:11px;font-weight:600;color:var(--ink-faint);}
+.rs-meter{position:relative;height:10px;background:var(--border-soft);border-radius:999px;overflow:visible;}
+.rs-meter-fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:var(--nv);}
+.rs-meter-cap{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);}
+.rs-card-extra{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:var(--nv);margin-top:10px;}
+.rs-card-det{font-size:12px;color:var(--ink-faint);margin-top:4px;}
+.rs-split{display:flex;flex-direction:column;gap:9px;margin-top:12px;}
+.rs-split-row{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:8px;}
+.rs-split-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.rs-split-ico .rs-ico{width:16px;height:16px;}
+.rs-split-name{font-size:13px;font-weight:700;color:var(--ink);}
+.rs-split-bar{height:6px;background:var(--border-soft);border-radius:999px;margin-top:4px;overflow:hidden;}
+.rs-split-bar i{display:block;height:100%;border-radius:999px;}
+.rs-split-val{font-family:var(--mono);font-size:18px;font-weight:800;color:var(--ink);}
 .resumo-chart{background:var(--surface);border:1px solid var(--border-soft);box-shadow:var(--shadow-card);padding:16px 20px;}
-.resumo-chart-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--ink-soft);margin-bottom:12px;}
-.resumo-bar-row{display:grid;grid-template-columns:150px minmax(0,1fr) 120px;gap:12px;align-items:center;margin-bottom:12px;}
-.resumo-bar-label{font-size:13.5px;font-weight:700;color:var(--ink);text-align:right;}
-.resumo-bar-track{position:relative;height:30px;background:var(--border-soft);}
-.resumo-bar-fill{position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-family:var(--mono);font-size:13px;font-weight:800;}
-.resumo-bar-cap{position:absolute;top:-5px;bottom:-5px;width:3px;background:var(--ink);}
-.resumo-bar-cap span{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:10.5px;font-weight:800;color:var(--ink-soft);white-space:nowrap;}
-.resumo-bar-val{font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--ink);}
-.resumo-chart-leg{font-size:12px;color:var(--ink-faint);margin-top:4px;}
+.resumo-chart-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--ink-soft);margin-bottom:16px;}
+.resumo-bar-row{display:grid;grid-template-columns:170px minmax(0,1fr) 120px;gap:12px;align-items:center;margin-bottom:22px;}
+.resumo-bar-label{font-size:13px;font-weight:700;color:var(--ink);text-align:right;}
+.resumo-bar-track{position:relative;height:26px;background:var(--border-soft);border-radius:4px;}
+.resumo-bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-family:var(--mono);font-size:12.5px;font-weight:800;}
+.resumo-bar-cap{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--ink);border-radius:2px;}
+.resumo-bar-cap span{position:absolute;bottom:-15px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;color:var(--ink-soft);white-space:nowrap;}
+.resumo-bar-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink);}
+.resumo-chart-leg{font-size:12px;color:var(--ink-faint);margin-top:10px;}
 .resumo-email{background:var(--surface);border:1px solid var(--border-soft);box-shadow:var(--shadow-card);padding:16px;display:flex;flex-direction:column;gap:10px;}
 .resumo-email-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--ink-soft);}
 .resumo-email textarea{width:100%;min-height:330px;resize:vertical;font-family:var(--font);font-size:13.5px;line-height:1.5;padding:10px;border:1px solid var(--border);background:var(--surface);color:var(--ink);}
@@ -1614,7 +1632,10 @@ button.kpi-hero-card.sel{background:var(--brand-bg);outline:2px solid var(--bran
       </div>
       <button class="resumo-close" id="resumoCloseBtn" title="Fechar">✕</button>
     </div>
-    <div class="resumo-fmts" id="resumoFmts"></div>
+    <div class="resumo-fmts">
+      <label for="resumoFmtSelect">Formato</label>
+      <select id="resumoFmtSelect"></select>
+    </div>
     <div class="resumo-body">
       <div id="resumoCaptura" class="resumo-captura"></div>
       <div class="resumo-email">
@@ -5164,105 +5185,117 @@ function resumoCalcular(grupo){
 function resumoNivel(p){ return p==null ? 'ok' : p>1 ? 'crit' : p>=0.85 ? 'warn' : 'ok'; }
 function resumoGrupoPadrao(){
   if(state.activeFilter && GRUPO_OCUPACAO_POR_METAL[state.activeFilter]) return GRUPO_OCUPACAO_POR_METAL[state.activeFilter];
-  // sem formato filtrado: abre no formato mais lotado
-  let pior=GRUPOS_OCUPACAO_ORDEM[0], piorPct=-1;
-  GRUPOS_OCUPACAO_ORDEM.forEach(g=>{ const p=resumoCalcular(g).livre.percentual||0; if(p>piorPct){ piorPct=p; pior=g; } });
-  return pior;
+  return 'TODOS';
 }
+// ícones (traço, herdam a cor do card)
+const RS_ICO = {
+  bobina:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="12" rx="4" ry="8"/><path d="M8 4h9c2.2 0 4 3.6 4 8s-1.8 8-4 8H8"/><ellipse cx="8" cy="12" rx="1.5" ry="3"/></svg>',
+  cadeado:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1.3"/></svg>',
+  lupa:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.6-4.6"/><path d="M7.8 10.6l1.9 1.9 3.4-3.6"/></svg>',
+  rua:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M7 21v-8h10v8"/><path d="M7 17h10"/></svg>',
+  caminhao:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h13v10H1z"/><path d="M14 9h4l4 4v3h-8z"/><circle cx="5.5" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/></svg>',
+  ok:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16.5 9"/></svg>',
+  grafico:'<svg class="rs-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg>'
+};
 function resumoRender(){
-  const grupo = resumoState.grupo;
-  const { livre, rua } = resumoCalcular(grupo);
-  const nome = resumoLabelGrupo(grupo);
+  const sel = resumoState.grupo;
+  const grupos = sel==='TODOS' ? GRUPOS_OCUPACAO_ORDEM.slice() : [sel];
+  const dados = grupos.map(g=>({ g, nome:resumoLabelGrupo(g), ...resumoCalcular(g) }));
+  const rua = dados[0].rua;
+  const nomeSel = sel==='TODOS' ? 'Todos os formatos' : resumoLabelGrupo(sel);
   const agora = new Date().toLocaleString('pt-BR');
-  document.getElementById('resumoFmtTitulo').textContent = nome;
+  document.getElementById('resumoFmtTitulo').textContent = nomeSel;
   document.getElementById('resumoSub').textContent = `Metal Novelis · BR3R Três Rios · dados de ${state.lastUpdate ? state.lastUpdate.toLocaleString('pt-BR') : agora}`;
-  document.getElementById('resumoFmts').innerHTML = GRUPOS_OCUPACAO_ORDEM.map(g=>`<button class="resumo-fmt-btn${g===grupo?' active':''}" data-resumo-grupo="${g}">${resumoLabelGrupo(g)}</button>`).join('');
+  const selEl=document.getElementById('resumoFmtSelect');
+  selEl.innerHTML = `<option value="TODOS">Todos os formatos</option>` + GRUPOS_OCUPACAO_ORDEM.map(g=>`<option value="${g}">${resumoLabelGrupo(g)}</option>`).join('');
+  selEl.value = sel;
 
-  const excLivre = livre.capacidade!=null ? livre.estoqueUN - livre.capacidade : null;
-  const excRua = rua.capacidade!=null ? rua.estoqueUN - rua.capacidade : null;
-  const nvL = resumoNivel(livre.percentual), nvR = resumoNivel(rua.percentual);
-  const extra = (exc)=> exc==null ? '' : exc>0 ? `+${exc} bobina${exc>1?'s':''} acima da capacidade` : exc===0 ? 'no limite — nenhuma vaga' : `${-exc} vaga${-exc>1?'s':''} disponíve${-exc>1?'is':'l'}`;
   const pct = p => p==null ? '—' : Math.round(p*100)+'%';
+  const exc = d => d.capacidade!=null ? d.estoqueUN - d.capacidade : null;
+  const textoExc = e => e==null ? '' : e>0 ? `+${e} bobina${e>1?'s':''} acima da capacidade` : e===0 ? 'no limite — nenhuma vaga' : `${-e} vaga${-e>1?'s':''} disponíve${-e>1?'is':'l'}`;
+  const tag = nv => nv==='crit' ? 'Superlotado' : nv==='warn' ? 'Perto do limite' : 'Com espaço';
+  const nvRua = resumoNivel(rua.percentual);
+  const lotados = dados.filter(d=>resumoNivel(d.livre.percentual)==='crit');
+  const algumWarn = dados.some(d=>resumoNivel(d.livre.percentual)==='warn') || nvRua==='warn';
+  const nomesLot = lotados.map(d=>d.nome).join(', ');
 
   // faixa de situação da descarga
   let alerta;
-  if(nvL==='crit' && nvR==='crit') alerta={cls:'crit',ico:'⛔',tit:'Descarga bloqueada — estoque superlotado',txt:`Livre ${nome} e rua HFI/CQ acima da capacidade. Não há espaço para descarregar novas bobinas.`};
-  else if(nvL==='crit') alerta={cls:'crit',ico:'⛔',tit:`Sem espaço no livre ${nome}`,txt:`O livre está acima da capacidade — descarga de ${nome} comprometida.`};
-  else if(nvR==='crit') alerta={cls:'crit',ico:'⛔',tit:'Rua HFI / CQ superlotada',txt:'Sem espaço para bobinas reprovadas ou em análise — descarga comprometida.'};
-  else if(nvL==='warn' || nvR==='warn') alerta={cls:'warn',ico:'⚠️',tit:'Ocupação próxima do limite',txt:'Pouco espaço para novas descargas.'};
-  else alerta={cls:'ok',ico:'✅',tit:'Há espaço para descarga',txt:'Ocupação dentro da capacidade.'};
+  if(lotados.length && nvRua==='crit') alerta={cls:'crit',ico:RS_ICO.caminhao,tit:'Descarga bloqueada — estoque superlotado',txt:`Livre ${nomesLot} e rua HFI/CQ acima da capacidade. Não há espaço para descarregar novas bobinas.`};
+  else if(lotados.length) alerta={cls:'crit',ico:RS_ICO.caminhao,tit:`Sem espaço no livre — ${nomesLot}`,txt:'Livre acima da capacidade: descarga comprometida.'};
+  else if(nvRua==='crit') alerta={cls:'crit',ico:RS_ICO.caminhao,tit:'Rua HFI / CQ superlotada',txt:'Sem espaço para bobinas bloqueadas ou em análise: descarga comprometida.'};
+  else if(algumWarn) alerta={cls:'warn',ico:RS_ICO.caminhao,tit:'Ocupação próxima do limite',txt:'Pouco espaço para novas descargas.'};
+  else alerta={cls:'ok',ico:RS_ICO.ok,tit:'Há espaço para descarga',txt:'Ocupação dentro da capacidade.'};
 
-  const membros = grupo===GRUPO_9_1_SLEEK && livre.membros.length ? `<div class="resumo-card-det">${livre.membros.map(m=>`${m.label} ${m.estoqueUN} UN`).join(' · ')}</div>` : '';
-  const cards = `
-    <div class="resumo-cards">
-      <div class="resumo-card ${nvL}">
-        <div class="resumo-card-label">Livre — ${nome}</div>
-        <div class="resumo-card-pct">${pct(livre.percentual)}</div>
-        <div class="resumo-card-un">${livre.estoqueUN} UN / ${livre.capacidade??'—'} UN</div>
-        <div class="resumo-card-extra">${extra(excLivre)}</div>${membros}
-      </div>
-      <div class="resumo-card ${nvR}">
-        <div class="resumo-card-label">Rua HFI + Controle de Qualidade (geral)</div>
-        <div class="resumo-card-pct">${pct(rua.percentual)}</div>
-        <div class="resumo-card-un">${rua.estoqueUN} UN / ${rua.capacidade??'—'} UN</div>
-        <div class="resumo-card-extra">${extra(excRua)}</div>
-        <div class="resumo-card-det">mesma rua física para HFI e CQ</div>
-      </div>
-      <div class="resumo-card ${rua.hfiUN+rua.cqUN>0 && nvR!=='ok' ? nvR : 'ok'}">
-        <div class="resumo-card-label">Divisão da rua HFI / CQ</div>
-        <div class="resumo-card-pct" style="font-size:30px;margin-top:12px">HFI ${rua.hfiUN} · CQ ${rua.cqUN}</div>
-        <div class="resumo-card-un">HFI = bloqueado</div>
-        <div class="resumo-card-det">HFI ${rua.estoqueUN?Math.round(rua.hfiUN/rua.estoqueUN*100):0}% · CQ ${rua.estoqueUN?Math.round(rua.cqUN/rua.estoqueUN*100):0}% da rua</div>
+  const medidor = (v,cap) => { if(cap==null) return ''; const esc=Math.max(v,cap)*1.05||1; return `<div class="rs-meter"><div class="rs-meter-fill" style="width:${v/esc*100}%"></div><div class="rs-meter-cap" style="left:${cap/esc*100}%" title="capacidade"></div></div>`; };
+  const cardLivre = d => { const nv=resumoNivel(d.livre.percentual); const e=exc(d.livre);
+    const membros = d.g===GRUPO_9_1_SLEEK && d.livre.membros.length ? `<div class="rs-card-det">${d.livre.membros.map(m=>`${m.label} ${m.estoqueUN} UN`).join(' · ')} · mesma rua</div>` : '';
+    return `<div class="rs-card ${nv}">
+      <div class="rs-card-top"><div class="rs-card-icon">${RS_ICO.bobina}</div><div><div class="rs-card-label">Livre — ${d.nome}</div><span class="rs-card-tag">${tag(nv)}</span></div></div>
+      <div class="rs-card-main"><div class="rs-card-pct">${pct(d.livre.percentual)}</div><div class="rs-card-un">${d.livre.estoqueUN} / ${d.livre.capacidade??'—'} UN<small>bobinas / capacidade</small></div></div>
+      ${medidor(d.livre.estoqueUN, d.livre.capacidade)}
+      <div class="rs-card-extra">${textoExc(e)}</div>${membros}
+    </div>`; };
+  const eR = exc(rua);
+  const cardRua = `<div class="rs-card ${nvRua}">
+      <div class="rs-card-top"><div class="rs-card-icon">${RS_ICO.rua}</div><div><div class="rs-card-label">Rua HFI + Controle de Qualidade</div><span class="rs-card-tag">${tag(nvRua)} · geral</span></div></div>
+      <div class="rs-card-main"><div class="rs-card-pct">${pct(rua.percentual)}</div><div class="rs-card-un">${rua.estoqueUN} / ${rua.capacidade??'—'} UN<small>bobinas / capacidade</small></div></div>
+      ${medidor(rua.estoqueUN, rua.capacidade)}
+      <div class="rs-card-extra">${textoExc(eR)}</div>
+      <div class="rs-split">
+        <div class="rs-split-row"><div class="rs-split-ico" style="background:var(--crit-bg);color:var(--crit)">${RS_ICO.cadeado}</div><div><div class="rs-split-name">HFI (bloqueado)</div><div class="rs-split-bar"><i style="width:${rua.estoqueUN?rua.hfiUN/rua.estoqueUN*100:0}%;background:var(--crit)"></i></div></div><div class="rs-split-val">${rua.hfiUN}</div></div>
+        <div class="rs-split-row"><div class="rs-split-ico" style="background:var(--warn-bg);color:var(--warn)">${RS_ICO.lupa}</div><div><div class="rs-split-name">Controle de qualidade</div><div class="rs-split-bar"><i style="width:${rua.estoqueUN?rua.cqUN/rua.estoqueUN*100:0}%;background:var(--warn)"></i></div></div><div class="rs-split-val">${rua.cqUN}</div></div>
       </div>
     </div>`;
 
   // gráfico: barras contra a capacidade (linha preta = capacidade)
-  const barras = [
-    { label:`Livre ${nome}`, v:livre.estoqueUN, cap:livre.capacidade },
-    { label:'HFI (bloqueado)', v:rua.hfiUN, cap:null },
-    { label:'Controle de qualidade', v:rua.cqUN, cap:null },
-    { label:'Rua HFI + CQ', v:rua.estoqueUN, cap:rua.capacidade }
-  ];
+  const barras = dados.map(d=>({ label:`Livre ${d.nome}`, v:d.livre.estoqueUN, cap:d.livre.capacidade }))
+    .concat([{ label:'HFI (bloqueado)', v:rua.hfiUN, cap:null, cor:'#B91C1C99' }, { label:'Controle de qualidade', v:rua.cqUN, cap:null, cor:'#B4530999' }, { label:'Rua HFI + CQ', v:rua.estoqueUN, cap:rua.capacidade }]);
   const escala = Math.max(1, ...barras.map(b=>Math.max(b.v, b.cap||0))) * 1.08;
-  const corBarra = b => b.cap==null ? '#64748B' : b.v>b.cap ? '#B91C1C' : b.v>=b.cap*0.85 ? '#B45309' : '#15803D';
+  const corBarra = b => b.cor || (b.v>b.cap ? '#B91C1C' : b.v>=b.cap*0.85 ? '#B45309' : '#15803D');
   const grafico = `
     <div class="resumo-chart">
-      <div class="resumo-chart-title">Bobinas × capacidade</div>
+      <div class="resumo-chart-title">${RS_ICO.grafico} Bobinas × capacidade</div>
       ${barras.map(b=>`
         <div class="resumo-bar-row">
           <div class="resumo-bar-label">${b.label}</div>
           <div class="resumo-bar-track">
-            <div class="resumo-bar-fill" style="width:${b.v/escala*100}%;background:${corBarra(b)}">${b.v/escala>0.06?b.v:''}</div>
+            <div class="resumo-bar-fill" style="width:${b.v/escala*100}%;background:${corBarra(b)}">${b.v/escala>0.05?b.v:''}</div>
             ${b.cap!=null?`<div class="resumo-bar-cap" style="left:${b.cap/escala*100}%"><span>cap. ${b.cap}</span></div>`:''}
           </div>
           <div class="resumo-bar-val">${b.v} UN${b.cap!=null?` · ${pct(b.cap?b.v/b.cap:null)}`:''}</div>
         </div>`).join('')}
-      <div class="resumo-chart-leg">Linha preta = capacidade física · vermelho = acima da capacidade · HFI e CQ dividem a rua de ${rua.capacidade??'—'} UN.</div>
+      <div class="resumo-chart-leg">Linha preta = capacidade física · vermelho = acima da capacidade · HFI e CQ dividem a mesma rua de ${rua.capacidade??'—'} UN.</div>
     </div>`;
 
   document.getElementById('resumoCaptura').innerHTML = `
     <div class="resumo-alerta ${alerta.cls}"><div class="resumo-alerta-ico">${alerta.ico}</div><div><div class="resumo-alerta-tit">${alerta.tit}</div><div class="resumo-alerta-txt">${alerta.txt}</div></div></div>
-    ${cards}${grafico}`;
+    <div class="resumo-sec">Estoque livre</div>
+    <div class="resumo-cards">${dados.map(cardLivre).join('')}</div>
+    <div class="resumo-sec">Bloqueado e em análise</div>
+    <div class="resumo-cards">${cardRua}</div>
+    ${grafico}`;
 
   // texto do e-mail
-  const lotado = nvL==='crit' || nvR==='crit';
-  const linhaLivre = `• Livre ${nome}: ${livre.estoqueUN} bobinas para ${livre.capacidade??'—'} de capacidade (${pct(livre.percentual)})${excLivre>0?` — ${excLivre} acima da capacidade`:''}.`;
-  const linhaRua = `• Rua HFI + Controle de Qualidade (geral): ${rua.estoqueUN} bobinas para ${rua.capacidade??'—'} de capacidade (${pct(rua.percentual)})${excRua>0?` — ${excRua} acima da capacidade`:''}. HFI (bloqueado): ${rua.hfiUN} · Controle de qualidade: ${rua.cqUN}.`;
+  const lotado = lotados.length>0 || nvRua==='crit';
+  const linhasLivre = dados.map(d=>{ const e=exc(d.livre); return `• Livre ${d.nome}: ${d.livre.estoqueUN} bobinas para ${d.livre.capacidade??'—'} de capacidade (${pct(d.livre.percentual)})${e>0?` — ${e} acima da capacidade`:''}.`; }).join('\n');
+  const linhaRua = `• Rua HFI + Controle de Qualidade (geral): ${rua.estoqueUN} bobinas para ${rua.capacidade??'—'} de capacidade (${pct(rua.percentual)})${eR>0?` — ${eR} acima da capacidade`:''}. HFI (bloqueado): ${rua.hfiUN} · Controle de qualidade: ${rua.cqUN}.`;
+  const onde = [lotados.length?`no livre (${nomesLot})`:'', nvRua==='crit'?'na rua de HFI/CQ':''].filter(Boolean).join(' e ');
   document.getElementById('resumoEmailTexto').value =
 `Prezados,
 
 Segue a ocupação atual do estoque de bobinas Novelis — BR3R Três Rios (${agora}):
 
-${linhaLivre}
+${linhasLivre}
 ${linhaRua}
 
 ${lotado
-  ? `Temos carretas paradas aguardando descarga e não consigo descarregar, porque o estoque está superlotado${nvL==='crit'&&nvR==='crit'?' no livre e na rua de HFI/CQ':nvL==='crit'?' no livre':' na rua de HFI/CQ'}.
+  ? `Temos carretas paradas aguardando descarga e não consigo descarregar, porque o estoque está superlotado ${onde}.
 Peço apoio para liberar espaço (consumo/transferência do livre e tratativa das bobinas em HFI e controle de qualidade).`
   : 'No momento ainda há espaço para descarga, mas seguimos acompanhando a ocupação.'}
 
 Att.`;
-  resumoState.assunto = `Estoque de bobinas BR3R — ocupação ${nome}${lotado?' (descarga bloqueada)':''} — ${new Date().toLocaleDateString('pt-BR')}`;
+  resumoState.assunto = `Estoque de bobinas BR3R — ocupação ${sel==='TODOS'?'geral':nomeSel}${lotado?' (descarga bloqueada)':''} — ${new Date().toLocaleDateString('pt-BR')}`;
 }
 function abrirResumo(){
   if(!state.mb52proc){ showToast('Carregue os arquivos do dia primeiro.'); return; }
@@ -5275,9 +5308,8 @@ document.getElementById('resumoBtn').addEventListener('click', abrirResumo);
 document.getElementById('resumoCloseBtn').addEventListener('click', fecharResumo);
 document.getElementById('resumoModal').addEventListener('click', e=>{
   if(e.target.id==='resumoModal'){ fecharResumo(); return; }
-  const b=e.target.closest('[data-resumo-grupo]');
-  if(b){ resumoState.grupo=b.dataset.resumoGrupo; resumoRender(); }
 });
+document.getElementById('resumoFmtSelect').addEventListener('change', e=>{ resumoState.grupo=e.target.value; resumoRender(); });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape' && document.getElementById('resumoModal').style.display==='flex') fecharResumo(); });
 document.getElementById('resumoCopiarTextoBtn').addEventListener('click', async ()=>{
   const t=document.getElementById('resumoEmailTexto');
