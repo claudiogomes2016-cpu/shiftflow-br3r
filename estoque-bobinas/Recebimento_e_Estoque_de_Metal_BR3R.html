@@ -5313,7 +5313,14 @@ async function garantirPasta(){
       else{dirHandle=await window.showDirectoryPicker({id:'relMetalBR3R',mode:'readwrite'});await dbSalvar(dirHandle)}
     }
     return true;
-  }catch(e){autoSetStatus('· autorização da pasta cancelada');return false}
+  }catch(e){
+    autoSetStatus('· autorização da pasta cancelada');
+    // antes saía calado (parecia que o botão não fazia nada). O navegador só abre a escolha de pasta logo
+    // depois de um clique: se o aviso ficou aberto alguns segundos, ele recusa — basta clicar de novo.
+    if(e&&e.name==='AbortError') sapAviso('vermelho','Pasta não escolhida','Clique em ATUALIZAR SAP de novo e escolha a pasta Projeção Metal.');
+    else sapAviso('vermelho','O navegador não deixou acessar a pasta','Clique em ATUALIZAR SAP de novo (o navegador só libera a pasta logo depois do clique). Detalhe: '+((e&&e.message)||e));
+    try{diario('erro ao autorizar a pasta: '+((e&&e.name)||'')+' '+((e&&e.message)||e))}catch(_){}
+    return false}
 }
 // arquivos do SAP + a planilha da Novelis mais recente da pasta
 async function arquivosDaPasta(){
@@ -5370,14 +5377,55 @@ function sapInstalador(){
   autoSetStatus('· instalador baixado: dê dois cliques em RelatorioMetalSAP.vbs (só na primeira vez)');
 }
 async function acionarSAP(){
-  if(modoRapido)return;
-  if(!await garantirPasta())return;
-  const pasta=sapPasta(true);if(!pasta){autoSetStatus('· informe a pasta do SAP');return}
-  const antes={},atual=await planilhasSAP();for(const k of Object.keys(ARQ_SAP))antes[k]=assinatura(atual[k]);
-  diario('ATUALIZAR SAP clicado · pasta autorizada: '+dirHandle.name+' · pasta do SAP: '+pasta);
-  abrirProtocolo(PROTOCOLO+'?v='+RUNNER_MIN+'&a=sap&t='+await codigoPasta()+'&q='+escape(pasta));
-  esperarSAP(antes);
+  // Antes: se uma atualização anterior ficou "em andamento", ou se a pasta/gravação falhava, o botão
+  // saía sem mostrar nada. Agora sempre aparece um aviso dizendo o que aconteceu.
+  if(modoRapido){
+    if(confirm('Já existe uma atualização do SAP em andamento (aguardando as planilhas).\n\nOK = cancelar essa espera e começar de novo · Cancelar = continuar esperando')){
+      clearInterval(pollTimer);modoRapido=false;$id('btnSap').disabled=false;pollNormal();
+    }else{sapAvisoAbrir('Ainda aguardando as planilhas da atualização anterior. Se a janela do Windows não abriu, clique no botão.');return}
+  }
+  sapAviso('amarelo','Preparando a atualização…','Conferindo a pasta Projeção Metal.');
+  try{
+    if(!await garantirPasta())return;
+    const pasta=sapPasta(true);
+    if(!pasta){autoSetStatus('· informe a pasta do SAP');sapAviso('vermelho','Pasta do SAP não informada','Clique em ATUALIZAR SAP de novo e confirme o caminho da pasta.');return}
+    const antes={},atual=await planilhasSAP();for(const k of Object.keys(ARQ_SAP))antes[k]=assinatura(atual[k]);
+    diario('ATUALIZAR SAP clicado · pasta autorizada: '+dirHandle.name+' · pasta do SAP: '+pasta);
+    let cod;
+    try{cod=await codigoPasta()}
+    catch(e){diario('erro ao gravar RELMETAL_PASTA.txt: '+e.message);sapAviso('vermelho','Não consegui gravar na pasta Projeção Metal','O navegador precisa da permissão "Editar arquivos". Clique em "trocar pasta autorizada", escolha a pasta e permita a edição. Detalhe: '+e.message);return}
+    const url=PROTOCOLO+'?v='+RUNNER_MIN+'&a=sap&t='+cod+'&q='+escape(pasta);
+    sapUltimaUrl=url;
+    // O navegador só abre o atalho do Windows logo depois de um clique. Se a pasta de rede demorou, o clique
+    // "venceu": nesse caso mostra um botão para abrir o atalho com um clique novo.
+    const ativo=!navigator.userActivation||navigator.userActivation.isActive;
+    if(ativo)abrirProtocolo(url);
+    esperarSAP(antes);
+    if(!ativo){diario('clique expirou antes de abrir o atalho — pedindo um clique no aviso');sapAvisoAbrir('A pasta demorou a responder. Clique no botão para abrir a janela do SAP.')}
+    else setTimeout(()=>{if(modoRapido&&!sapRespondeu())sapAvisoAbrir('Se a janela "Relatorio de Metal BR3R" não abriu, clique no botão. Se continuar sem abrir, use "📘 Como instalar" → passo 4.')},8000);
+  }catch(e){
+    console.error(e);
+    try{diario('erro no ATUALIZAR SAP: '+e.message)}catch(_){}
+    sapAviso('vermelho','ATUALIZAR SAP não conseguiu começar',(e&&e.message)||String(e));
+    if(modoRapido){clearInterval(pollTimer);modoRapido=false;$id('btnSap').disabled=false;pollNormal()}
+  }
 }
+let sapUltimaUrl='';
+// o atalho grava RELMETAL_SCRIPT.txt (versão) logo que o usuário clica em "Sim" na janela do Windows
+let sapInicioEspera=0;
+function sapRespondeu(){return !!sapRespondeu._ok}
+// aviso amarelo com um botão que abre o atalho com um clique novo (o navegador exige o clique)
+function sapAvisoAbrir(txt){
+  sapAviso('amarelo','SAP ATUALIZANDO… (aguardando o atalho)',txt);
+  const e=document.getElementById('sapAviso');if(!e)return;
+  const div=e.querySelector('div');if(!div||div.querySelector('.sapAbrirBtn'))return;
+  const b=document.createElement('button');b.type='button';b.className='sapAbrirBtn';b.textContent='▶ Abrir a janela do SAP';
+  b.style.cssText='display:block;margin-top:8px;font:800 13px Inter,Segoe UI,Arial,sans-serif;padding:7px 12px;border:0;border-radius:6px;background:#1A1A1A;color:#fff;cursor:pointer';
+  b.onclick=ev=>{ev.stopPropagation();if(sapUltimaUrl){abrirProtocolo(sapUltimaUrl);diario('atalho aberto pelo botão do aviso')}};
+  div.appendChild(b);
+}
+// erros que escapam de funções assíncronas do painel também viram aviso (antes sumiam no console)
+window.addEventListener('unhandledrejection',ev=>{const m=(ev.reason&&ev.reason.message)||String(ev.reason||'');if(!m)return;try{diario('erro: '+m)}catch(_){}sapAviso('vermelho','Algo falhou no painel',m)});
 
 /* ---------- AVISO DO SAP (igual em todos os painéis da Logística BR3R) ----------
    Amarelo piscando enquanto o SAP atualiza; verde quando termina (com o aviso de voz do Antônio). */
@@ -5392,7 +5440,7 @@ function sapAviso(cor,titulo,txt){
 }
 function metalOk(){sapAviso('verde','✓ Relatório atualizado com sucesso','Recebimento e estoque de metal atualizado às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'.')}
 function esperarSAP(antes){
-  modoRapido=true;$id('btnSap').disabled=true;clearInterval(pollTimer);
+  modoRapido=true;sapRespondeu._ok=false;$id('btnSap').disabled=true;clearInterval(pollTimer);
   let inicio=Date.now(),assin=null,avisou=false;const ks=Object.keys(ARQ_SAP);
   autoSetStatus('· confirme o pop-up "Relatorio de Metal BR3R" na tela do Windows…');
   sapAviso('amarelo','SAP ATUALIZANDO…','Confirme a janela "Relatorio de Metal BR3R" do Windows. O relatório carrega sozinho no fim.');
@@ -5402,6 +5450,7 @@ function esperarSAP(antes){
     try{
       const info=await planilhasSAP();
       const novos=ks.filter(k=>info[k]&&assinatura(info[k])!==antes[k]);
+      if(novos.length)sapRespondeu._ok=true;
       if(novos.length&&novos.length<ks.length){esperarSAP._parcial=esperarSAP._parcial||Date.now();if(Date.now()-esperarSAP._parcial>180e3){clearInterval(pollTimer);esperarSAP._parcial=null;autoSetStatus('· carregando '+novos.length+' planilhas novas (as outras não mudaram)…');await carregarDaPasta(true,'SAP (parcial)');diario('planilhas carregadas (parcial)'+novInfo);fim();metalOk();falar(VOZ_AVISO);emailAutomatico();return}}
       if(novos.length<ks.length){assin=null;autoSetStatus('· aguardando o SAP: '+novos.length+'/'+ks.length+' planilhas novas');
         if(!avisou&&!novos.length&&Date.now()-inicio>30000){avisou=true;autoSetStatus('· nada aconteceu? Se nenhum pop-up abriu, clique em "instalar atalho SAP" e dê dois cliques no arquivo baixado')}return}
@@ -5818,7 +5867,7 @@ parseNovelisFile=async function(file){
       <table class="gi-prob">
         <thead><tr><th style="width:38%">O que aparece</th><th>O que fazer</th></tr></thead>
         <tbody>
-          <tr><td>Clico em ATUALIZAR SAP e nada acontece</td><td>Refaça o passo 4 (instalar o atalho) e tente de novo. Confira se o navegador não bloqueou o pop-up "Abrir Relatorio de Metal BR3R?".</td></tr>
+          <tr><td>Clico em ATUALIZAR SAP e nada acontece / o aviso fica amarelo e a janela do Windows não abre</td><td>Clique no botão <b>▶ Abrir a janela do SAP</b> que aparece no aviso amarelo. Se continuar sem abrir, refaça o passo 4 (instalar o atalho). Confira se o navegador não bloqueou o pop-up "Abrir Relatorio de Metal BR3R?" (ícone na barra de endereço).</td></tr>
           <tr><td>"O PAINEL ESTÁ LIGADO A OUTRA PASTA"</td><td>No painel, clique em <b>trocar pasta autorizada</b> e escolha exatamente a pasta Projeção Metal do drive O:.</td></tr>
           <tr><td>"Não foi possível conectar ao SAP"</td><td>Abra e faça login no SAP. Confira o passo 2 (Scripting ativado).</td></tr>
           <tr><td>"Não consegui carregar a variante…"</td><td>O usuário SAP precisa enxergar as variantes <b>/METAL LATAS</b> (MB51), <b>///METAL TR</b> e <b>/3RIOS ESTOQUE</b> (MB52). Teste abrindo a transação manualmente e clicando em "Obter variante".</td></tr>
