@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 140">
+  <defs>
+    <linearGradient id="sfTrl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2F7BFF"/><stop offset="1" stop-color="#0A47E0"/></linearGradient>
+    <linearGradient id="sfCab" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9D3E3"/></linearGradient>
+  </defs>
+  <!-- swoosh azul (arco superior) -->
+  <path d="M38 112 C 70 40, 190 4, 330 22 C 205 18, 100 46, 50 112 Z" fill="#1463FF"/>
+  <!-- swoosh branco (arco base) -->
+  <path d="M14 130 C 26 84, 120 42, 250 42 C 140 54, 56 92, 40 130 Z" fill="#FFFFFF"/>
+  <path d="M40 124 L 352 124 L 340 129 L 44 129 Z" fill="#FFFFFF"/>
+  <!-- empilhadeira -->
+  <g transform="translate(44,64) scale(1.3)">
+    <rect x="30" y="-4" width="3" height="40" fill="#E8EDF5"/>
+    <rect x="34" y="28" width="16" height="3" fill="#E8EDF5"/>
+    <path d="M2 18 h20 l6 -14 h3 v28 h-29 z" fill="#FFFFFF"/>
+    <path d="M10 18 v-14 h12 l-4 14 z" fill="#0B1A33" stroke="#FFFFFF" stroke-width="2"/>
+    <circle cx="15" cy="9" r="3" fill="#1463FF"/>
+    <rect x="13" y="12" width="5" height="6" fill="#1463FF"/>
+    <circle cx="8" cy="34" r="6" fill="#0B1A33" stroke="#FFFFFF" stroke-width="2.5"/>
+    <circle cx="25" cy="34" r="5" fill="#0B1A33" stroke="#FFFFFF" stroke-width="2.5"/>
+    <!-- paletes -->
+    <g fill="#FFFFFF"><rect x="36" y="10" width="7" height="7"/><rect x="44" y="10" width="7" height="7"/><rect x="36" y="18" width="7" height="8"/><rect x="44" y="18" width="7" height="8"/></g>
+    <g fill="#0B1A33"><rect x="39" y="10" width="1" height="16"/><rect x="47" y="10" width="1" height="16"/></g>
+  </g>
+  <!-- carreta 1 -->
+  <g>
+    <rect x="128" y="76" width="60" height="34" rx="2" fill="url(#sfTrl)" stroke="#FFFFFF" stroke-width="2"/>
+    <g stroke="#7FB0FF" stroke-width="1" opacity=".55"><line x1="140" y1="79" x2="140" y2="107"/><line x1="152" y1="79" x2="152" y2="107"/><line x1="164" y1="79" x2="164" y2="107"/><line x1="176" y1="79" x2="176" y2="107"/></g>
+    <rect x="128" y="110" width="60" height="4" fill="#E8EDF5"/>
+    <circle cx="140" cy="117" r="5.5" fill="#0B1A33" stroke="#FFFFFF" stroke-width="2.5"/><circle cx="153" cy="117" r="5.5" fill="#0B1A33" stroke="#FFFFFF" stroke-width="2.5"/>
+    <rect x="188" y="108" width="8" height="3" fill="#E8EDF5"/>
+  </g>
+  <!-- carreta 2 -->
+  <g>
+    <rect x="196" y="62" width="74" height="48" rx="2" fill="url(#sfTrl)" stroke="#FFFFFF" stroke-width="2"/>
+    <g stroke="#7FB0FF" stroke-width="1" opacity=".55"><line x1="210" y1="65" x2="210" y2="107"/><line x1="224" y1="65" x2="224" y2="107"/><line x1="238" y1="65" x2="238" y2="107"/><line x1="252" y1="65" x2="252" y2="107"/></g>
+    <rect x="196" y="110" width="74" height="4" fill="#E8EDF5"/>
+    <circle cx="208" cy="117" r="5.5" fill="#0B1A33" stroke="#FFFFFF" stroke-width="2.5"/><circle cx="221" cy="117" r="5.5" fill="#0B1A33" stroke="#FFFFFF" stroke-width="2.5"/>
+    <circle cx="256" cy="117" r="5.5" fill="#0B1A33" stroke="#FFFFFF" stroke-width="2.5"/>
+  </g>
+  <!-- cavalo mecânico (cabine) -->
+  <g>
+    <path d="M272 112 V 52 Q 272 44 280 44 H 322 Q 330 44 332 52 L 340 78 V 112 Z" fill="url(#sfCab)" stroke="#FFFFFF" stroke-width="1.5"/>
+    <path d="M300 50 H 322 Q 327 50 328 55 L 334 76 H 300 Z" fill="#0B1A33"/>
+    <path d="M304 53 H 321 L 326 72 H 304 Z" fill="#1E4FB8" opacity=".55"/>
+    <rect x="278" y="52" width="16" height="22" rx="2" fill="#0B1A33"/>
+    <g fill="#0B1A33"><rect x="304" y="84" width="34" height="3"/><rect x="304" y="90" width="34" height="3"/><rect x="304" y="96" width="34" height="3"/></g>
+    <rect x="334" y="102" width="8" height="5" rx="1.5" fill="#BFE0FF"/>
+    <rect x="272" y="104" width="70" height="8" fill="#E8EDF5"/>
+    <rect x="276" y="40" width="44" height="5" rx="2" fill="#1463FF"/>
+    <circle cx="288" cy="117" r="6.5" fill="#0B1A33" stroke="#FFFFFF" stroke-width="2.5"/>
+    <circle cx="324" cy="117" r="6.5" fill="#0B1A33" stroke="#FFFFFF" stroke-width="2.5"/>
+  </g>
+</svg>
