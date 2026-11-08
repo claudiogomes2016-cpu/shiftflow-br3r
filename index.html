@@ -763,6 +763,7 @@ input:checked + .sw::after { transform:translateX(20px); }
 .hdr-btn.bell svg { width:25px; height:25px; }
 .bdg { position:absolute; top:1px; right:0; min-width:18px; height:18px; padding:0 5px; border-radius:99px; background:#1463FF; color:#fff; font-family:var(--f-display); font-size:12px; font-weight:700; line-height:18px; text-align:center; border:2px solid #07102A; box-sizing:content-box; }
 .bdg[hidden] { display:none; }
+.hdr-btn.bell .bdg { top:2px; right:-4px; min-width:16px; height:16px; line-height:16px; font-size:11px; }
 .hdr-logo { display:flex; align-items:center; gap:4px; border:0; background:none; padding:0; cursor:pointer; min-width:0; margin-right:auto; }
 .hdr-logo img { height:40px; width:auto; }
 .hdr-lw { display:flex; flex-direction:column; align-items:flex-start; }
@@ -858,6 +859,49 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
 @media(min-width:760px){
   .tiles, body:not(.is-gestor) .tiles { grid-template-columns:repeat(3, 1fr); }
   #sc-home .wrap { max-width:760px; }
+}
+
+/* Início compacto: tudo cabe numa tela só (sem rolar) no celular.
+   A tela ocupa exatamente o espaço entre o cabeçalho e a barra inferior
+   e cada parte se ajusta à altura visível (dvh). */
+@media(max-width:759px){
+  #sc-home.app-wrap { padding-top:var(--hdr-h, 64px); padding-bottom:var(--nav-h, 78px); }
+  #sc-home .wrap { height:calc(100dvh - var(--hdr-h, 64px) - var(--nav-h, 78px)); display:flex; flex-direction:column; gap:clamp(6px, 1.3dvh, 12px); padding:clamp(8px, 1.6dvh, 16px) 12px; overflow:hidden; }
+  #sc-home .hm-greet, #sc-home .hm-pass, #sc-home .tiles, #sc-home .hm-turno { margin:0; flex-shrink:0; }
+  .hm-greet { gap:10px; }
+  .hm-av { width:clamp(34px, 5.6dvh, 48px); height:clamp(34px, 5.6dvh, 48px); }
+  .hm-av svg { width:60%; height:60%; }
+  .hm-hello { font-size:clamp(17px, 3dvh, 24px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .hm-role { font-size:clamp(12px, 1.9dvh, 15px); margin-top:0; }
+  .thm button { width:clamp(34px, 5dvh, 42px); height:clamp(28px, 4.2dvh, 32px); }
+  .hm-pass { padding:clamp(8px, 1.6dvh, 16px) 12px; gap:12px; border-radius:14px; }
+  .hm-pass-i { width:clamp(36px, 6dvh, 52px); height:clamp(36px, 6dvh, 52px); border-radius:12px; }
+  .hm-pass-i svg { width:58%; height:58%; }
+  .hm-pass-t b { font-size:clamp(17px, min(2.9dvh, 5.6vw), 23px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .hm-pass-t small { font-size:clamp(11.5px, 1.8dvh, 14px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .hm-pass-c svg { width:22px; height:22px; }
+  #sc-home .tiles { flex:1 1 auto; min-height:0; gap:clamp(6px, 1.2dvh, 10px); grid-auto-rows:1fr; }
+  .tile { min-height:0; padding:clamp(4px, 1dvh, 12px) 4px; gap:clamp(1px, .4dvh, 4px); border-radius:12px; }
+  .tile-i { margin-bottom:clamp(0px, .4dvh, 4px); }
+  .tile-i svg { width:clamp(22px, 4.2dvh, 36px); height:clamp(22px, 4.2dvh, 36px); }
+  .tile b { font-size:clamp(13.5px, min(2.3dvh, 4.4vw), 18px); }
+  .tile em { font-size:clamp(13px, min(2.2dvh, 4.2vw), 17px); }
+  .tile-i .bdg { top:-7px; right:-12px; }
+  .hm-turno { padding:clamp(8px, 1.5dvh, 16px) 12px; border-radius:14px; }
+  .hm-turno-top { gap:10px; margin-bottom:clamp(6px, 1.3dvh, 14px); }
+  .hm-turno-i svg { width:clamp(26px, 4.4dvh, 40px); height:clamp(26px, 4.4dvh, 40px); }
+  .hm-turno-top b { font-size:clamp(16px, 2.7dvh, 22px); }
+  .hm-turno-top small { font-size:clamp(13px, 2.1dvh, 17px); }
+  .hm-turno-tag { min-width:0; padding:clamp(4px, 1dvh, 10px) clamp(12px, 3vw, 18px); font-size:clamp(16px, 2.8dvh, 22px); border-radius:10px; }
+  .hm-swap { height:clamp(40px, 6dvh, 52px); font-size:clamp(16px, min(2.6dvh, 5vw), 20px); gap:10px; }
+  .hm-swap svg { width:22px; height:22px; }
+  .hm-foot { margin:0; font-size:12px; flex-shrink:0; }
+}
+@media(max-width:759px) and (max-height:700px){
+  .hm-foot { display:none; }
+}
+@media(max-width:759px) and (max-height:560px){
+  .hm-pass-t small { display:none; }
 }
 
 /* ── BARRA DE NAVEGAÇÃO ── */
@@ -1896,6 +1940,14 @@ const app = {
     await this.loadConferentes();
   },
 
+  // Mede cabeçalho e barra inferior reais para a tela Início caber exata na tela
+  measureChrome() {
+    const h = document.querySelector('.hdr'), n = document.querySelector('.nav-bot');
+    const r = document.documentElement.style;
+    if(h && h.offsetHeight) r.setProperty('--hdr-h', h.offsetHeight + 'px');
+    if(n && n.offsetHeight && innerWidth < 1024) r.setProperty('--nav-h', n.offsetHeight + 'px');
+  },
+
   startClock() {
     const tick = () => {
       const d = new Date();
@@ -2093,6 +2145,7 @@ const app = {
     document.getElementById('hm-role').textContent = 'Turma ' + this.user.turma + ' • ' + roleFmt;
     document.body.classList.toggle('is-gestor', this.user.role === 'gestor');
     this.tab('home');
+    requestAnimationFrame(() => this.measureChrome());
     // Gestor: desbloqueia área automaticamente
     if(this.user.role === 'gestor') {
       document.getElementById('gestor-area').classList.remove('hidden');
@@ -4063,6 +4116,7 @@ document.getElementById('cam-inp').onchange = function(e) {
 };
 
 window.onload = () => app.init();
+window.addEventListener('resize', () => app.measureChrome());
 document.addEventListener('change', e => { if(e.target.closest && e.target.closest('#tma-lista')) app.updateHero(); });
 document.addEventListener('input', e => { if(e.target.closest && e.target.closest('#tma-lista')) app.updateHero(); });
 </script>
