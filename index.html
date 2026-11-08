@@ -816,6 +816,35 @@ button.drw-row { cursor:pointer; }
 .thm button svg { width:18px; height:18px; }
 .thm button.on { background:#1463FF; color:#fff; box-shadow:0 2px 10px rgba(20,99,255,.5); }
 
+/* ── FILTRO POR CONFERENTE / CARDS CLICÁVEIS ── */
+.conf-bar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.conf-sel { position:relative; display:flex; align-items:center; gap:8px; flex:1 1 220px; max-width:420px; height:44px; padding:0 12px; border-radius:12px; border:1.5px solid var(--border2); background:var(--card-bg); color:var(--blue-txt); cursor:pointer; }
+.conf-bar.on .conf-sel { border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-dim); }
+.conf-sel > svg { width:20px; height:20px; flex-shrink:0; }
+.conf-sel select { flex:1; min-width:0; height:100%; border:0; outline:0; background:transparent; color:var(--text); font-family:var(--f-display); font-size:16px; font-weight:600; -webkit-appearance:none; appearance:none; cursor:pointer; }
+.conf-sel select option { background:var(--bg3); color:var(--text); }
+.conf-chev { width:16px !important; height:16px !important; pointer-events:none; opacity:.7; }
+.conf-x { width:44px; height:44px; border-radius:12px; border:1.5px solid var(--border2); background:var(--card-bg); color:var(--text2); font-size:16px; cursor:pointer; }
+.conf-perfil { height:44px; padding:0 16px; border:0; border-radius:12px; background:linear-gradient(180deg,#2F7BFF,#1463FF); color:#fff; font-family:var(--f-display); font-size:16px; font-weight:700; cursor:pointer; box-shadow:0 6px 16px rgba(20,99,255,.35); align-items:center; }
+.clk { cursor:pointer; }
+.clk:active { transform:scale(.98); }
+.cw.clk:hover { border-color:var(--blue); }
+.oc-cards.one { grid-template-columns:1fr; }
+.kc.sel { border-color:var(--blue); box-shadow:0 0 0 2px var(--blue-dim); }
+.oc-card-inc.sel { border-color:var(--red); box-shadow:0 0 0 2px var(--red-dim); }
+.oc-card-blq.sel { border-color:var(--yellow); box-shadow:0 0 0 2px var(--yellow-dim); }
+.flt-banner { display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--blue-dim); border:1.5px solid var(--blue); border-radius:12px; padding:10px 14px; margin-bottom:12px; font-size:14px; font-weight:700; color:var(--blue-txt); }
+.flt-banner button { background:none; border:0; color:var(--blue-txt); font-size:18px; cursor:pointer; padding:0 4px; }
+.pf-ks { display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; }
+@media(max-width:520px){ .pf-ks { grid-template-columns:repeat(3, 1fr); } }
+.pf-k { background:var(--card-bg); border:1px solid var(--border); border-radius:10px; padding:8px 6px; text-align:center; }
+.pf-k b { display:block; font-family:var(--f-display); font-size:24px; font-weight:700; line-height:1.1; }
+.pf-k span { font-size:11.5px; color:var(--text3); }
+.pf-reg { background:var(--bg4); border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-bottom:8px; }
+.pf-reg-h { display:flex; justify-content:space-between; gap:6px; flex-wrap:wrap; font-size:12.5px; color:var(--text3); font-weight:600; margin-bottom:4px; }
+.pf-rel { font-size:13px; color:var(--text2); line-height:1.5; margin-top:4px; }
+.pf-rel.inc b { color:var(--red); } .pf-rel.blq b { color:var(--yellow); }
+
 /* ── TELA INÍCIO ── */
 .hm-greet { display:flex; align-items:center; gap:14px; margin:4px 0 16px; }
 .hm-gt { flex:1; min-width:0; }
@@ -1423,7 +1452,8 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
   </div>
 
   <!-- Filtro de Período — gerado dinamicamente por JS -->
-  <div id="dash-periodo-btns" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap"></div>
+  <div id="dash-periodo-btns" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap"></div>
+  <div class="conf-bar" data-scope="dash"></div>
 
   <div class="kpi-g">
     <div class="kc">
@@ -1546,24 +1576,25 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
   </div>
 
   <!-- Filtro período — gerado dinamicamente por JS -->
-  <div id="ocorr-periodo-btns" style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap"></div>
+  <div id="ocorr-periodo-btns" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap"></div>
+  <div class="conf-bar" data-scope="ocorr"></div>
   <!-- Filtro tipo -->
   <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-    <button class="ocorr-filter on" onclick="app.setOcorrFilter('todos',this)">Todos</button>
-    <button class="ocorr-filter" onclick="app.setOcorrFilter('incidente',this)">🚨 Incidentes</button>
-    <button class="ocorr-filter" onclick="app.setOcorrFilter('bloqueio',this)">⚠️ Bloqueios</button>
+    <button class="ocorr-filter on" data-f="todos" onclick="app.setOcorrFilter('todos',this)">Todos</button>
+    <button class="ocorr-filter" data-f="incidente" onclick="app.setOcorrFilter('incidente',this)">🚨 Incidentes</button>
+    <button class="ocorr-filter" data-f="bloqueio" onclick="app.setOcorrFilter('bloqueio',this)">⚠️ Bloqueios</button>
   </div>
 
   <!-- KPIs resumo -->
-  <div class="g2" style="margin-bottom:16px">
-    <div class="kc" style="padding:16px">
+  <div class="g2 oc-cards" id="oc-cards" style="margin-bottom:16px">
+    <div class="kc clk oc-card-inc" style="padding:16px" id="oc-card-inc" role="button" tabindex="0" onclick="app.ocorrCardClick('incidente')" title="Mostrar só incidentes">
       <div style="width:36px;height:36px;border-radius:10px;background:var(--red-dim);display:flex;align-items:center;justify-content:center;margin-bottom:10px">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       </div>
       <div class="kc-v" style="color:var(--red);font-size:32px" id="oc-tot-incidentes">0</div>
       <div class="kc-l" style="text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;color:var(--text2)">Incidentes</div>
     </div>
-    <div class="kc" style="padding:16px">
+    <div class="kc clk oc-card-blq" style="padding:16px" id="oc-card-blq" role="button" tabindex="0" onclick="app.ocorrCardClick('bloqueio')" title="Mostrar só bloqueios">
       <div style="width:36px;height:36px;border-radius:10px;background:var(--yellow-dim);display:flex;align-items:center;justify-content:center;margin-bottom:10px">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       </div>
@@ -1603,7 +1634,8 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
       <button onclick="app.openDiscModal()" style="background:var(--blue);border:none;color:#fff;border-radius:10px;padding:10px 18px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">+ Nova Ocorrência</button>
     </div>
   </div>
-  <div id="disc-periodo-btns" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap"></div>
+  <div id="disc-periodo-btns" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap"></div>
+  <div class="conf-bar" data-scope="disc"></div>
   <div class="g2" style="margin-bottom:16px">
     <div class="cw" style="padding:18px">
       <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px">Por Tipo</div>
@@ -1903,6 +1935,105 @@ const app = {
       else partes.push('Nenhum alerta no turno. Bom descanso!');
       return partes.join(' ');
     },
+  },
+
+  // ── FILTRO GLOBAL POR CONFERENTE (BI Gestão, Relatórios/Ocorrências, Disciplina, Histórico) ──
+  confSel: '',
+
+  filtraConf(arr) {
+    if(!this.confSel) return arr || [];
+    return (arr || []).filter(r => this.normConf(r.conferente) === this.confSel);
+  },
+
+  confNomes() {
+    const map = {};
+    const add = n => { const k = this.normConf(n); if(k && !map[k]) map[k] = n; };
+    Object.values(this.conferentesMap || {}).forEach(c => add(c.nome));   // cadastro (nomes oficiais)
+    (this.allTurnos || []).forEach(r => add(r.conferente));
+    (this._ocorrData || []).forEach(r => add(r.conferente));
+    (this._discData || []).forEach(r => add(r.conferente));
+    return Object.entries(map).sort((a, b) => a[0].localeCompare(b[0]));
+  },
+
+  confSelNome() {
+    const f = this.confNomes().find(([k]) => k === this.confSel);
+    return f ? f[1] : this.confSel;
+  },
+
+  renderConfBars() {
+    const nomes = this.confNomes();
+    const opts = '<option value="">Todos os conferentes</option>' +
+      nomes.map(([k, n]) => `<option value="${k.replace(/"/g, '&quot;')}"${k === this.confSel ? ' selected' : ''}>${n}</option>`).join('');
+    document.querySelectorAll('.conf-bar').forEach(bar => {
+      bar.classList.toggle('on', !!this.confSel);
+      bar.innerHTML = `
+        <label class="conf-sel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <select onchange="app.setConfSel(this.value)" aria-label="Filtrar por conferente">${opts}</select>
+          <svg class="conf-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </label>
+        ${this.confSel ? `<button class="conf-x" onclick="app.setConfSel('')" aria-label="Limpar filtro de conferente">✕</button>` : ''}
+        ${this.confSel ? `<button class="conf-perfil gestor-only" onclick="app.abrirPerfilConferente(app.confSelNome(), '${bar.dataset.scope}')">Ver tudo do conferente</button>` : ''}`;
+    });
+  },
+
+  setConfSel(k) {
+    this.confSel = this.normConf(k || '');
+    this.renderConfBars();
+    const on = id => document.getElementById(id)?.classList.contains('on');
+    if(on('sc-dash')) this.renderDash(this.filtrarPorPeriodo(this.allTurnos || []));
+    if(on('sc-ocorr')) this.renderOcorrencias(this._ocorrData || []);
+    if(on('sc-disc')) this.renderDisc(this.filtrarDiscPorPeriodo(this._discData || []));
+  },
+
+  // Converte a chave de período ('mes:atual', 'mes:AAAA-M', 'tudo') em intervalo de datas
+  rangeFromKey(key) {
+    const agora = new Date();
+    if(!key || key === 'tudo') return { ini: null, fim: null };
+    if(key === 'mes:atual') return { ini: new Date(agora.getFullYear(), agora.getMonth(), 1), fim: null };
+    if(key.startsWith('mes:')) {
+      const parts = key.replace('mes:', '').split('-');
+      const ano = parseInt(parts[0]), mes = parseInt(parts[1]);
+      return { ini: new Date(ano, mes, 1), fim: new Date(ano, mes + 1, 0, 23, 59, 59) };
+    }
+    return { ini: null, fim: null };
+  },
+
+  // Histórico do gestor filtrado a partir dos cards do BI
+  histFiltro: '',
+  HIST_FILTROS: {
+    seg:   { l: 'com incidente de segurança', f: r => r.seg === 'sim' },
+    qual:  { l: 'com bloqueio de qualidade', f: r => r.qual === 'sim' },
+    tma:   { l: 'com veículos acima de 4 h (TMA)', f: r => { try { return JSON.parse(r.tma_justificativas || '[]').length > 0; } catch(e) { return false; } } },
+    falta: { l: 'com falta no quadro Sodexo', f: r => String(r.s_falta).toLowerCase() === 'sim' },
+    equip: { l: 'com empilhadeira parada ou baú reprovado', f: r => String(r.emp_s).toLowerCase() === 'sim' || String(r.bau_s).toLowerCase() === 'sim' },
+  },
+
+  goHist(f) {
+    this.histFiltro = f || '';
+    this.goTab('dash');
+    setTimeout(() => document.getElementById('hist-list')?.scrollIntoView({ behavior:'smooth', block:'start' }), 900);
+  },
+
+  isGestor() { return this.user?.role === 'gestor'; },
+
+  scrollToEl(id) { document.getElementById(id)?.scrollIntoView({ behavior:'smooth', block:'center' }); },
+
+  // Liga os cards fixos do BI Gestão como atalhos/filtros
+  bindDashCards() {
+    if(this._dashCardsBound) return; this._dashCardsBound = true;
+    const bind = (id, fn, title) => {
+      const card = document.getElementById(id)?.closest('.kc, .cw'); if(!card) return;
+      card.classList.add('clk'); card.setAttribute('role', 'button'); card.setAttribute('tabindex', '0'); card.title = title;
+      card.addEventListener('click', fn);
+      card.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+    };
+    bind('k-planta', () => this.scrollToEl('chart-prod'), 'Ver produtividade por turma');
+    bind('k-nsa', () => this.scrollToEl('chart-prod'), 'Ver produtividade por turma');
+    bind('k-seg', () => this.goOcorrFiltro('incidente'), 'Ver incidentes');
+    bind('k-qual', () => this.goOcorrFiltro('bloqueio'), 'Ver bloqueios');
+    bind('card-seg', () => this.goOcorrFiltro('incidente'), 'Ver incidentes');
+    bind('card-qual', () => this.goOcorrFiltro('bloqueio'), 'Ver bloqueios');
   },
 
   primeiroNome() {
@@ -2231,10 +2362,6 @@ const app = {
     this.goTab('form');
     setTimeout(() => document.getElementById('yn-tma-n')?.scrollIntoView({ behavior:'smooth', block:'center' }), 80);
   },
-  goHist() {
-    this.goTab('dash');
-    setTimeout(() => document.getElementById('hist-list')?.scrollIntoView({ behavior:'smooth', block:'start' }), 900);
-  },
 
   // ── TELA INÍCIO ──
   turnoHorario(t) {
@@ -2294,15 +2421,26 @@ const app = {
   },
 
   setOcorrFilter(f, el) {
-    this.ocorrFilter = f;
-    el.parentElement.querySelectorAll('.ocorr-filter').forEach(b => b.classList.remove('on'));
-    el.classList.add('on');
+    this.ocorrFilter = f || 'todos';
+    document.querySelectorAll('.ocorr-filter[data-f]').forEach(b => b.classList.toggle('on', b.dataset.f === this.ocorrFilter));
     this.renderOcorrencias(this._ocorrData || []);
+  },
+
+  // Card de Incidentes/Bloqueios funciona como filtro (toque de novo volta para Todos)
+  ocorrCardClick(f) {
+    this.setOcorrFilter(this.ocorrFilter === f ? 'todos' : f);
+  },
+
+  // Abre Ocorrências já filtrada (usado pelos cards do BI e da tela Início)
+  goOcorrFiltro(f) {
+    this.ocorrFilter = f || 'todos';
+    this.goTab('ocorr');
+    document.querySelectorAll('.ocorr-filter[data-f]').forEach(b => b.classList.toggle('on', b.dataset.f === this.ocorrFilter));
   },
 
   setOcorrPeriodo(p, el) {
     this.ocorrPeriodo = p;
-    document.querySelectorAll('#ocorr-periodo-btns .ocorr-filter').forEach(b => b.classList.remove('on'));
+    document.querySelectorAll('#ocorr-periodo-btns .periodo-btn').forEach(b => b.classList.remove('on'));
     if(el) el.classList.add('on');
     this.renderOcorrencias(this._ocorrData || []);
   },
@@ -2318,10 +2456,7 @@ const app = {
         .limit(500);
       if(error) throw error;
       this._ocorrData = data || [];
-      const inc = (data||[]).filter(r => r.seg === 'sim').length;
-      const blq = (data||[]).filter(r => r.qual === 'sim').length;
-      document.getElementById('oc-tot-incidentes').textContent = inc;
-      document.getElementById('oc-tot-bloqueios').textContent = blq;
+      this.renderConfBars();
       this.renderOcorrencias(this._ocorrData);
     } catch(e) {
       el.innerHTML = '<div style="text-align:center;color:var(--red);padding:30px;font-size:14px">Erro ao carregar: ' + (e.message||e) + '</div>';
@@ -2330,10 +2465,10 @@ const app = {
 
   renderOcorrencias(data) {
     const el = document.getElementById('ocorr-list');
-    const f = this.ocorrFilter;
-    const p = this.ocorrPeriodo;
+    const f = this.ocorrFilter || 'todos';
+    const p = this.ocorrPeriodo || 'mes:atual';
     const now = new Date();
-    const filtered = data.filter(r => {
+    const doPeriodo = this.filtraConf(data).filter(r => {
       const dt = new Date(r.data_registro);
       if(p !== 'tudo') {
         if(p === 'mes:atual') {
@@ -2347,11 +2482,17 @@ const app = {
           if(dt < ini || dt > fim) return false;
         }
       }
-      // filtro tipo
-      if(f === 'incidente') return r.seg === 'sim';
-      if(f === 'bloqueio') return r.qual === 'sim';
       return true;
     });
+    // Totais dos cards: período + conferente escolhidos
+    document.getElementById('oc-tot-incidentes').textContent = doPeriodo.filter(r => r.seg === 'sim').length;
+    document.getElementById('oc-tot-bloqueios').textContent = doPeriodo.filter(r => r.qual === 'sim').length;
+    // Tipo escolhido: mostra só o card, o gráfico e a lista daquele tipo
+    const ci = document.getElementById('oc-card-inc'), cb = document.getElementById('oc-card-blq'), cc = document.getElementById('oc-cards');
+    if(ci) { ci.style.display = f === 'bloqueio' ? 'none' : ''; ci.classList.toggle('sel', f === 'incidente'); }
+    if(cb) { cb.style.display = f === 'incidente' ? 'none' : ''; cb.classList.toggle('sel', f === 'bloqueio'); }
+    if(cc) cc.classList.toggle('one', f !== 'todos');
+    const filtered = doPeriodo.filter(r => f === 'incidente' ? r.seg === 'sim' : f === 'bloqueio' ? r.qual === 'sim' : true);
     this.renderOcorrChart(filtered);
     if(!filtered.length) {
       el.innerHTML = '<div style="text-align:center;color:var(--text3);padding:40px 0;font-size:15px">Nenhuma ocorrência encontrada.</div>';
@@ -2390,13 +2531,15 @@ const app = {
       if(r.seg === 'sim') byConf[c].inc++;
       if(r.qual === 'sim') byConf[c].blo++;
     });
-    const labels = Object.keys(byConf).sort();
+    const ft = this.ocorrFilter || 'todos';
+    const labels = Object.keys(byConf).sort().filter(c => ft === 'incidente' ? byConf[c].inc : ft === 'bloqueio' ? byConf[c].blo : true);
     const incData = labels.map(c => byConf[c].inc);
     const bloData = labels.map(c => byConf[c].blo);
     const isDark = this.theme === 'dark';
     const gridCol = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
     const tickCol = isDark ? '#D4D4D8' : '#475569';
     const legendCol = isDark ? '#FFFFFF' : '#1E293B';
+    const self = this;
     this.charts.ocorr = new Chart(ctx.getContext('2d'), {
       type: 'bar',
       data: {
@@ -2404,10 +2547,12 @@ const app = {
         datasets: [
           { label: '🚨 Incidentes', data: incData, backgroundColor: isDark ? 'rgba(239,68,68,0.75)' : 'rgba(220,38,38,0.7)', borderRadius: 6, borderSkipped: false },
           { label: '⚠️ Bloqueios',  data: bloData, backgroundColor: isDark ? 'rgba(245,158,11,0.75)' : 'rgba(217,119,6,0.7)',  borderRadius: 6, borderSkipped: false },
-        ]
+        ].filter(d => ft === 'incidente' ? d.label.includes('Incidentes') : ft === 'bloqueio' ? d.label.includes('Bloqueios') : true)
       },
       options: {
         responsive: true, maintainAspectRatio: false,
+        onClick: (evt, els) => { if(els && els.length) self.setConfSel(labels[els[0].index]); },
+        onHover: (evt, els) => { evt.native.target.style.cursor = els.length ? 'pointer' : 'default'; },
         layout: { padding: { top: 28, left: 4, right: 4, bottom: 4 } },
         plugins: {
           legend: { position: 'bottom', labels: { color: legendCol, font: { family: 'Barlow, sans-serif', size: 13, weight: '700' }, padding: 16, boxWidth: 12, boxHeight: 12 } },
@@ -2975,9 +3120,9 @@ const app = {
     let html = '';
     meses.forEach((m, i) => {
       const isOn = this.ocorrPeriodo === m.key;
-      html += `<button class="ocorr-filter${isOn ? ' on' : ''}" onclick="app.setOcorrPeriodo('${m.key}',this)">${m.label}</button>`;
+      html += `<button class="periodo-btn${isOn ? ' on' : ''}" onclick="app.setOcorrPeriodo('${m.key}',this)">${m.label}</button>`;
     });
-    html += `<button class="ocorr-filter${this.ocorrPeriodo === 'tudo' ? ' on' : ''}" onclick="app.setOcorrPeriodo('tudo',this)">Tudo</button>`;
+    html += `<button class="periodo-btn${this.ocorrPeriodo === 'tudo' ? ' on' : ''}" onclick="app.setOcorrPeriodo('tudo',this)">Tudo</button>`;
     container.innerHTML = html;
   },
 
@@ -3020,6 +3165,9 @@ const app = {
   },
 
   renderDash(turnos) {
+    this.bindDashCards();
+    this.renderConfBars();
+    turnos = this.filtraConf(turnos);
     let tp=0, tn=0, seg=0, qual=0;
     const byT = {};
     turnos.forEach(r => {
@@ -3041,7 +3189,8 @@ const app = {
     kQ.textContent = qual > 0 ? qual : 'OK'; kQT.textContent = qual > 0 ? 'bloqueios' : 'sem bloqueios';
     kQ.className = 'kc-v ' + (qual > 0 ? 'cw2' : 'cs'); kQT.className = 'kc-t ' + (qual > 0 ? 'cw2' : 'cs');
     const periodoLabel = this._periodoLabel || 'Período atual';
-    document.getElementById('dash-per').textContent = total > 0 ? `${total} registro${total!==1?'s':''} · ${periodoLabel}` : `Sem registros · ${periodoLabel}`;
+    const confTxt = this.confSel ? ' · ' + this.confSelNome() : '';
+    document.getElementById('dash-per').textContent = (total > 0 ? `${total} registro${total!==1?'s':''} · ${periodoLabel}` : `Sem registros · ${periodoLabel}`) + confTxt;
 
     this.renderOpsKpis(turnos, tp, tn);
     this.renderGroupedChart(byT);
@@ -3057,7 +3206,7 @@ const app = {
     const total = turnos.length;
     const sim = v => String(v || '').toLowerCase() === 'sim';
     // Dias sem incidente de segurança (sobre todo o histórico, não só o período)
-    const ultInc = (this.allTurnos || []).find(r => r.seg === 'sim');
+    const ultInc = this.filtraConf(this.allTurnos || []).find(r => r.seg === 'sim');
     const diasSemInc = ultInc ? Math.floor((Date.now() - new Date(ultInc.data_registro)) / 86400000) : null;
     let tmaVeic = 0, tmaTurnos = 0;
     turnos.forEach(r => {
@@ -3072,15 +3221,15 @@ const app = {
     const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
     const absPct = pct(faltas, total);
     const tiles = [
-      { l:'Dias sem incidente', v: diasSemInc === null ? '—' : diasSemInc, s: diasSemInc === null ? 'nenhum incidente registrado' : 'desde o último registro', c: diasSemInc === null || diasSemInc >= 30 ? 'good' : diasSemInc >= 7 ? 'warn' : 'bad', bar: diasSemInc === null ? 100 : Math.min(100, diasSemInc / 30 * 100), i:'🛡️' },
-      { l:'Registros', v: total, s: 'passagens de turno no período', c:'info', bar: 100, i:'📝' },
-      { l:'Média por turno', v: media, s: 'paletes movimentados (planta + NSA)', c:'info', bar: 100, i:'📦' },
-      { l:'TMA > 4h', v: tmaVeic, s: tmaTurnos + ' turno' + (tmaTurnos!==1?'s':'') + ' com veículos parados', c: tmaVeic === 0 ? 'good' : tmaVeic <= 5 ? 'warn' : 'bad', bar: pct(tmaTurnos, total), i:'⏱️' },
-      { l:'Absenteísmo', v: absPct + '%', s: faltas + ' falta' + (faltas!==1?'s':'') + ' · ' + repos + ' reposta' + (repos!==1?'s':''), c: absPct === 0 ? 'good' : absPct <= 10 ? 'warn' : 'bad', bar: absPct, i:'👥' },
-      { l:'Equipamentos', v: emp, s: 'empilhadeira parada · ' + bau + ' baú reprovado' + (bau!==1?'s':''), c: emp === 0 ? 'good' : empCham === emp ? 'warn' : 'bad', bar: pct(empCham, emp || 1), i:'🔧', foot: emp ? (empCham + '/' + emp + ' com chamado') : 'operação sem paradas' },
+      { go:"app.goOcorrFiltro('incidente')", l:'Dias sem incidente', v: diasSemInc === null ? '—' : diasSemInc, s: diasSemInc === null ? 'nenhum incidente registrado' : 'desde o último registro', c: diasSemInc === null || diasSemInc >= 30 ? 'good' : diasSemInc >= 7 ? 'warn' : 'bad', bar: diasSemInc === null ? 100 : Math.min(100, diasSemInc / 30 * 100), i:'🛡️' },
+      { go: this.isGestor() ? "app.goHist('')" : '', l:'Registros', v: total, s: 'passagens de turno no período', c:'info', bar: 100, i:'📝' },
+      { go:"app.scrollToEl('chart-prod')", l:'Média por turno', v: media, s: 'paletes movimentados (planta + NSA)', c:'info', bar: 100, i:'📦' },
+      { go: this.isGestor() ? "app.goHist('tma')" : '', l:'TMA > 4h', v: tmaVeic, s: tmaTurnos + ' turno' + (tmaTurnos!==1?'s':'') + ' com veículos parados', c: tmaVeic === 0 ? 'good' : tmaVeic <= 5 ? 'warn' : 'bad', bar: pct(tmaTurnos, total), i:'⏱️' },
+      { go: this.isGestor() ? "app.goHist('falta')" : '', l:'Absenteísmo', v: absPct + '%', s: faltas + ' falta' + (faltas!==1?'s':'') + ' · ' + repos + ' reposta' + (repos!==1?'s':''), c: absPct === 0 ? 'good' : absPct <= 10 ? 'warn' : 'bad', bar: absPct, i:'👥' },
+      { go: this.isGestor() ? "app.goHist('equip')" : '', l:'Equipamentos', v: emp, s: 'empilhadeira parada · ' + bau + ' baú reprovado' + (bau!==1?'s':''), c: emp === 0 ? 'good' : empCham === emp ? 'warn' : 'bad', bar: pct(empCham, emp || 1), i:'🔧', foot: emp ? (empCham + '/' + emp + ' com chamado') : 'operação sem paradas' },
     ];
     el.innerHTML = tiles.map(t => `
-      <div class="ops ${t.c}">
+      <div class="ops ${t.c}${t.go ? ' clk' : ''}"${t.go ? ` role="button" tabindex="0" onclick="${t.go}"` : ''}>
         <div class="ops-h"><span class="ops-l">${t.l}</span><span class="ops-i">${t.i}</span></div>
         <div class="ops-v">${t.v}</div>
         <div class="ops-s">${t.s}</div>
@@ -3294,12 +3443,15 @@ const app = {
   renderHist() {
     const search = (document.getElementById('hist-search')?.value || '').toLowerCase();
     const filter = document.getElementById('hist-filter')?.value || '';
-    let items = [...this.allTurnos];
+    let items = this.filtraConf([...this.allTurnos]);
+    const hf = this.HIST_FILTROS[this.histFiltro];
+    if(hf) items = items.filter(hf.f);
+    const banner = hf ? `<div class="flt-banner">🔍 Registros ${hf.l} <button onclick="app.histFiltro='';app.renderHist()" aria-label="Limpar filtro">✕</button></div>` : '';
     if(search) items = items.filter(r => r.conferente.toLowerCase().includes(search) || (r.relato||'').toLowerCase().includes(search));
     if(filter) items = items.filter(r => r.turma_sai === filter);
-    if(!items.length) { document.getElementById('hist-list').innerHTML = '<p style="text-align:center;color:var(--text3);font-size:14px;padding:20px">Nenhum registro encontrado.</p>'; return; }
+    if(!items.length) { document.getElementById('hist-list').innerHTML = banner + '<p style="text-align:center;color:var(--text3);font-size:14px;padding:20px">Nenhum registro encontrado.</p>'; return; }
     const isGestor = this.user?.role === 'gestor';
-    document.getElementById('hist-list').innerHTML = items.map(r => `
+    document.getElementById('hist-list').innerHTML = banner + items.map(r => `
       <div class="hi">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px">
           <div>
@@ -3566,9 +3718,11 @@ const app = {
     // Reseta filtros ao recarregar dados (mudança de período, nova entrada)
     this._discFiltroTipo = null;
     this._discFiltroConf = null;
+    this.renderConfBars();
+    data = this.filtraConf(data);
     this.renderDiscTipoChart(data);
     this.renderDiscConfChart(data);
-    this.renderDiscMesChart(this._discData);
+    this.renderDiscMesChart(this.filtraConf(this._discData));
     this.renderDiscConfList(data);
   },
 
@@ -3592,12 +3746,12 @@ const app = {
       filtered = data.filter(r => r.tipo === this._discFiltroTipo);
       filtroBanner = `<div style="background:var(--blue-dim);border:1.5px solid var(--blue);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:700;color:var(--blue);display:flex;justify-content:space-between;align-items:center">
         🔍 Filtrando por tipo: <b>${this._discFiltroTipo}</b>
-        <button onclick="app._discFiltroTipo=null;app.renderDiscConfList(app._discData)" style="background:transparent;border:none;color:var(--blue);font-size:18px;cursor:pointer;padding:0 4px">✕</button></div>`;
+        <button onclick="app._discFiltroTipo=null;app.renderDiscConfList(app.filtraConf(app.filtrarDiscPorPeriodo(app._discData)))" style="background:transparent;border:none;color:var(--blue);font-size:18px;cursor:pointer;padding:0 4px">✕</button></div>`;
     } else if(this._discFiltroConf) {
       filtered = data.filter(r => this.normConf(r.conferente) === this._discFiltroConf);
       filtroBanner = `<div style="background:var(--blue-dim);border:1.5px solid var(--blue);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:700;color:var(--blue);display:flex;justify-content:space-between;align-items:center">
         🔍 Filtrando por conferente: <b>${this._discFiltroConf}</b>
-        <button onclick="app._discFiltroConf=null;app.renderDiscConfList(app._discData)" style="background:transparent;border:none;color:var(--blue);font-size:18px;cursor:pointer;padding:0 4px">✕</button></div>`;
+        <button onclick="app._discFiltroConf=null;app.renderDiscConfList(app.filtraConf(app.filtrarDiscPorPeriodo(app._discData)))" style="background:transparent;border:none;color:var(--blue);font-size:18px;cursor:pointer;padding:0 4px">✕</button></div>`;
     }
     if(!filtered.length) { el.innerHTML = filtroBanner + '<div style="text-align:center;color:var(--text3);padding:40px 0;font-size:15px">Nenhum resultado para este filtro.</div>'; return; }
 
@@ -3705,7 +3859,7 @@ const app = {
     document.getElementById('perfil-modal')?.classList.remove('on');
   },
 
-  async abrirPerfilConferente(nomeOriginal) {
+  async abrirPerfilConferente(nomeOriginal, scope) {
     const modal = document.getElementById('perfil-modal');
     const content = document.getElementById('perfil-content');
     if(!modal || !content) return;
@@ -3719,10 +3873,22 @@ const app = {
       } catch(e) { console.error('Erro ao carregar turnos para o perfil:', e); }
     }
 
+    // Disciplina ainda não carregada (perfil aberto fora da tela Disciplina): busca agora
+    if(this.isGestor() && (!this._discData || !this._discData.length)) {
+      try {
+        const { data } = await db.from('disciplina').select('*').order('created_at', { ascending: false }).limit(500);
+        const sup = data || [];
+        const promoted = new Set(sup.map(r => r._seed_origin).filter(Boolean));
+        this._discData = this._applyDiscOverrides([...SEED_DISC.filter(x => !promoted.has(x.id)), ...sup]);
+      } catch(e) { this._discData = this._applyDiscOverrides([...SEED_DISC]); }
+    }
+
     const nomeNorm = this.normConf(nomeOriginal);
     const pessoa = this.conferentesMap ? Object.values(this.conferentesMap).find(c => this.normConf(c.nome) === nomeNorm) : null;
     const turma = pessoa?.turma || '—';
-    const { ini, fim } = this.getPeriodoRangeDisc();
+    // Período: o da tela de onde o perfil foi aberto
+    const perKey = scope === 'dash' ? this.periodoAtivo : scope === 'ocorr' ? this.ocorrPeriodo : this.discPeriodo;
+    const { ini, fim } = scope ? this.rangeFromKey(perKey || 'mes:atual') : this.getPeriodoRangeDisc();
 
     const turnosPessoa = (this.allTurnos || []).filter(r => {
       if(this.normConf(r.conferente) !== nomeNorm) return false;
@@ -3745,9 +3911,31 @@ const app = {
       return true;
     }).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
 
-    const periodoLabel = (!this.discPeriodo || this.discPeriodo === 'tudo')
+    const periodoLabel = !ini
       ? 'todo o período'
-      : (ini ? ini.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) : 'mês atual');
+      : ini.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+
+    // Segurança, qualidade e operação do conferente no período
+    const simV = v => String(v || '').toLowerCase() === 'sim';
+    const nInc = turnosPessoa.filter(r => r.seg === 'sim').length;
+    const nBlq = turnosPessoa.filter(r => r.qual === 'sim').length;
+    let nTma = 0; turnosPessoa.forEach(r => { try { nTma += JSON.parse(r.tma_justificativas || '[]').length; } catch(e) {} });
+    const nFalta = turnosPessoa.filter(r => simV(r.s_falta)).length;
+    const nEquip = turnosPessoa.filter(r => simV(r.emp_s) || simV(r.bau_s)).length;
+    const mini = (l, v, c) => `<div class="pf-k"><b style="color:${v ? c : 'var(--green)'}">${v}</b><span>${l}</span></div>`;
+    const ultimos = turnosPessoa.slice(0, 8).map(r => {
+      const d = new Date(r.data_registro);
+      const tags = [r.seg === 'sim' ? '<span class="ocorr-badge-inc">🚨 Incidente</span>' : '', r.qual === 'sim' ? '<span class="ocorr-badge-blq">⚠️ Bloqueio</span>' : ''].join('');
+      const rel = [r.relato_seg ? '<div class="pf-rel inc"><b>Incidente:</b> ' + r.relato_seg + '</div>' : '', r.relato_qual ? '<div class="pf-rel blq"><b>Bloqueio:</b> ' + r.relato_qual + '</div>' : ''].join('');
+      return `<div class="pf-reg"><div class="pf-reg-h"><span>${d.toLocaleDateString('pt-BR')} ${d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})} · Turma ${r.turma_sai||'?'}→${r.turma_rec||'?'}</span><span style="display:flex;gap:4px">${tags}</span></div>${rel}<div class="pf-rel">${r.relato || ''}</div></div>`;
+    }).join('') || '<div style="text-align:center;color:var(--text3);padding:10px 0;font-size:14px">Nenhuma passagem de turno no período.</div>';
+    const segHtml = `
+      <div style="background:var(--bg4);border-radius:var(--radius);padding:14px;margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px">🛡️ Segurança, qualidade e operação</div>
+        <div class="pf-ks">${mini('Incidentes', nInc, 'var(--red)')}${mini('Bloqueios', nBlq, 'var(--yellow)')}${mini('Veíc. TMA > 4h', nTma, 'var(--yellow)')}${mini('Faltas Sodexo', nFalta, 'var(--yellow)')}${mini('Equip. parado', nEquip, 'var(--yellow)')}</div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px">📝 Últimas passagens de turno (${turnosPessoa.length})</div>
+      <div style="margin-bottom:16px">${ultimos}</div>`;
 
     const discHtml = discPessoa.length ? discPessoa.map(r => {
       const dt = r.data_ocorrencia
@@ -3778,8 +3966,9 @@ const app = {
         </div>
         ${fimSemana > 0 ? `<div style="font-size:12px;color:var(--text3);margin-top:10px">⚠️ ${fimSemana} de ${turnosPessoa.length} turnos foram em fim de semana — nesses dias ele fatura NSA e Planta sozinho, sem apoio.</div>` : ''}
       </div>
-      <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px">⚠️ Disciplina (${discPessoa.length})</div>
-      ${discHtml}
+      ${segHtml}
+      ${this.isGestor() ? `<div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px">⚠️ Disciplina (${discPessoa.length})</div>
+      ${discHtml}` : ''}
     `;
   },
 
@@ -3811,14 +4000,14 @@ const app = {
           if(!els.length) {
             this._discFiltroTipo = null;
             this.renderDiscConfChart(data);
-            this.renderDiscConfList(this._discData);
+            this.renderDiscConfList(this.filtraConf(this.filtrarDiscPorPeriodo(this._discData)));
             return;
           }
           const tipo = tipoLabels[els[0].index];
           this._discFiltroTipo = tipo;
           this._discFiltroConf = null;
           this.renderDiscConfChart(data.filter(r => r.tipo === tipo));
-          this.renderDiscConfList(this._discData);
+          this.renderDiscConfList(this.filtraConf(this.filtrarDiscPorPeriodo(this._discData)));
         },
         plugins: {
           legend: { position:'bottom', labels:{ color:legendCol, font:{family:'Barlow,sans-serif',size:11,weight:'600'}, padding:8, boxWidth:10, boxHeight:10 } },
@@ -3855,14 +4044,14 @@ const app = {
           if(!els.length) {
             this._discFiltroConf = null;
             this.renderDiscTipoChart(data);
-            this.renderDiscConfList(this._discData);
+            this.renderDiscConfList(this.filtraConf(this.filtrarDiscPorPeriodo(this._discData)));
             return;
           }
           const conf = confLabels[els[0].index];
           this._discFiltroConf = conf;
           this._discFiltroTipo = null;
           this.renderDiscTipoChart(data.filter(r => this.normConf(r.conferente) === conf));
-          this.renderDiscConfList(this._discData);
+          this.renderDiscConfList(this.filtraConf(this.filtrarDiscPorPeriodo(this._discData)));
         },
         plugins: {
           legend:{display:false},
