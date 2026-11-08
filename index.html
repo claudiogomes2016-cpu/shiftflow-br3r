@@ -733,6 +733,27 @@ input:checked + .sw::after { transform:translateX(20px); }
 #sc-login .login-footer { position:absolute; bottom:max(10px, env(safe-area-inset-bottom)); left:0; right:0; margin:0; color:rgba(221,230,247,.55); font-family:var(--f-display); font-size:11.5px; letter-spacing:.2em; z-index:2; }
 @media(min-height:860px){ .lg-wrap{ padding-top:48px; } }
 
+/* Login compacto: cabe inteiro na tela (caminhão → docas) sem rolar.
+   Tudo é dimensionado pela altura visível (dvh), então se ajusta a qualquer celular. */
+#sc-login { position:fixed; inset:0; height:100vh; height:100dvh; min-height:0; overflow:hidden; }
+.lg-wrap { height:100%; padding:max(clamp(10px, 2.4dvh, 30px), env(safe-area-inset-top)) 18px 0; }
+.lg-brand { margin-bottom:clamp(8px, 1.8dvh, 20px); flex-shrink:0; }
+.lg-art { width:min(300px, 74vw, 36dvh); margin-bottom:-2px; }
+.lg-word { font-size:clamp(32px, 6.4dvh, 58px); }
+.lg-brand .sf-tag { font-size:clamp(10px, 1.6dvh, 13px); margin-top:clamp(4px, .9dvh, 10px); }
+.lg-card { padding:clamp(12px, 2.2dvh, 22px) 16px clamp(10px, 1.8dvh, 16px); flex-shrink:0; }
+.lg-title { font-size:clamp(19px, 3dvh, 25px); margin-bottom:clamp(8px, 1.8dvh, 18px); }
+.lg-title svg { width:clamp(20px, 3dvh, 26px); height:clamp(20px, 3dvh, 26px); }
+.lg-fld { height:clamp(42px, 6.2dvh, 52px); margin-bottom:clamp(7px, 1.3dvh, 12px); }
+.lg-fld select, .lg-fld input { font-size:clamp(16px, 2.4dvh, 19px); }
+.lg-btn { height:clamp(44px, 6.4dvh, 54px); font-size:clamp(18px, 2.8dvh, 22px); margin-top:2px; }
+.lg-keep { margin-top:clamp(8px, 1.6dvh, 16px); font-size:clamp(13px, 1.9dvh, 14.5px); }
+#sc-login .login-err { margin-bottom:8px; padding:7px 12px; }
+.lg-docks { flex:0 1 auto; min-height:0; max-height:none; height:clamp(90px, 32dvh, 280px); margin-top:auto; }
+.lg-docks svg { height:100%; }
+#sc-login .login-footer { font-size:10.5px; bottom:max(6px, env(safe-area-inset-bottom)); }
+@media(max-height:520px){ .lg-docks{ display:none; } .lg-art{ width:min(220px, 30dvh); } }
+
 /* ── CABEÇALHO (barra da marca, sempre azul-marinho) ── */
 .hdr { height:64px; padding:0 10px 0 6px; gap:6px; background:rgba(6,14,36,.94); border-bottom:1px solid rgba(86,130,255,.18); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); color:#fff; padding-top:env(safe-area-inset-top); height:calc(64px + env(safe-area-inset-top)); }
 .hdr-btn { width:44px; height:44px; border:0; background:transparent; color:#4D8DFF; display:flex; align-items:center; justify-content:center; border-radius:12px; cursor:pointer; position:relative; flex-shrink:0; }
@@ -1030,7 +1051,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
       <label class="lg-keep">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg>
         <span>Manter conectado neste dispositivo</span>
-        <input type="checkbox" id="login-keep" checked>
+        <input type="checkbox" id="login-keep">
         <i class="sw"></i>
       </label>
     </form>
@@ -1994,20 +2015,26 @@ const app = {
   // Sessão salva no aparelho ("Manter conectado")
   saveSession() {
     try {
-      if(document.getElementById('login-keep')?.checked) localStorage.setItem('sf_session', JSON.stringify({ id: this.user.id, pin: this.user.pin }));
+      if(document.getElementById('login-keep')?.checked) localStorage.setItem('sf_session', JSON.stringify({ id: this.user.id, pin: this.user.pin, t: this._sessT || Date.now() }));
       else localStorage.removeItem('sf_session');
     } catch(e) {}
+    this._sessT = null;
   },
 
   tryAutoLogin() {
     let sess = null;
     try { sess = JSON.parse(localStorage.getItem('sf_session') || 'null'); } catch(e) {}
     if(!sess || !this.conferentesMap) return false;
+    // Sessão vale no máximo 12 h (um turno): depois disso pede login de novo
+    if(!sess.t || Date.now() - sess.t > 12 * 3600 * 1000) { try { localStorage.removeItem('sf_session'); } catch(e) {} return false; }
     const dados = this.conferentesMap[String(sess.id)];
     // Só entra se o usuário continua ativo e o PIN não mudou
     if(!dados || dados.pin !== String(sess.pin)) { try { localStorage.removeItem('sf_session'); } catch(e) {} return false; }
     document.getElementById('login-conf').value = String(sess.id);
     this.loginPinVal = String(sess.pin);
+    // Mantém a sessão e o horário do login original (expira 12 h após o login)
+    const keep = document.getElementById('login-keep'); if(keep) keep.checked = true;
+    this._sessT = sess.t;
     this.verificarLogin();
     return true;
   },
@@ -2091,6 +2118,7 @@ const app = {
     document.body.classList.remove('is-gestor');
     this.closeDrawer();
     const pin = document.getElementById('login-pin'); if(pin) pin.value = '';
+    const keep = document.getElementById('login-keep'); if(keep) keep.checked = false;
     document.getElementById('login-err').style.display = 'none';
     this.reset();
     if(this.realtimeSub) { db.removeChannel(this.realtimeSub); this.realtimeSub = null; }
