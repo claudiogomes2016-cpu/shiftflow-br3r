@@ -845,6 +845,51 @@ button.drw-row { cursor:pointer; }
 .pf-rel { font-size:13px; color:var(--text2); line-height:1.5; margin-top:4px; }
 .pf-rel.inc b { color:var(--red); } .pf-rel.blq b { color:var(--yellow); }
 
+/* ── DESTAQUES DOS CONFERENTES ── */
+.rkc-g { display:grid; grid-template-columns:1fr; gap:10px; margin-top:10px; }
+@media(min-width:620px){ .rkc-g { grid-template-columns:repeat(2, 1fr); } }
+@media(min-width:1280px){ .rkc-g { grid-template-columns:repeat(4, 1fr); } }
+.rkc { background:var(--bg4); border:1px solid var(--border); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:6px; }
+.rkc-h { display:flex; align-items:center; gap:8px; } .rkc-h span { font-size:18px; }
+.rkc-h b { font-family:var(--f-display); font-size:16px; font-weight:700; color:var(--text2); }
+.rkc-top { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 10px; }
+.rkc-tn { font-family:var(--f-display); font-size:21px; font-weight:700; color:var(--blue-txt); }
+.rkc-tv { font-family:var(--f-display); font-size:21px; font-weight:700; color:var(--text); margin-left:auto; }
+.rkc-tv small { font-size:13px; font-weight:500; color:var(--text3); }
+.rkc-med { flex-basis:100%; font-size:12.5px; color:var(--text3); }
+.rkc-d { font-size:12px; color:var(--text3); margin-top:-2px; }
+.rkc-list { display:flex; flex-direction:column; gap:2px; margin-top:2px; border-top:1px solid var(--border); padding-top:6px; }
+.rkc-row { display:flex; align-items:center; gap:8px; width:100%; padding:6px 6px; border:0; border-radius:8px; background:none; color:var(--text2); font-family:var(--font); font-size:14px; text-align:left; cursor:pointer; }
+.rkc-row:hover { background:var(--hover); color:var(--text); }
+.rkc-row.me { background:var(--blue-dim); color:var(--blue-txt); }
+.rkc-m { width:22px; } .rkc-n { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; }
+.rkc-v { font-family:var(--f-display); font-weight:700; color:var(--text); }
+.rkc-empty { font-size:13px; color:var(--text3); padding:8px 0; }
+@media(max-width:619px){
+  .rkc-g { grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px; }
+  .rkc, .rkc-row, .rkc-tn { min-width:0; max-width:100%; }
+  .rkc-tn { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .rkc { padding:9px; gap:4px; border-radius:12px; }
+  .rkc-h { gap:5px; align-items:flex-start; } .rkc-h span { font-size:14px; }
+  .rkc-h b { font-size:13px; line-height:1.15; }
+  .rkc-top { flex-direction:column; align-items:flex-start; gap:0; }
+  .rkc-tn { font-size:15px; line-height:1.15; }
+  .rkc-tv { font-size:17px; margin-left:0; }
+  .rkc-tv small { font-size:11px; }
+  .rkc-med, .rkc-d { display:none; }
+  .rkc-list { padding-top:4px; gap:0; }
+  .rkc-row { padding:3px 2px; font-size:12px; gap:4px; }
+  .rkc-m { width:16px; font-size:12px; }
+}
+.pf-rks { display:grid; grid-template-columns:repeat(2, 1fr); gap:6px; margin-bottom:16px; }
+@media(max-width:420px){ .pf-rks { grid-template-columns:1fr; } }
+.pf-rk { display:flex; align-items:center; gap:10px; background:var(--bg4); border:1px solid var(--border); border-radius:10px; padding:8px 10px; }
+.pf-rk-p { min-width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:var(--f-display); font-size:19px; font-weight:800; background:var(--bg5); color:var(--text2); }
+.pf-rk.p1 { border-color:rgba(255,194,26,.55); } .pf-rk.p1 .pf-rk-p { background:linear-gradient(180deg,#FFD24D,#E0A800); color:#2A1C00; }
+.pf-rk.p3 .pf-rk-p { background:var(--blue-dim); color:var(--blue-txt); }
+.pf-rk-t { font-size:13px; font-weight:600; color:var(--text); line-height:1.25; }
+.pf-rk-t small { display:block; font-size:12px; font-weight:500; color:var(--text3); margin-top:2px; }
+
 /* ── TELA INÍCIO ── */
 .hm-greet { display:flex; align-items:center; gap:14px; margin:4px 0 16px; }
 .hm-gt { flex:1; min-width:0; }
@@ -1538,6 +1583,18 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
     </div>
     <div id="ranking-list"><p style="text-align:center;color:var(--text3);font-size:15px;padding:20px">Nenhum dado ainda.</p></div>
+  </div>
+
+  <!-- Destaques / ranking dos conferentes -->
+  <div class="cw" id="rk-conf-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px">
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.3px">Destaques dos Conferentes</div>
+        <div style="font-size:13px;color:var(--text3);margin-top:2px" id="rk-conf-sub">Quem mais se destacou no período</div>
+      </div>
+      <span style="font-size:26px">🏆</span>
+    </div>
+    <div class="rkc-g" id="rk-conf"></div>
   </div>
 
   <!-- GESTOR -->
@@ -3167,6 +3224,8 @@ const app = {
   renderDash(turnos) {
     this.bindDashCards();
     this.renderConfBars();
+    this._turnosPeriodo = turnos;            // período, todos os conferentes (ranking)
+    this.renderConfRanking(turnos);
     turnos = this.filtraConf(turnos);
     let tp=0, tn=0, seg=0, qual=0;
     const byT = {};
@@ -3363,6 +3422,74 @@ const app = {
         }
       }
     });
+  },
+
+  // ── RANKING / DESTAQUES DOS CONFERENTES ──
+  RK_CATS: [
+    { k:'pc',   i:'🏆', l:'Mais carregou na planta',      u:'paletes', us:'palete', med:true },
+    { k:'nc',   i:'🚚', l:'Mais carregou na NSA',         u:'paletes', us:'palete', med:true },
+    { k:'pd',   i:'📦', l:'Mais descarregou na planta',   u:'paletes', us:'palete', med:true },
+    { k:'n',    i:'📝', l:'Mais passagens de turno',      u:'turnos', us:'turno' },
+    { k:'inc',  i:'🛡️', l:'Mais incidentes relatados',    u:'relatos', us:'relato',   d:'incidentes de segurança registrados com descrição' },
+    { k:'blq',  i:'⚠️', l:'Mais bloqueios relatados',     u:'relatos', us:'relato',   d:'bloqueios de qualidade registrados com descrição' },
+    { k:'pal',  i:'✍️', l:'Relatos mais completos',       u:'palavras/turno', d:'média de palavras escritas por passagem de turno' },
+    { k:'tma',  i:'⏱️', l:'Mais justificativas de TMA',   u:'veículos', us:'veículo',  d:'veículos acima de 4 h justificados' },
+  ],
+
+  confStats(turnos) {
+    const st = {};
+    const palavras = t => { t = String(t || '').trim(); if(!t || /^sem observa/i.test(t)) return 0; return t.split(/\s+/).length; };
+    (turnos || []).forEach(r => {
+      const k = this.normConf(r.conferente); if(!k) return;
+      const o = st[k] || (st[k] = { k, nome: r.conferente, n:0, pc:0, pd:0, nc:0, inc:0, blq:0, tma:0, words:0 });
+      o.n++; o.pc += r.p_c || 0; o.pd += r.p_d || 0; o.nc += r.n_c || 0;
+      if(r.seg === 'sim' && String(r.relato_seg || '').trim()) o.inc++;
+      if(r.qual === 'sim' && String(r.relato_qual || '').trim()) o.blq++;
+      try { o.tma += JSON.parse(r.tma_justificativas || '[]').length; } catch(e) {}
+      o.words += palavras(r.relato) + palavras(r.relato_seg) + palavras(r.relato_qual);
+    });
+    const nomes = Object.fromEntries(this.confNomes());
+    Object.values(st).forEach(o => { o.pal = o.n ? Math.round(o.words / o.n) : 0; if(nomes[o.k]) o.nome = nomes[o.k]; });
+    return st;
+  },
+
+  rkUn(c, v) { return v === 1 && c.us ? c.us : c.u; },
+
+  rankBy(st, k) {
+    return Object.values(st).filter(o => o[k] > 0).sort((a, b) => b[k] - a[k] || b.n - a.n);
+  },
+
+  renderConfRanking(turnos) {
+    const el = document.getElementById('rk-conf'); if(!el) return;
+    const st = this.confStats(turnos);
+    const sub = document.getElementById('rk-conf-sub');
+    if(sub) sub.textContent = 'Quem mais se destacou · ' + (this._periodoLabel || 'período atual') + ' · toque no nome para ver o perfil';
+    if(!Object.keys(st).length) { el.innerHTML = '<p style="text-align:center;color:var(--text3);font-size:15px;padding:20px;grid-column:1/-1">Sem registros no período.</p>'; return; }
+    const medal = ['🥇','🥈','🥉'];
+    const fmt = v => Number(v).toLocaleString('pt-BR');
+    el.innerHTML = this.RK_CATS.map(c => {
+      const rk = this.rankBy(st, c.k);
+      if(!rk.length) return `<div class="rkc"><div class="rkc-h"><span>${c.i}</span><b>${c.l}</b></div><div class="rkc-empty">Ninguém no período</div></div>`;
+      const top = rk[0];
+      const linhas = rk.slice(0, 3).map((o, i) => `
+        <button class="rkc-row${this.normConf(o.k) === this.confSel ? ' me' : ''}" onclick="app.rkAbrir('${o.k.replace(/'/g, "\\'")}')">
+          <span class="rkc-m">${medal[i]}</span><span class="rkc-n">${o.nome}</span><span class="rkc-v">${fmt(o[c.k])}</span>
+        </button>`).join('');
+      const media = c.med && top.n ? `<span class="rkc-med">${fmt(Math.round(top[c.k] / top.n))} ${c.u}/turno</span>` : '';
+      return `<div class="rkc">
+        <div class="rkc-h"><span>${c.i}</span><b>${c.l}</b></div>
+        <div class="rkc-top"><span class="rkc-tn">${top.nome}</span><span class="rkc-tv">${fmt(top[c.k])} <small>${this.rkUn(c, top[c.k])}</small></span>${media}</div>
+        ${c.d ? `<div class="rkc-d">${c.d}</div>` : ''}
+        <div class="rkc-list">${linhas}</div>
+      </div>`;
+    }).join('');
+  },
+
+  // Nome no ranking: gestor abre o perfil completo; conferente filtra o BI por ele
+  rkAbrir(k) {
+    const nome = (this.confNomes().find(([kk]) => kk === k) || [k, k])[1];
+    if(this.isGestor()) this.abrirPerfilConferente(nome, 'dash');
+    else this.setConfSel(k);
   },
 
   renderStatCard(cardId, bad, good, lblBad, lblGood, colorBad, colorGood) {
@@ -3929,6 +4056,22 @@ const app = {
       const rel = [r.relato_seg ? '<div class="pf-rel inc"><b>Incidente:</b> ' + r.relato_seg + '</div>' : '', r.relato_qual ? '<div class="pf-rel blq"><b>Bloqueio:</b> ' + r.relato_qual + '</div>' : ''].join('');
       return `<div class="pf-reg"><div class="pf-reg-h"><span>${d.toLocaleDateString('pt-BR')} ${d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})} · Turma ${r.turma_sai||'?'}→${r.turma_rec||'?'}</span><span style="display:flex;gap:4px">${tags}</span></div>${rel}<div class="pf-rel">${r.relato || ''}</div></div>`;
     }).join('') || '<div style="text-align:center;color:var(--text3);padding:10px 0;font-size:14px">Nenhuma passagem de turno no período.</div>';
+    // Posição do conferente em cada destaque (mesmo período, entre todos os conferentes)
+    const turnosRange = (this.allTurnos || []).filter(r => { const d = new Date(r.data_registro); return (!ini || d >= ini) && (!fim || d <= fim); });
+    const stAll = this.confStats(turnosRange);
+    const totalConf = Object.keys(stAll).length;
+    const fmtN = v => Number(v).toLocaleString('pt-BR');
+    const rkChips = this.RK_CATS.map(c => {
+      const rk = this.rankBy(stAll, c.k);
+      const pos = rk.findIndex(o => o.k === nomeNorm);
+      if(pos < 0) return '';
+      const me = rk[pos];
+      const cls = pos === 0 ? 'p1' : pos < 3 ? 'p3' : '';
+      return `<div class="pf-rk ${cls}"><span class="pf-rk-p">${pos + 1}º</span><span class="pf-rk-t">${c.i} ${c.l}<small>${fmtN(me[c.k])} ${this.rkUn(c, me[c.k])}${rk.length > 1 ? ' · de ' + rk.length : ''}</small></span></div>`;
+    }).filter(Boolean).join('');
+    const rkHtml = `
+      <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px">🏆 Posição nos destaques <span style="font-weight:500;color:var(--text3)">(entre ${totalConf} conferente${totalConf !== 1 ? 's' : ''})</span></div>
+      <div class="pf-rks">${rkChips || '<div style="color:var(--text3);font-size:14px;padding:6px 0">Sem registros no período.</div>'}</div>`;
     const segHtml = `
       <div style="background:var(--bg4);border-radius:var(--radius);padding:14px;margin-bottom:16px">
         <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px">🛡️ Segurança, qualidade e operação</div>
@@ -3966,6 +4109,7 @@ const app = {
         </div>
         ${fimSemana > 0 ? `<div style="font-size:12px;color:var(--text3);margin-top:10px">⚠️ ${fimSemana} de ${turnosPessoa.length} turnos foram em fim de semana — nesses dias ele fatura NSA e Planta sozinho, sem apoio.</div>` : ''}
       </div>
+      ${rkHtml}
       ${segHtml}
       ${this.isGestor() ? `<div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px">⚠️ Disciplina (${discPessoa.length})</div>
       ${discHtml}` : ''}
