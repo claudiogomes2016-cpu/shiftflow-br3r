@@ -38,13 +38,11 @@ const SAP_INTEGRATION = {
 const SAP_EVOLUTION = {
   en: [
     'Replace the desktop VBScript export with a scheduled extraction approved by IT (SAP OData/CDS views or BW).',
-    'Host on an internal web server or SharePoint with corporate sign-in.',
-    'Move embedded reference data out of the HTML into a governed data source.'
+    'Host on an internal web server or SharePoint with corporate sign-in.'
   ],
   pt: [
     'Substituir a exportação por VBScript no desktop por uma extração agendada aprovada pela TI (OData/CDS do SAP ou BW).',
-    'Hospedar em servidor web interno ou SharePoint com login corporativo.',
-    'Tirar os dados de referência embutidos no HTML e levá-los para uma fonte de dados governada.'
+    'Hospedar em servidor web interno ou SharePoint com login corporativo.'
   ]
 };
 
@@ -347,11 +345,181 @@ window.PROJECTS = [
     }
   },
   {
-    id: 'rickson-01',
-    status: 'prep',
-    icon: 'inventory',
+    id: 'reposicao-latas',
+    status: 'live',
+    url: 'projects/reposicao-latas/Controle-Reposicao-Latas_v2.2.html',
+    files: ['Controle-Reposicao-Latas_v2.2.html'],
+    icon: 'barcode',
     developer: 'rickson',
-    name: { en: 'Shipping project', pt: 'Projeto de Expedição' },
-    category: { en: 'Transportation', pt: 'Transporte' }
+    banner: { title: 'CONTROLE DE REPOSIÇÃO DE', accent: 'LATAS', sub: 'PRÉ-EMBARQUE · EXPEDIÇÃO' },
+    name: { en: 'Can Replenishment Control', pt: 'Controle de Reposição de Latas' },
+    category: { en: 'Shipping · Quality', pt: 'Expedição · Qualidade' },
+    description: {
+      en: 'Barcode check of the replenishment pallets at pre-loading, in 6 independent docks: each label is compared with the replenishment SKU and marked OK, divergent or repeated lot, with PDF and A4 printout signed by driver and checker.',
+      pt: 'Conferência por bipagem dos paletes de reposição no pré-embarque, em 6 docas independentes: cada etiqueta é comparada com o SKU da reposição e marcada como OK, divergente ou lote repetido, com PDF e impressão A4 assinada por motorista e conferente.'
+    },
+    problem: {
+      en: 'Making sure cans are replenished correctly, avoiding a wrong SKU during the process.',
+      pt: 'Garantir a reposição correta de latas, evitando SKU incorreto durante o processo.'
+    },
+    tech: {
+      objective: { en: 'Validate, pallet by pallet, that the replenishment matches the right SKU before loading.', pt: 'Validar, palete a palete, que a reposição corresponde ao SKU certo antes do carregamento.' },
+      dataSources: {
+        en: ['Labels read by barcode scanner (or typed).', 'SKU database embedded in the file (code, description, cans per pallet), editable and with backup.', 'Optional shared SKU service configured in a separate file.'],
+        pt: ['Etiquetas lidas por leitor de código de barras (ou digitadas).', 'Banco de SKUs embutido no arquivo (código, descrição, latas por palete), editável e com backup.', 'Serviço de SKUs compartilhado opcional, configurado em arquivo à parte.']
+      },
+      technologies: {
+        en: ['Single-file HTML, CSS and vanilla JavaScript', 'Browser storage (localStorage / IndexedDB) per dock', 'PDF and A4 print with signatures'],
+        pt: ['HTML, CSS e JavaScript puro em arquivo único', 'Armazenamento no navegador (localStorage / IndexedDB) por doca', 'PDF e impressão A4 com assinaturas']
+      },
+      businessRules: {
+        en: ['Each scanned label is checked against the replenishment pallet SKU: OK or divergent.', 'Duplicate check by lot: a lot already scanned is marked "Repeated".', '6 docks with independent records; up to 41 label positions per loading.', 'Driver and checker sign the final report.'],
+        pt: ['Cada etiqueta bipada é conferida contra o SKU do palete de reposição: OK ou divergente.', 'Verificação de duplicidade pelo lote: lote já bipado é marcado como "Repetido".', '6 docas com registros independentes; até 41 posições de etiqueta por carregamento.', 'Motorista e conferente assinam o relatório final.']
+      },
+      operation: { en: 'Runs entirely in the browser, without server.', pt: 'Roda inteiramente no navegador, sem servidor.' },
+      integration: { en: 'Standalone. Not integrated with SAP, WMS or TMS.', pt: 'Independente. Não integrado a SAP, WMS ou TMS.' },
+      evolution: {
+        en: ['Share the SKU database across all shipping computers.', 'Use in other Ball operations.'],
+        pt: ['Compartilhar o banco de SKUs entre todos os computadores da expedição.', 'Uso em outras operações da Ball.']
+      }
+    }
+  },
+  {
+    id: 'rastreabilidade-lotes',
+    status: 'live',
+    url: 'projects/rastreabilidade-lotes/RASTREABILIDADE_LOTES_BR3R.html',
+    files: ['RASTREABILIDADE_LOTES_BR3R.html'],
+    icon: 'data',
+    developer: 'rickson',
+    banner: { title: 'CONTROLE DE CARREGAMENTO E', accent: 'RASTREABILIDADE DE LOTES', sub: 'EXPEDIÇÃO · RASTREABILIDADE SAP (ZTPP0014)' },
+    name: { en: 'Loading Control & Lot Traceability', pt: 'Controle de Carregamento e Rastreabilidade de Lotes' },
+    category: { en: 'Shipping · Traceability', pt: 'Expedição · Rastreabilidade' },
+    description: {
+      en: 'Loading check per dock: billed SKUs × scanned pallets, packaging materials expected × billed, alerts, and lot traceability sent to SAP (ZTPP0014) through a local agent — with history, PDF and voice notices.',
+      pt: 'Conferência do carregamento por doca: SKUs faturados × paletes bipados, materiais de embalagem esperados × faturados, alertas e rastreabilidade dos lotes enviada ao SAP (ZTPP0014) por agente local — com histórico, PDF e avisos de voz.'
+    },
+    problem: {
+      en: 'Making sure the loaded SKUs are the ones billed — SKUs and packaging material — and automating lot traceability.',
+      pt: 'Garantir que os SKUs carregados sejam os mesmos que foram faturados — SKUs e material de embalagem — e automatizar a rastreabilidade dos lotes.'
+    },
+    tech: {
+      objective: { en: 'Check every loading against the invoice and record lot traceability in SAP.', pt: 'Conferir cada carregamento contra o faturamento e registrar a rastreabilidade dos lotes no SAP.' },
+      dataSources: {
+        en: ['SAP transport number and NF-e of the loading.', 'Pallet labels read by barcode scanner.', 'SKU database and blocked-lot list embedded in the file.', 'SAP ZTPP0014 (lot traceability).'],
+        pt: ['Nº do transporte SAP e NF-e do carregamento.', 'Etiquetas dos paletes lidas por leitor de código de barras.', 'Banco de SKUs e lista de lotes bloqueados embutidos no arquivo.', 'SAP ZTPP0014 (rastreabilidade de lotes).']
+      },
+      technologies: {
+        en: ['Single-file HTML, CSS and vanilla JavaScript', 'Local VBScript agent + SAP GUI Scripting', 'Browser storage per dock · PDF and A4 print · voice and sound alerts'],
+        pt: ['HTML, CSS e JavaScript puro em arquivo único', 'Agente local em VBScript + SAP GUI Scripting', 'Armazenamento no navegador por doca · PDF e impressão A4 · alertas de voz e som']
+      },
+      businessRules: {
+        en: ['Pallets expected = billed cans ÷ cans per pallet (SKU database).', 'Each scanned label is checked against the billed SKUs; blocked lots are flagged.', 'Packaging materials (pallets, separator sheets) expected × billed, with the difference.', 'Lot re-use requires a declared reason; sensitive actions require an authorization code.'],
+        pt: ['Paletes esperados = latas faturadas ÷ latas por palete (banco de SKUs).', 'Cada etiqueta bipada é conferida contra os SKUs faturados; lotes bloqueados são sinalizados.', 'Materiais de embalagem (paletes, folhas separadoras) esperados × faturados, com a diferença.', 'Re-uso de lote exige motivo declarado; ações sensíveis exigem código de autorização.']
+      },
+      operation: {
+        en: 'Runs in the browser. Two modes: simulator (training, without SAP) and real SAP, through a local VBScript agent that works on the SAP session already open and logged in (no user or password in the code). The page and the agent exchange command and answer files in a folder authorized in the browser.',
+        pt: 'Roda no navegador. Dois modos: simulador (treino, sem SAP) e SAP real, por um agente local em VBScript que trabalha na sessão do SAP já aberta e logada (sem usuário nem senha no código). A página e o agente trocam arquivos de comando e resposta numa pasta autorizada no navegador.'
+      },
+      integration: {
+        en: 'SAP through SAP GUI Scripting (local agent), on the user\'s own session. Not integrated with WMS or TMS.',
+        pt: 'SAP pelo SAP GUI Scripting (agente local), na sessão do próprio usuário. Não integrado a WMS ou TMS.'
+      },
+      evolution: {
+        en: ['Extend traceability to other loading flows.', 'Use in other Ball operations.'],
+        pt: ['Estender a rastreabilidade a outros fluxos de carregamento.', 'Uso em outras operações da Ball.']
+      }
+    }
+  },
+  {
+    id: 'faturamento-sucata',
+    status: 'live',
+    url: 'projects/faturamento-sucata/ROBO_SUCATA.html',
+    files: ['ROBO_SUCATA.html'],
+    icon: 'robot',
+    developer: 'rickson',
+    banner: { title: 'FATURAMENTO', accent: 'SUCATA', sub: 'AUTOMAÇÃO DE REMESSAS E FATURAMENTO' },
+    name: { en: 'Scrap Billing', pt: 'Faturamento Sucata' },
+    category: { en: 'Automation · Billing', pt: 'Automação · Faturamento' },
+    description: {
+      en: 'A robot that guides the aluminium scrap shipment in 15 steps — from MB52 and lots to the delivery (VL10C), transport, billing, SEFAZ authorization and DANFE — working on the SAP session already open, with a simulator for training.',
+      pt: 'Robô que conduz a remessa de sucata de alumínio em 15 etapas — do MB52 e dos lotes à remessa (VL10C), transporte, faturamento, autorização SEFAZ e DANFE — trabalhando na sessão do SAP já aberta, com simulador para treino.'
+    },
+    problem: {
+      en: 'Scrap billing took the checker more than 20 minutes per process.',
+      pt: 'O faturamento de sucata levava mais de 20 minutos do conferente por processo.'
+    },
+    tech: {
+      objective: { en: 'Automate the scrap shipment and billing flow in SAP, step by step, with the user confirming.', pt: 'Automatizar o fluxo de remessa e faturamento de sucata no SAP, etapa por etapa, com a confirmação do usuário.' },
+      dataSources: {
+        en: ['SAP MB52 (scrap stock) and the lots and weights of the shipment.', 'Sales order, transport and driver data entered in the flow.', 'Register of lots already used (duplicate lock).'],
+        pt: ['SAP MB52 (estoque de sucata) e os lotes e pesos da remessa.', 'Ordem de venda, transporte e dados do motorista informados no fluxo.', 'Registro de lotes já usados (trava de duplicidade).']
+      },
+      technologies: {
+        en: ['Single-file HTML, CSS and vanilla JavaScript', 'Local VBScript agent + SAP GUI Scripting (VL10C, VL01N, MB52)', 'Execution history and logs · light/dark theme'],
+        pt: ['HTML, CSS e JavaScript puro em arquivo único', 'Agente local em VBScript + SAP GUI Scripting (VL10C, VL01N, MB52)', 'Histórico de execuções e logs · tema claro/escuro']
+      },
+      businessRules: {
+        en: ['15 steps in 4 stages: billing preparation, transport, billing, documents and conclusion.', 'A lot already used in a previous shipment is blocked.', 'The robot prepares; the user confirms before SAP saves.', 'Waits for vehicle release and SEFAZ authorization before going on.'],
+        pt: ['15 etapas em 4 fases: preparação do faturamento, transporte, faturamento, documentos e conclusão.', 'Lote já usado em remessa anterior é bloqueado.', 'O robô prepara; o usuário confirma antes de o SAP gravar.', 'Aguarda a liberação do veículo e a autorização da SEFAZ antes de seguir.']
+      },
+      operation: {
+        en: 'Runs in the browser. Two modes: simulator (training, without SAP) and real SAP, through a local VBScript agent that works on the SAP session already open and logged in (no user or password in the code). The page and the agent exchange command and answer files in a folder authorized in the browser.',
+        pt: 'Roda no navegador. Dois modos: simulador (treino, sem SAP) e SAP real, por um agente local em VBScript que trabalha na sessão do SAP já aberta e logada (sem usuário nem senha no código). A página e o agente trocam arquivos de comando e resposta numa pasta autorizada no navegador.'
+      },
+      integration: {
+        en: 'SAP through SAP GUI Scripting (local agent), on the user\'s own session. Not integrated with WMS or TMS.',
+        pt: 'SAP pelo SAP GUI Scripting (agente local), na sessão do próprio usuário. Não integrado a WMS ou TMS.'
+      },
+      evolution: {
+        en: ['Apply the same robot to other shipment types.', 'Use in other Ball operations.'],
+        pt: ['Aplicar o mesmo robô a outros tipos de remessa.', 'Uso em outras operações da Ball.']
+      }
+    }
+  },
+  {
+    id: 'apontamento-sucatas',
+    status: 'live',
+    url: 'projects/apontamento-sucatas/APONTAMENTO_SUCATAS.html',
+    files: ['APONTAMENTO_SUCATAS.html'],
+    icon: 'scale',
+    developer: 'rickson',
+    banner: { title: 'APONTAMENTO DE', accent: 'SUCATAS', sub: 'INTEGRAÇÃO SAP · MB1C (MOVIMENTO 531)' },
+    name: { en: 'Scrap Booking', pt: 'Apontamento de Sucatas' },
+    category: { en: 'Automation · SAP booking', pt: 'Automação · Apontamento SAP' },
+    description: {
+      en: 'Books scrap in SAP MB1C (movement 531) from the weights read or typed, with the month\'s orders, up to 14 lots per booking, a check before saving and the booking history. It replaces the previous macro spreadsheet.',
+      pt: 'Aponta a sucata na MB1C do SAP (movimento 531) a partir dos pesos lidos ou digitados, com as ordens do mês, até 14 lotes por apontamento, conferência antes de gravar e histórico dos apontamentos. Substitui a planilha de macro anterior.'
+    },
+    problem: {
+      en: 'Scrap booking took the checker more than 10 minutes per process.',
+      pt: 'O apontamento de sucata levava mais de 10 minutos do conferente por processo.'
+    },
+    tech: {
+      objective: { en: 'Book scrap in SAP quickly and with a check before saving.', pt: 'Apontar a sucata no SAP com rapidez e com conferência antes de gravar.' },
+      dataSources: {
+        en: ['Weights read or typed per lot (cans or ends, clean or dirty).', 'Orders of the month, registered in the app.', 'SAP MB51 / MB52 for checking.'],
+        pt: ['Pesos lidos ou digitados por lote (latas ou tampas, limpa ou suja).', 'Ordens do mês, cadastradas no app.', 'SAP MB51 / MB52 para conferência.']
+      },
+      technologies: {
+        en: ['Single-file HTML, CSS and vanilla JavaScript', 'Local VBScript agent + SAP GUI Scripting (MB1C)', 'Booking history and logs · light/dark theme'],
+        pt: ['HTML, CSS e JavaScript puro em arquivo único', 'Agente local em VBScript + SAP GUI Scripting (MB1C)', 'Histórico de apontamentos e logs · tema claro/escuro']
+      },
+      businessRules: {
+        en: ['MB1C, movement 531 (co-product receipt), plant BR3R, storage location 0800, whole kg.', 'Up to 14 lots per booking.', 'Fills MB1C and checks before saving.', 'Closing of the month\'s orders, including previous months.'],
+        pt: ['MB1C, movimento 531 (entrada de co-produto), centro BR3R, depósito 0800, KG inteiro.', 'Até 14 lotes por apontamento.', 'Preenche a MB1C e confere antes de gravar.', 'Encerramento das ordens do mês, inclusive de meses anteriores.']
+      },
+      operation: {
+        en: 'Runs in the browser. Two modes: simulator (training, without SAP) and real SAP, through a local VBScript agent that works on the SAP session already open and logged in (no user or password in the code). The page and the agent exchange command and answer files in a folder authorized in the browser.',
+        pt: 'Roda no navegador. Dois modos: simulador (treino, sem SAP) e SAP real, por um agente local em VBScript que trabalha na sessão do SAP já aberta e logada (sem usuário nem senha no código). A página e o agente trocam arquivos de comando e resposta numa pasta autorizada no navegador.'
+      },
+      integration: {
+        en: 'SAP through SAP GUI Scripting (local agent), on the user\'s own session. Not integrated with WMS or TMS.',
+        pt: 'SAP pelo SAP GUI Scripting (agente local), na sessão do próprio usuário. Não integrado a WMS ou TMS.'
+      },
+      evolution: {
+        en: ['Extend the same booking model to other materials.', 'Use in other Ball operations.'],
+        pt: ['Estender o mesmo modelo de apontamento a outros materiais.', 'Uso em outras operações da Ball.']
+      }
+    }
   }
 ];

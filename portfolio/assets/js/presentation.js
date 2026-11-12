@@ -65,15 +65,22 @@
   }
 
   function overviewSlide(n, total) {
-    const cards = projects().map((p) => `
+    const list = projects(), compacto = list.length > 8; // muitos projetos: cartão só com banner, categoria e autor
+    const cards = list.map((p) => {
+      const dev = window.DEVELOPERS[p.developer];
+      const corpo = compacto
+        ? `<p class="eyebrow">${esc(tr(p.category))}</p><p class="dev-mini">${esc(dev ? dev.name : '')}</p>`
+        : `<p class="eyebrow">${esc(tr(p.category))}</p><p>${esc(tr(p.pitch.purpose))}</p>`;
+      return `
       <div class="mini">
-        <div class="mini-bnr"><div class="t">${esc(p.banner.title)} <span>${esc(p.banner.accent)}</span></div><div class="s">${esc(p.banner.sub)}</div></div>
-        <div class="mini-body"><p class="eyebrow">${esc(tr(p.category))}</p><p>${esc(tr(p.pitch.purpose))}</p></div>
-      </div>`).join('');
+        <div class="mini-bnr"><div class="t">${esc(p.banner.title)} <span>${esc(p.banner.accent)}</span>${p.banner.after ? ' ' + esc(p.banner.after) : ''}</div><div class="s">${esc(p.banner.sub)}</div></div>
+        <div class="mini-body">${corpo}</div>
+      </div>`;
+    }).join('');
     return `
       <section class="slide overview">
         ${banner({ title: 'LOGISTICS', accent: 'DIGITAL', after: 'INNOVATION', sub: d().overviewSub.toUpperCase() })}
-        <div class="grid${projects().length > 6 ? ' g4' : ''}">${cards}</div>
+        <div class="grid${list.length > 6 ? ' g4' : ''}${compacto ? ' compacto' : ''}">${cards}</div>
         ${foot(n, total)}
       </section>`;
   }
