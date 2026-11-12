@@ -35,14 +35,17 @@ const SAP_INTEGRATION = {
   en: 'SAP data comes from report exports (files), not from a direct database or API connection. Not integrated with WMS or TMS.',
   pt: 'Os dados do SAP vêm da exportação de relatórios (arquivos), não de conexão direta com banco ou API. Não integrado a WMS ou TMS.'
 };
-const SAP_EVOLUTION = {
+// Oportunidades de evolução: as mesmas três frentes do encerramento da apresentação.
+const EVOLUCAO = {
   en: [
-    'Replace the desktop VBScript export with a scheduled extraction approved by IT (SAP OData/CDS views or BW).',
-    'Host on an internal web server or SharePoint with corporate sign-in.'
+    'Integration and connectivity — broaden the connection between systems and information, making processes increasingly integrated.',
+    'Automation and operational intelligence — advance the automation of routines and the smart use of data to support decisions.',
+    'Expansion potential — identify opportunities to apply and share this solution in other Ball operations.'
   ],
   pt: [
-    'Substituir a exportação por VBScript no desktop por uma extração agendada aprovada pela TI (OData/CDS do SAP ou BW).',
-    'Hospedar em servidor web interno ou SharePoint com login corporativo.'
+    'Integração e conectividade — ampliar a conexão entre sistemas e informações, tornando os processos cada vez mais integrados.',
+    'Automação e inteligência operacional — avançar na automatização das rotinas e no uso inteligente dos dados para apoiar decisões.',
+    'Potencial de expansão — identificar oportunidades de aplicação e compartilhamento desta solução em outras operações da Ball.'
   ]
 };
 
@@ -71,12 +74,12 @@ window.PROJECTS = [
         pt: 'Dar à expedição uma visão única da grade de carregamento de latas e tampas contra o estoque disponível.'
       },
       dataSources: {
-        en: ['SAP ZTSD0012 (loading schedule) and MB52 (stock) — required.', 'SAP ZTSD0123 (billing) for the logistics analysis.', 'Restriction, region and palletization spreadsheets (default copies embedded in the file).', 'Customer master embedded in the file (code, name, city).'],
-        pt: ['SAP ZTSD0012 (grade) e MB52 (estoque) — obrigatórios.', 'SAP ZTSD0123 (faturamento) para a análise logística.', 'Planilhas de restrição, região e paletização (cópias padrão embutidas no arquivo).', 'Cadastro de clientes embutido no arquivo (código, nome, cidade).']
+        en: ['SAP ZTSD0012 (loading schedule) and MB52 (stock) — required.', 'SAP ZTSD0123 (billing) for the logistics analysis, loaded manually (the SAP update exports ZTSD0012 and MB52).', 'Restriction, region and palletization spreadsheets (default copies embedded in the file).', 'Customer master embedded in the file (code, name, city).'],
+        pt: ['SAP ZTSD0012 (grade) e MB52 (estoque) — obrigatórios.', 'SAP ZTSD0123 (faturamento) para a análise logística, carregada manualmente (o ATUALIZAR SAP exporta ZTSD0012 e MB52).', 'Planilhas de restrição, região e paletização (cópias padrão embutidas no arquivo).', 'Cadastro de clientes embutido no arquivo (código, nome, cidade).']
       },
       technologies: {
-        en: ['Single-file HTML, CSS and vanilla JavaScript', 'Built-in Excel (.xlsx) reader using the browser DecompressionStream · html2canvas (copy as image)', 'File System Access API + IndexedDB to re-read the SAP folder', 'VBScript + SAP GUI Scripting for the export', 'Light/dark theme'],
-        pt: ['HTML, CSS e JavaScript puro em arquivo único', 'Leitor próprio de Excel (.xlsx) com DecompressionStream do navegador · html2canvas (copiar como imagem)', 'File System Access API + IndexedDB para reler a pasta do SAP', 'VBScript + SAP GUI Scripting para a exportação', 'Tema claro/escuro']
+        en: ['Single-file HTML, CSS and vanilla JavaScript', 'Built-in Excel (.xlsx) reader using the browser DecompressionStream · html2canvas (copy as image)', 'Reads the data file written by the SAP script (no folder permission in the browser)', 'VBScript + SAP GUI Scripting for the export', 'Light/dark theme'],
+        pt: ['HTML, CSS e JavaScript puro em arquivo único', 'Leitor próprio de Excel (.xlsx) com DecompressionStream do navegador · html2canvas (copiar como imagem)', 'Lê o arquivo de dados gravado pelo script do SAP (sem permissão de pasta no navegador)', 'VBScript + SAP GUI Scripting para a exportação', 'Tema claro/escuro']
       },
       businessRules: {
         en: ['Order balances converted from thousand cans to pallets with the palletization matrix.', 'Balance split between plant and AG, flagging stock shortage per order.', 'Customer restrictions matched by customer + exact format (never approximate).', 'Filters by customer group, location (plant / AG) and period (7, 14, 30 days or all).'],
@@ -84,7 +87,7 @@ window.PROJECTS = [
       },
       operation: SAP_RUNTIME,
       integration: SAP_INTEGRATION,
-      evolution: SAP_EVOLUTION
+      evolution: EVOLUCAO
     }
   },
   {
@@ -124,7 +127,7 @@ window.PROJECTS = [
       },
       operation: SAP_RUNTIME,
       integration: SAP_INTEGRATION,
-      evolution: SAP_EVOLUTION
+      evolution: EVOLUCAO
     }
   },
   {
@@ -155,8 +158,8 @@ window.PROJECTS = [
         pt: ['SAP MB52 (estoque) e ZTSD0012 (grade de vendas).', 'Capacidades de referência de latas (planta e NSA), tampa acabada e tampa básica, definidas no código.']
       },
       technologies: {
-        en: ['Single-file HTML, CSS and vanilla JavaScript', 'Chart.js · SheetJS · html2canvas', 'IndexedDB + File System Access API for the SAP folder', 'Speech synthesis · VBScript + SAP GUI Scripting'],
-        pt: ['HTML, CSS e JavaScript puro em arquivo único', 'Chart.js · SheetJS · html2canvas', 'IndexedDB + File System Access API para a pasta do SAP', 'Síntese de voz · VBScript + SAP GUI Scripting']
+        en: ['Single-file HTML, CSS and vanilla JavaScript', 'Chart.js · SheetJS · html2canvas', 'Reads the data file written by the SAP script (no folder permission in the browser)', 'Speech synthesis · VBScript + SAP GUI Scripting'],
+        pt: ['HTML, CSS e JavaScript puro em arquivo único', 'Chart.js · SheetJS · html2canvas', 'Lê o arquivo de dados gravado pelo script do SAP (sem permissão de pasta no navegador)', 'Síntese de voz · VBScript + SAP GUI Scripting']
       },
       businessRules: {
         en: ['Production can be set to zero on line-stop days.', 'Both transfers leave plant stock; only the NSA transfer enters NSA stock.', 'Occupancy shown in pallets per day against each area\'s capacity.'],
@@ -164,7 +167,7 @@ window.PROJECTS = [
       },
       operation: SAP_RUNTIME,
       integration: SAP_INTEGRATION,
-      evolution: SAP_EVOLUTION
+      evolution: EVOLUCAO
     }
   },
   {
@@ -204,7 +207,7 @@ window.PROJECTS = [
       },
       operation: SAP_RUNTIME,
       integration: SAP_INTEGRATION,
-      evolution: SAP_EVOLUTION
+      evolution: EVOLUCAO
     }
   },
   {
@@ -244,7 +247,7 @@ window.PROJECTS = [
       },
       operation: SAP_RUNTIME,
       integration: SAP_INTEGRATION,
-      evolution: SAP_EVOLUTION
+      evolution: EVOLUCAO
     }
   },
   {
@@ -290,10 +293,7 @@ window.PROJECTS = [
         en: 'Standalone. Not integrated with SAP, WMS, TMS or EHS systems.',
         pt: 'Independente. Não integrado a SAP, WMS, TMS ou sistemas de EHS.'
       },
-      evolution: {
-        en: ['Store points and action plan in a shared database so all users see the same data.', 'Feed recorded events from the corporate EHS system.', 'Host internally with corporate sign-in.'],
-        pt: ['Guardar pontos e plano de ação em banco compartilhado, para todos verem os mesmos dados.', 'Alimentar os eventos registrados a partir do sistema corporativo de EHS.', 'Hospedar internamente com login corporativo.']
-      }
+      evolution: EVOLUCAO
     }
   },
   {
@@ -338,10 +338,7 @@ window.PROJECTS = [
         en: 'Own cloud database (Supabase), with a view ready for Excel and Power BI. Not integrated with SAP or corporate EHS systems.',
         pt: 'Banco próprio na nuvem (Supabase), com visão pronta para Excel e Power BI. Não integrado a SAP ou a sistemas corporativos de EHS.'
       },
-      evolution: {
-        en: ['Corporate sign-in for entering and editing tasks.', 'Indicators in the corporate Power BI from the tmrd_planilha view.', 'Use in other Ball operations.'],
-        pt: ['Login corporativo para lançar e editar.', 'Indicadores no Power BI corporativo a partir da visão tmrd_planilha.', 'Uso em outras operações da Ball.']
-      }
+      evolution: EVOLUCAO
     }
   },
   {
@@ -378,10 +375,7 @@ window.PROJECTS = [
       },
       operation: { en: 'Runs entirely in the browser, without server.', pt: 'Roda inteiramente no navegador, sem servidor.' },
       integration: { en: 'Standalone. Not integrated with SAP, WMS or TMS.', pt: 'Independente. Não integrado a SAP, WMS ou TMS.' },
-      evolution: {
-        en: ['Share the SKU database across all shipping computers.', 'Use in other Ball operations.'],
-        pt: ['Compartilhar o banco de SKUs entre todos os computadores da expedição.', 'Uso em outras operações da Ball.']
-      }
+      evolution: EVOLUCAO
     }
   },
   {
@@ -424,10 +418,7 @@ window.PROJECTS = [
         en: 'SAP through SAP GUI Scripting (local agent), on the user\'s own session. Not integrated with WMS or TMS.',
         pt: 'SAP pelo SAP GUI Scripting (agente local), na sessão do próprio usuário. Não integrado a WMS ou TMS.'
       },
-      evolution: {
-        en: ['Extend traceability to other loading flows.', 'Use in other Ball operations.'],
-        pt: ['Estender a rastreabilidade a outros fluxos de carregamento.', 'Uso em outras operações da Ball.']
-      }
+      evolution: EVOLUCAO
     }
   },
   {
@@ -470,10 +461,7 @@ window.PROJECTS = [
         en: 'SAP through SAP GUI Scripting (local agent), on the user\'s own session. Not integrated with WMS or TMS.',
         pt: 'SAP pelo SAP GUI Scripting (agente local), na sessão do próprio usuário. Não integrado a WMS ou TMS.'
       },
-      evolution: {
-        en: ['Apply the same robot to other shipment types.', 'Use in other Ball operations.'],
-        pt: ['Aplicar o mesmo robô a outros tipos de remessa.', 'Uso em outras operações da Ball.']
-      }
+      evolution: EVOLUCAO
     }
   },
   {
@@ -516,10 +504,7 @@ window.PROJECTS = [
         en: 'SAP through SAP GUI Scripting (local agent), on the user\'s own session. Not integrated with WMS or TMS.',
         pt: 'SAP pelo SAP GUI Scripting (agente local), na sessão do próprio usuário. Não integrado a WMS ou TMS.'
       },
-      evolution: {
-        en: ['Extend the same booking model to other materials.', 'Use in other Ball operations.'],
-        pt: ['Estender o mesmo modelo de apontamento a outros materiais.', 'Uso em outras operações da Ball.']
-      }
+      evolution: EVOLUCAO
     }
   }
 ];

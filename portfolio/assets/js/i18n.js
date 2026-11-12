@@ -31,7 +31,7 @@ window.I18N = {
       businessRules: 'Business rules implemented',
       operation: 'How it runs',
       integration: 'Current integrations',
-      evolution: 'Evolution opportunities toward a corporate architecture'
+      evolution: 'Evolution opportunities'
     },
     techPending: 'To be documented after the source code is reviewed.',
     deck: {
@@ -89,7 +89,7 @@ window.I18N = {
       businessRules: 'Regras de negócio implementadas',
       operation: 'Como funciona',
       integration: 'Integrações atuais',
-      evolution: 'Oportunidades de evolução para arquitetura corporativa'
+      evolution: 'Oportunidades de evolução'
     },
     techPending: 'A ser documentado após a análise do código-fonte.',
     deck: {
