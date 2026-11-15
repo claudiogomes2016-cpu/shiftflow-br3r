@@ -961,6 +961,16 @@ button.drw-row { cursor:pointer; }
 .pl-fo-big.sem { color:var(--red); background:var(--red-dim); border:1px solid rgba(255,77,90,.45); }
 .pl-fo-big.reposto { color:var(--yellow); background:var(--yellow-dim); border:1px solid rgba(255,194,26,.45); }
 .rd-fo { margin:4px 0 0 32px; font-size:12.5px; font-weight:600; } .rd-fo.sem { color:var(--red); } .rd-fo.rep { color:var(--yellow); }
+.rk-share { margin:10px 0 4px; }
+.pl-mes { margin-top:12px; }
+.pl-mes .pl-tr { grid-template-columns:minmax(0,2fr) repeat(6, minmax(0,1fr)); gap:2px; padding:6px 6px; }
+.pl-mes .pl-th { font-size:10.5px; }
+.pl-mes .pl-who b { font-size:14px; line-height:1.1; overflow-wrap:anywhere; }
+.pl-mes .pl-who small { white-space:normal; overflow:visible; line-height:1.2; }
+.pl-mes .pl-tr > span.top { background:linear-gradient(180deg,#FFD24D,#E0A800); color:#2A1C00; border-radius:7px; padding:2px 0; }
+.pl-mes .pl-tr > span.hl.top { color:#2A1C00; }
+.pl-mes-leg { font-size:11px; color:var(--text3); margin-top:6px; display:flex; align-items:center; gap:6px; }
+.top-ex { background:linear-gradient(180deg,#FFD24D,#E0A800); color:#2A1C00; border-radius:5px; padding:0 5px; font-family:var(--f-display); font-weight:700; }
 .pl-cada { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; margin-top:12px; }
 .pl-c { background:var(--bg4); border:1.5px solid rgba(43,208,127,.45); border-radius:14px; padding:10px; display:flex; flex-direction:column; gap:6px; min-width:0; }
 .pl-c.zero { border-color:rgba(255,77,90,.6); background:linear-gradient(180deg, var(--red-dim), transparent 60%), var(--bg4); }
@@ -1742,6 +1752,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
       </div>
       <span style="font-size:26px">🏆</span>
     </div>
+    <button class="placar-btn rk-share" onclick="app.abrirPlacar('mes')">📤 Compartilhar ranking do mês <small>tabela pronta para o grupo do WhatsApp</small></button>
     <div class="rkc-g" id="rk-conf"></div>
   </div>
 
@@ -1909,6 +1920,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
   <div class="placar-tabs">
     <button data-v="rodada" onclick="app.renderPlacar('rodada')">Rodada</button>
     <button data-v="turno" onclick="app.renderPlacar('turno')">Último turno</button>
+    <button data-v="mes" onclick="app.renderPlacar('mes')">Mês</button>
     <button class="mc" onclick="app.fecharPlacar()" aria-label="Fechar">✕</button>
   </div>
   <div class="placar-nav" id="placar-nav"></div>
@@ -3576,6 +3588,10 @@ const app = {
       try { const { data } = await db.from('turnos').select('*').order('data_registro', { ascending:false }); this.allTurnos = data || []; } catch(e) {}
     }
     this._rodIdx = null;   // sempre abre na última rodada terminada
+    const pk = this.periodoAtivo || 'mes:atual';
+    const agora = new Date();
+    if(pk.startsWith('mes:') && pk !== 'mes:atual') { const [a, m] = pk.replace('mes:', '').split('-').map(Number); this._mesRef = new Date(a, m, 1); }
+    else this._mesRef = new Date(agora.getFullYear(), agora.getMonth(), 1);
     this.renderPlacar(view || 'rodada');
   },
   fecharPlacar() {
@@ -3611,7 +3627,7 @@ const app = {
 
   renderPlacar(view) {
     this._placarView = view;
-    const navEl = document.getElementById('placar-nav'); if(navEl) { navEl.style.display = view === 'rodada' ? '' : 'none'; }
+    const navEl = document.getElementById('placar-nav'); if(navEl) { navEl.style.display = (view === 'rodada' || view === 'mes') ? '' : 'none'; }
     document.querySelectorAll('.placar-tabs [data-v]').forEach(b => b.classList.toggle('on', b.dataset.v === view));
     const el = document.getElementById('placar-shot');
     const regs = [...(this.allTurnos || [])].sort((a, b) => new Date(b.data_registro) - new Date(a.data_registro));
@@ -3627,6 +3643,43 @@ const app = {
       <div class="pl-title">${titulo}</div>
       <div class="pl-sub">${sub}</div>`;
     if(!regs.length) { el.innerHTML = head('Placar', 'Sem passagens de turno registradas.'); return; }
+
+    if(view === 'mes') {
+      const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+      const ref = this._mesRef || new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const ini = new Date(ref.getFullYear(), ref.getMonth(), 1), fim = new Date(ref.getFullYear(), ref.getMonth() + 1, 1);
+      const hoje = new Date(); const ehAtual = ini.getFullYear() === hoje.getFullYear() && ini.getMonth() === hoje.getMonth();
+      const nav = document.getElementById('placar-nav');
+      if(nav) nav.innerHTML = `
+        <button onclick="app.navMes(-1)" aria-label="Mês anterior">◀ ${MESES[(ini.getMonth() + 11) % 12].slice(0, 3)}</button>
+        <span>${MESES[ini.getMonth()]} ${ini.getFullYear()}</span>
+        <button onclick="app.navMes(1)" ${ehAtual ? 'disabled' : ''} aria-label="Próximo mês">${MESES[(ini.getMonth() + 1) % 12].slice(0, 3)} ▶</button>`;
+      const doMes = regs.filter(r => { const d = new Date(r.data_registro); return d >= ini && d < fim && r.turma_sai !== 'ADM'; });
+      const nomes = Object.fromEntries(this.confNomes());
+      const porK = {};
+      doMes.forEach(r => { const k = this.normConf(r.conferente); if(k) (porK[k] = porK[k] || []).push(r); });
+      const linhas = Object.entries(porK).map(([k, rr]) => Object.assign({ k, nome: nomes[k] || rr[0].conferente, turnos: rr.length }, this.placarNums(rr)));
+      linhas.sort((a, b) => b.me - a.me || b.pc - a.pc);
+      const cols = ['turnos', 'pc', 'nsa', 'me', 'tampa', 'dev'];
+      const max = Object.fromEntries(cols.map(c => [c, Math.max(...linhas.map(o => o[c]), 0)]));
+      const tot = this.placarNums(doMes);
+      const cel = (o, c, extra) => `<span class="${extra || ''}${max[c] > 0 && o[c] === max[c] && linhas.length > 1 ? ' top' : ''}">${fmt(o[c])}</span>`;
+      el.innerHTML = head('Ranking de ' + MESES[ini.getMonth()] + (ehAtual ? ' (parcial)' : ''),
+          doMes.length ? `${doMes.length} passagens de turno · ${linhas.length} conferentes${ehAtual ? ' · até ' + fdt(hoje) : ''}` : 'Sem passagens de turno neste mês.') +
+        (linhas.length ? `
+        <div class="pl-tab pl-mes">
+          <div class="pl-tr pl-th"><span>Conferente</span><span>Turnos</span><span>Carr. Planta</span><span>Carr. NSA</span><span class="hl">ME</span><span>Tampa</span><span>Devol.</span></div>
+          ${linhas.map((o, i) => { const fo = o.foSem + o.foRep; return `
+          <div class="pl-tr">
+            <span class="pl-who"><b>${(() => { const pp = o.nome.split(' ').filter(Boolean); return pp[0] + (pp[1] ? ' ' + pp[1][0] + '.' : ''); })()}</b><small>${['🥇','🥈','🥉'][i] ? ['🥇','🥈','🥉'][i] + ' ' : (i + 1) + 'º · '}ME ${fmt(Math.round(o.me / Math.max(1, o.turnos) * 10) / 10)}/turno</small>${fo ? `<span class="fo ${o.foSem ? 'sem' : 'rep'}">🚜 ${fo} falta${fo === 1 ? '' : 's'} de operador${o.foSem ? ` (${o.foSem} sem rep.)` : ''}</span>` : ''}</span>
+            ${cel(o, 'turnos')}${cel(o, 'pc')}${cel(o, 'nsa')}${cel(o, 'me', 'hl')}${cel(o, 'tampa')}${cel(o, 'dev')}
+          </div>`; }).join('')}
+          <div class="pl-tr pl-tot"><span class="pl-who"><b>Total</b></span><span>${fmt(doMes.length)}</span><span>${fmt(tot.pc)}</span><span>${fmt(tot.nsa)}</span><span class="hl"><em>${fmt(tot.me)}</em></span><span>${fmt(tot.tampa)}</span><span>${fmt(tot.dev)}</span></div>
+        </div>
+        <div class="pl-mes-leg"><span class="top-ex">00</span> maior do mês em cada coluna · ordenado por descarga de ME</div>` : '') + `
+        <div class="pl-foot">ME = folha · quadro de topo · palete. Valores em carretas, lançados pelos conferentes na passagem de turno · Shift Flow</div>`;
+      return;
+    }
 
     if(view === 'turno') {
       const r = regs[0], o = this.placarNums([r]);
@@ -3704,6 +3757,12 @@ const app = {
       </div>
       ${prev ? `<div class="pl-prev">Rodada anterior (${fd(new Date(prev.ini))} a ${fd(new Date(prev.fim))} · ${this.rodadaNomes(prev).map(n => n.split(' ')[0]).join(' e ')}): <b class="g">ME ${fmt(pv.me)}</b> · Tampa ${fmt(pv.tampa)} · Devol. ${fmt(pv.dev)} · Carregou ${fmt(pv.pc)} planta / ${fmt(pv.nsa)} NSA</div>` : ''}
       <div class="pl-foot">ME = folha · quadro de topo · palete. Valores em carretas, lançados pelos conferentes na passagem de turno · Shift Flow</div>`;
+  },
+
+  navMes(d) {
+    const r = this._mesRef || new Date();
+    this._mesRef = new Date(r.getFullYear(), r.getMonth() + d, 1);
+    this.renderPlacar('mes');
   },
 
   navRodada(d) {
