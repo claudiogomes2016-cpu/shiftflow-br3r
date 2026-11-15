@@ -887,6 +887,9 @@ body.oo-open { overflow:hidden; }
 .oo-k-c { margin-top:6px; font-size:.82em; font-weight:700; }
 .oo-k-c em { display:block; font-style:normal; font-weight:500; color:var(--text3); }
 .oo-k-c.up { color:var(--green); } .oo-k-c.dn { color:var(--red); } .oo-k-c.eq { color:var(--text2); }
+.oo-ctx { display:flex; flex-wrap:wrap; gap:6px 10px; margin:-4px 0 clamp(12px, 1.2vw, 20px); }
+.oo-ctx span { font-size:.82em; color:var(--text2); background:var(--bg4); border:1px solid var(--border); border-radius:99px; padding:4px 12px; }
+.oo-ctx b { color:var(--text); }
 .oo-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:clamp(10px, 1vw, 18px); }
 @media(min-width:1400px){ .oo-grid { grid-template-columns:1fr 1fr 1.3fr; } .oo-card.bad { grid-row:span 2; } }
 @media(max-width:860px){ .oo-grid { grid-template-columns:1fr; } }
@@ -3482,6 +3485,10 @@ const app = {
   // conta para o dia em que começou. A rodada que ainda está em andamento fica
   // de fora: a "última rodada" é a mais recente que já terminou.
   RODADA_DIAS: 4,
+  // Tipo de turno pelo horário do registro: o turno do dia fecha perto das 18h,
+  // o da noite perto das 6h
+  tipoTurno(r) { return new Date(r.data_registro).getHours() >= 12 ? 'dia' : 'noite'; },
+
   diaTurno(r) { const d = new Date(+new Date(r.data_registro) - 7 * 3600e3); d.setHours(0, 0, 0, 0); return +d; },
 
   rodadaGrupos(turnos) {
@@ -3754,14 +3761,20 @@ const app = {
     const perLbl = (this.OO_PERS.find(([v]) => v === per) || [0, ''])[1] + ' · ' + fd(ini) + ' a ' + fd(new Date(Math.min(+fim, Date.now())));
 
     // números: dele x média da equipe (por turno)
-    const eu = this.placarNums(meus), eq = this.placarNums(equipe);
+    const eu = this.placarNums(meus);
     const nConf = new Set(equipe.map(r => this.normConf(r.conferente))).size || 1;
+    // média da equipe por turno, separada por tipo de turno (dia x noite)
+    const eqTipo = { dia: equipe.filter(r => this.tipoTurno(r) === 'dia'), noite: equipe.filter(r => this.tipoTurno(r) === 'noite') };
+    const mediaTipo = { dia: this.placarNums(eqTipo.dia), noite: this.placarNums(eqTipo.noite) };
+    const esperado = c => meus.length ? meus.reduce((a, r) => { const t = this.tipoTurno(r); return a + (eqTipo[t].length ? mediaTipo[t][c] / eqTipo[t].length : 0); }, 0) / meus.length : 0;
+    const nDia = meus.filter(r => this.tipoTurno(r) === 'dia').length, nNoite = meus.length - nDia;
+    const tipoLbl = nDia && nNoite ? 'mesmo turno' : nNoite ? 'noite' : 'dia';
     const kpi = (l, c, unid) => {
-      const v = eu[c], mt = meus.length ? v / meus.length : 0, et = equipe.length ? eq[c] / equipe.length : 0;
+      const v = eu[c], mt = meus.length ? v / meus.length : 0, et = esperado(c);
       const dif = et ? (mt - et) / et : 0;
       const seta = !meus.length || Math.abs(dif) < 0.05 || fmt1(mt) === fmt1(et) ? ['=', 'eq'] : dif > 0 ? ['▲', 'up'] : ['▼', 'dn'];
       return `<div class="oo-k"><span class="oo-k-l">${l}</span><b>${fmt(v)}</b><span class="oo-k-u">${unid}</span>
-        <span class="oo-k-c ${seta[1]}">${seta[0]} ${fmt1(mt)}/turno <em>equipe ${fmt1(et)}</em></span></div>`;
+        <span class="oo-k-c ${seta[1]}">${seta[0]} ${fmt1(mt)}/turno <em>equipe (${tipoLbl}) ${fmt1(et)}</em></span></div>`;
     };
     const kpis = `
       <div class="oo-k"><span class="oo-k-l">Turnos</span><b>${fmt(meus.length)}</b><span class="oo-k-u">passagens</span><span class="oo-k-c eq">equipe ${fmt1(equipe.length / nConf)} por conferente</span></div>
@@ -3774,14 +3787,17 @@ const app = {
     const pos = this.RK_CATS.map(c => { const rk = this.rankBy(st, c.k); const i = rk.findIndex(o => o.k === k); return { c, i, n: rk.length, v: st[k] ? st[k][c.k] : 0, lider: rk[0] }; });
     const bons = pos.filter(p => p.i >= 0 && p.i < 3 && p.n > 1).sort((a, b) => a.i - b.i);
     // só categorias em que alguém da equipe pontuou (senão não diz nada sobre o conferente)
-    const fracos = pos.filter(p => total > 2 && p.n > 0 && p.lider && (p.i < 0 || (p.i >= 3 && p.i >= Math.ceil(p.n / 2))) && !bons.includes(p));
+    // quem é mais da noite não é comparado no ranking de NSA e ME (misturam o dia, que tem
+    // NSA o dia todo e apoio na descarga); a comparação justa é a média da noite, acima
+    const noturno = nNoite > nDia;
+    const fracos = pos.filter(p => total > 2 && p.n > 0 && p.lider && !(noturno && (p.c.k === 'nc' || p.c.k === 'pd')) && (p.i < 0 || (p.i >= 3 && p.i >= Math.ceil(p.n / 2))) && !bons.includes(p));
     const medal = ['🥇','🥈','🥉'];
     const bonsHtml = bons.length ? bons.map(p => `<div class="oo-r good"><span class="oo-r-m">${medal[p.i]}</span><span class="oo-r-t">${p.c.i} ${p.c.l}<small>${p.i + 1}º de ${p.n} · ${fmt(p.v)} ${this.rkUn(p.c, p.v)}</small></span></div>`).join('')
       : '<div class="oo-empty">Não ficou entre os 3 primeiros em nenhuma categoria neste período.</div>';
-    // abaixo da média da equipe por turno (mais de 10% abaixo)
+    // abaixo da média da equipe do mesmo tipo de turno (mais de 5% abaixo, igual à seta ▼ dos números)
     const abaixo = meus.length ? [['me', '📦 Descarga de ME'], ['pc', '🏆 Carregamentos na planta'], ['nsa', '🚚 Carregamentos na NSA']].map(([c, l]) => {
-      const mt = eu[c] / meus.length, et = equipe.length ? eq[c] / equipe.length : 0;
-      return et > 0 && mt < et * 0.9 ? `<div class="oo-r weak"><span class="oo-r-m">▼</span><span class="oo-r-t">${l} abaixo da média<small>${fmt1(mt)} por turno · equipe ${fmt1(et)} (${Math.round((mt - et) / et * 100)}%)</small></span></div>` : '';
+      const mt = eu[c] / meus.length, et = esperado(c);
+      return et > 0 && mt < et * 0.95 && fmt1(mt) !== fmt1(et) ? `<div class="oo-r weak"><span class="oo-r-m">▼</span><span class="oo-r-t">${l} abaixo da média<small>${fmt1(mt)} por turno · equipe (${tipoLbl}) ${fmt1(et)} (${Math.round((mt - et) / et * 100)}%)</small></span></div>` : '';
     }).join('') : '';
     const fracosHtml = (abaixo || fracos.length) ? abaixo + fracos.map(p => `<div class="oo-r weak"><span class="oo-r-m">${p.i >= 0 ? (p.i + 1) + 'º' : '—'}</span><span class="oo-r-t">${p.c.i} ${p.c.l}<small>${p.i >= 0 ? (p.i + 1) + 'º de ' + p.n + ' · ' + fmt(p.v) + ' ' + this.rkUn(p.c, p.v) + ' · ' : 'nenhum registro · '}líder: ${(nomes[p.lider?.k] || p.lider?.nome || '—').split(' ')[0]} com ${fmt(p.lider ? p.lider[p.c.k] : 0)}</small></span></div>`).join('')
       : '<div class="oo-empty good">Acima ou na média da equipe em tudo. 👏</div>';
@@ -3836,6 +3852,12 @@ const app = {
         <div class="oo-brand"><img src="logo.svg" alt=""><span class="sf-word">SHIFT <em>FLOW</em></span></div>
       </div>
       <div class="oo-kpis">${kpis}</div>
+      <div class="oo-ctx">
+        <span>☀️ <b>${nDia}</b> turno${nDia === 1 ? '' : 's'} de dia · 🌙 <b>${nNoite}</b> de noite</span>
+        <span>Comparação com a média de quem fez o mesmo tipo de turno (dia com dia, noite com noite)</span>
+        ${nNoite ? '<span>🌙 A NSA funciona das 6h às 22h: no turno da noite são só 4 horas de NSA</span>' : ''}
+        ${nDia ? '<span>☀️ De dia (seg–sex) o João Paulo, e às vezes o Rafael, ajudam a faturar a NSA; o operador ADM e a folha separadora ajudam na descarga de ME</span>' : ''}
+      </div>
       <div class="oo-grid">
         <section class="oo-card ok"><h2>🏆 Onde você se destacou</h2>${bonsHtml}</section>
         <section class="oo-card warn"><h2>📉 Onde pode melhorar</h2>${fracosHtml}</section>
@@ -3843,7 +3865,7 @@ const app = {
         <section class="oo-card"><h2>🛡️ Segurança e operação</h2><div class="oo-ss">${seg}</div></section>
         <section class="oo-card wide"><h2>📅 Evolução mês a mês <span>últimos 6 meses</span></h2>${evo}</section>
       </div>
-      <div class="oo-foot">Comparação com a média da equipe por turno (turmas A–D, mesmo período) · Shift Flow · ${new Date().toLocaleDateString('pt-BR')}</div>`;
+      <div class="oo-foot">Comparação com a média da equipe por turno do mesmo tipo (dia/noite), turmas A–D, mesmo período · Shift Flow · ${new Date().toLocaleDateString('pt-BR')}</div>`;
   },
 
   // ── PLACAR PARA O GRUPO ──
