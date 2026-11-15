@@ -951,6 +951,16 @@ button.drw-row { cursor:pointer; }
 .pl-tr.pl-tot { background:var(--bg4); border-top:1.5px solid var(--border2); }
 .pl-prev { margin-top:10px; padding:9px 11px; border-radius:12px; background:var(--bg4); border:1px dashed var(--border2); font-size:12.5px; color:var(--text2); line-height:1.45; }
 .pl-prev b.g { color:var(--green); font-family:var(--f-display); font-size:15px; }
+.fo { display:block; font-size:10px; font-weight:700; line-height:1.15; margin-top:2px; font-family:var(--font); }
+.fo.sem { color:var(--red); } .fo.rep { color:var(--yellow); }
+.pl-c-fo { font-size:11.5px; font-weight:600; border-radius:8px; padding:4px 7px; line-height:1.25; }
+.pl-c-fo.ok { color:var(--text3); background:transparent; padding-left:0; }
+.pl-c-fo.rep { color:var(--yellow); background:var(--yellow-dim); }
+.pl-c-fo.sem { color:var(--red); background:var(--red-dim); }
+.pl-fo-big { margin-top:8px; padding:7px 10px; border-radius:10px; font-size:13px; font-weight:700; }
+.pl-fo-big.sem { color:var(--red); background:var(--red-dim); border:1px solid rgba(255,77,90,.45); }
+.pl-fo-big.reposto { color:var(--yellow); background:var(--yellow-dim); border:1px solid rgba(255,194,26,.45); }
+.rd-fo { margin:4px 0 0 32px; font-size:12.5px; font-weight:600; } .rd-fo.sem { color:var(--red); } .rd-fo.rep { color:var(--yellow); }
 .pl-cada { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; margin-top:12px; }
 .pl-c { background:var(--bg4); border:1.5px solid rgba(43,208,127,.45); border-radius:14px; padding:10px; display:flex; flex-direction:column; gap:6px; min-width:0; }
 .pl-c.zero { border-color:rgba(255,77,90,.6); background:linear-gradient(180deg, var(--red-dim), transparent 60%), var(--bg4); }
@@ -3531,6 +3541,7 @@ const app = {
             <div class="rd-bar">
               <i class="b-me" style="width:${o.me / max * 100}%"></i><i class="b-tp" style="width:${o.tampa / max * 100}%"></i><i class="b-dv" style="width:${o.dev / max * 100}%"></i>
             </div>
+            ${(() => { const fs = o.regs.filter(r => this.faltaOp(r) === 'sem').length, fr = o.regs.filter(r => this.faltaOp(r) === 'reposto').length; return fs + fr ? `<div class="rd-fo ${fs ? 'sem' : 'rep'}">🚜 Falta de operador em ${fs + fr} turno${fs + fr === 1 ? '' : 's'}${fs ? ` (${fs} sem reposição)` : ' (reposto)'}</div>` : ''; })()}
             <div class="rd-v"><span>ME <b>${fmt(o.me)}</b></span><span>Tampa <b>${fmt(o.tampa)}</b></span><span>Devolução <b>${fmt(o.dev)}</b></span><span class="rd-c">Carreg. ${fmt(o.carr)} · NSA ${fmt(o.nsa)}</span></div>
           </button>`).join('')}
         <div class="me-note">ME = campo "Descarga ME" do Registro (folha, quadro de topo e palete). Tampa básica e devolução em carretas, lançadas em "Entradas".</div>
@@ -3573,11 +3584,25 @@ const app = {
     if(this.periodoAtivo === 'rodada' && document.getElementById('sc-dash').classList.contains('on')) this.renderDash(this.filtrarPorPeriodo(this.allTurnos || []));
   },
 
+  // Falta de OPERADOR DE EMPILHADEIRA lançada no Registro (Absenteísmo Sodexo)
+  // null = sem falta · 'reposto' = faltou e houve reposição · 'sem' = faltou e ficou sem
+  faltaOp(r) {
+    const sim = v => String(v || '').toLowerCase() === 'sim';
+    if(!sim(r.s_falta) || !/empilhadeira/i.test(r.s_funcao || '')) return null;
+    return sim(r.s_repo) ? 'reposto' : 'sem';
+  },
+  faltaOpTag(r) {
+    const f = this.faltaOp(r);
+    if(!f) return '';
+    return f === 'sem' ? '<span class="fo sem">🚜 faltou operador · sem reposição</span>' : '<span class="fo rep">🚜 faltou operador · reposto</span>';
+  },
+
   placarNums(regs) {
     const n = v => parseInt(v) || 0;
-    const o = { pc:0, nsa:0, me:0, tampa:0, dev:0 };
+    const o = { pc:0, nsa:0, me:0, tampa:0, dev:0, foRep:0, foSem:0 };
     regs.forEach(r => {
       o.pc += r.p_c || 0; o.nsa += r.n_c || 0; o.me += r.p_d || 0;
+      const fo = this.faltaOp(r); if(fo === 'sem') o.foSem++; else if(fo === 'reposto') o.foRep++;
       this.meParse(r.tampa_entradas).forEach(e => o.tampa += n(e.qtd));
       this.meParse(r.devolucao_entradas).forEach(e => o.dev += n(e.qtd));
     });
@@ -3608,7 +3633,7 @@ const app = {
       const ult = regs.slice(0, 6);
       const fcurta = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' }) + ' ' + String(d.getHours()).padStart(2, '0') + 'h';
       const maxMe = Math.max(1, ...ult.map(x => x.p_d || 0));
-      el.innerHTML = head('Último turno', `Turma ${r.turma_sai || '?'} → ${r.turma_rec || '?'} · ${r.conferente || '—'} · ${fdt(new Date(r.data_registro))}`) + `
+      el.innerHTML = head('Último turno', `Turma ${r.turma_sai || '?'} → ${r.turma_rec || '?'} · ${r.conferente || '—'} · ${fdt(new Date(r.data_registro))}`) + (this.faltaOp(r) ? `<div class="pl-fo-big ${this.faltaOp(r)}">${this.faltaOp(r) === 'sem' ? '🚜 Faltou operador de empilhadeira neste turno e não houve reposição' : '🚜 Faltou operador de empilhadeira neste turno (houve reposição)'}</div>` : '') + `
         <div class="pl-grp">🚛 Carregou</div>
         <div class="pl-g2">
           <div class="pl-t c-b"><b>${fmt(o.pc)}</b><span><strong>Planta</strong><small>${car(o.pc)}</small></span></div>
@@ -3625,7 +3650,7 @@ const app = {
           <div class="pl-tr pl-th"><span>Conferente · turma</span><span>Carr. Planta</span><span>Carr. NSA</span><span class="hl">ME</span><span>Tampa</span><span>Devol.</span></div>
           ${ult.map(x => { const q = this.placarNums([x]); return `
           <div class="pl-tr${x === r ? ' cur' : ''}">
-            <span class="pl-who"><b>${(x.conferente || '—').split(' ')[0]}</b><small>${x.turma_sai || '?'} · ${fcurta(new Date(x.data_registro))}</small></span>
+            <span class="pl-who"><b>${(x.conferente || '—').split(' ')[0]}</b><small>${x.turma_sai || '?'} · ${fcurta(new Date(x.data_registro))}</small>${this.faltaOpTag(x)}</span>
             <span>${fmt(q.pc)}</span><span>${fmt(q.nsa)}</span>
             <span class="hl ${q.me ? '' : 'zero'}"><i style="width:${(q.me / maxMe) * 100}%"></i><em>${fmt(q.me)}</em></span>
             <span>${fmt(q.tampa)}</span><span>${fmt(q.dev)}</span>
@@ -3662,6 +3687,7 @@ const app = {
           <div class="pl-c-me"><b>${fmt(o.me)}</b><span>${car(o.me)} de <strong>ME</strong></span></div>
           <div class="pl-c-l"><span>Tampa básica <b class="y">${fmt(o.tampa)}</b></span><span>Devolução <b class="v">${fmt(o.dev)}</b></span></div>
           <div class="pl-c-l c"><span>Carregou planta <b>${fmt(o.pc)}</b></span><span>NSA <b>${fmt(o.nsa)}</b></span></div>
+          <div class="pl-c-fo ${o.foSem ? 'sem' : o.foRep ? 'rep' : 'ok'}">🚜 ${o.foSem + o.foRep ? `Falta de operador em ${o.foSem + o.foRep} turno${o.foSem + o.foRep === 1 ? '' : 's'}${o.foSem ? ` (${o.foSem} sem reposição)` : ' (reposto)'}` : 'Sem falta de operador'}</div>
         </div>`).join('')}
       </div>
       <div class="pl-grp">📋 Turno a turno</div>
@@ -3669,7 +3695,7 @@ const app = {
         <div class="pl-tr pl-th"><span>Conferente</span><span>Carr. Planta</span><span>Carr. NSA</span><span class="hl">ME</span><span>Tampa</span><span>Devol.</span></div>
         ${linhas.map(x => { const q = this.placarNums([x]); return `
         <div class="pl-tr">
-          <span class="pl-who"><b>${(x.conferente || '—').split(' ')[0]}</b><small>${fcurta(new Date(x.data_registro))}</small></span>
+          <span class="pl-who"><b>${(x.conferente || '—').split(' ')[0]}</b><small>${fcurta(new Date(x.data_registro))}</small>${this.faltaOpTag(x)}</span>
           <span>${fmt(q.pc)}</span><span>${fmt(q.nsa)}</span>
           <span class="hl ${q.me ? '' : 'zero'}"><em>${fmt(q.me)}</em></span>
           <span>${fmt(q.tampa)}</span><span>${fmt(q.dev)}</span>
