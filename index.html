@@ -1092,6 +1092,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
 .mov-t { font-family:var(--f-display); font-size:17px; letter-spacing:.06em; }
 .mi { font-family:var(--f-display); font-size:26px; font-weight:700; background:var(--bg3); border-radius:10px; }
 .ml { font-family:var(--f-display); font-size:13px; letter-spacing:.06em; }
+.ml-h { font-size:10.5px; color:var(--text3); text-align:center; margin-top:1px; line-height:1.15; }
 .fs { background:var(--bg4); border-color:var(--border2); border-radius:14px; }
 .fs svg { stroke:var(--blue-txt); }
 .fl2 { font-family:var(--f-display); font-size:15px; letter-spacing:.06em; }
@@ -1455,7 +1456,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
       <div class="mov-t"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1A7FE8"><circle cx="12" cy="12" r="10"/></svg>Planta</div>
       <div class="mv3">
         <div><input type="number" id="m-p-c" class="mi" placeholder="0" oninput="app.calc()" inputmode="numeric"><div class="ml">Carregados</div></div>
-        <div><input type="number" id="m-p-d" class="mi" placeholder="0" oninput="app.calc()" inputmode="numeric"><div class="ml">Descarregados</div></div>
+        <div><input type="number" id="m-p-d" class="mi" placeholder="0" oninput="app.calc()" inputmode="numeric"><div class="ml">Descarga ME</div><div class="ml-h">folha · quadro · palete</div></div>
         <div><input type="number" id="m-p-t" class="mi" disabled><div class="ml" style="color:var(--blue)">Total</div></div>
       </div>
     </div>
@@ -1607,7 +1608,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div>
         <div style="font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.3px">Produtividade por Turma</div>
-        <div style="font-size:14px;color:var(--text3);margin-top:2px">Carregados · Descarregados · NSA</div>
+        <div style="font-size:14px;color:var(--text3);margin-top:2px">Carregados · Descarga ME · NSA</div>
       </div>
       <div class="rt-badge"><div class="rt-dot"></div>Ao vivo</div>
     </div>
@@ -2832,7 +2833,7 @@ const app = {
       '', '',
       '📊 *PLANTA*',
       '· Carregados: ' + r.p_c,
-      '· Descarregados: ' + r.p_d,
+      '· Descarga ME (folha/quadro/palete): ' + r.p_d,
       '· Total: ' + r.p_t,
       '', '',
       '📊 *NSA*',
@@ -3403,7 +3404,7 @@ const app = {
             </div>
             <div class="rd-v"><span>ME <b>${fmt(o.me)}</b></span><span>Tampa <b>${fmt(o.tampa)}</b></span><span>Devolução <b>${fmt(o.dev)}</b></span><span class="rd-c">Carreg. ${fmt(o.carr)} · NSA ${fmt(o.nsa)}</span></div>
           </button>`).join('')}
-        <div class="me-note">ME = "Descarregados" da Planta (folha, quadro de topo e palete). Tampa básica e devolução em carretas, lançadas em "Entradas".</div>
+        <div class="me-note">ME = campo "Descarga ME" do Registro (folha, quadro de topo e palete). Tampa básica e devolução em carretas, lançadas em "Entradas".</div>
       </div>`;
     }
 
@@ -3450,7 +3451,7 @@ const app = {
     const tiles = [
       { go:"app.goOcorrFiltro('incidente')", l:'Dias sem incidente', v: diasSemInc === null ? '—' : diasSemInc, s: diasSemInc === null ? 'nenhum incidente registrado' : 'desde o último registro', c: diasSemInc === null || diasSemInc >= 30 ? 'good' : diasSemInc >= 7 ? 'warn' : 'bad', bar: diasSemInc === null ? 100 : Math.min(100, diasSemInc / 30 * 100), i:'🛡️' },
       { go: this.isGestor() ? "app.goHist('')" : '', l:'Registros', v: total, s: 'passagens de turno no período', c:'info', bar: 100, i:'📝' },
-      { go:"app.scrollToEl('chart-prod')", l:'Média por turno', v: media, s: 'carregamentos e descarregamentos (planta + NSA)', c:'info', bar: 100, i:'📦' },
+      { go:"app.scrollToEl('chart-prod')", l:'Média por turno', v: media, s: 'carregamentos e descargas de ME (planta + NSA)', c:'info', bar: 100, i:'📦' },
       { go: this.isGestor() ? "app.goHist('tma')" : '', l:'TMA > 4h', v: tmaVeic, s: tmaTurnos + ' turno' + (tmaTurnos!==1?'s':'') + ' com veículos parados', c: tmaVeic === 0 ? 'good' : tmaVeic <= 5 ? 'warn' : 'bad', bar: pct(tmaTurnos, total), i:'⏱️' },
       { go: this.isGestor() ? "app.goHist('falta')" : '', l:'Absenteísmo', v: absPct + '%', s: faltas + ' falta' + (faltas!==1?'s':'') + ' · ' + repos + ' reposta' + (repos!==1?'s':''), c: absPct === 0 ? 'good' : absPct <= 10 ? 'warn' : 'bad', bar: absPct, i:'👥' },
       { go: this.isGestor() ? "app.goHist('equip')" : '', l:'Equipamentos', v: emp, s: 'empilhadeira parada · ' + bau + ' baú reprovado' + (bau!==1?'s':''), c: emp === 0 ? 'good' : empCham === emp ? 'warn' : 'bad', bar: pct(empCham, emp || 1), i:'🔧', foot: emp ? (empCham + '/' + emp + ' com chamado') : 'operação sem paradas' },
@@ -3494,7 +3495,7 @@ const app = {
             borderWidth: 0,
           },
           {
-            label: 'Descarregados',
+            label: 'Descarga ME',
             data: turmas.map(t => byT[t].pd),
             backgroundColor: '#8C8E94',
             borderRadius: { topLeft:6, topRight:6, bottomLeft:0, bottomRight:0 },
@@ -3596,7 +3597,7 @@ const app = {
   RK_CATS: [
     { k:'pc',   i:'🏆', l:'Mais carregou na planta',      u:'carregamentos', us:'carregamento', med:true },
     { k:'nc',   i:'🚚', l:'Mais carregou na NSA',         u:'carregamentos', us:'carregamento', med:true },
-    { k:'pd',   i:'📦', l:'Mais descarregou na planta',   u:'descarregamentos', us:'descarregamento', med:true },
+    { k:'pd',   i:'📦', l:'Mais descarregou ME',          u:'descargas', us:'descarga', med:true },
     { k:'n',    i:'📝', l:'Mais passagens de turno',      u:'turnos', us:'turno' },
     { k:'inc',  i:'🛡️', l:'Mais incidentes relatados',    u:'relatos', us:'relato',   d:'incidentes de segurança registrados com descrição' },
     { k:'blq',  i:'⚠️', l:'Mais bloqueios relatados',     u:'relatos', us:'relato',   d:'bloqueios de qualidade registrados com descrição' },
@@ -3729,7 +3730,7 @@ const app = {
         </div>
         <div style="display:flex;gap:12px;margin-top:6px">
           <span style="font-size:15px;color:var(--text3)">▪ Carr: <strong style="color:var(--text2)">${v.pc}</strong></span>
-          <span style="font-size:15px;color:var(--text3)">▪ Desc: <strong style="color:var(--text2)">${v.pd}</strong></span>
+          <span style="font-size:15px;color:var(--text3)">▪ ME: <strong style="color:var(--text2)">${v.pd}</strong></span>
           <span style="font-size:15px;color:var(--text3)">▪ NSA: <strong style="color:var(--text2)">${v.nc}</strong></span>
         </div>
       </div>`;
@@ -3821,7 +3822,7 @@ const app = {
       <div style="font-family:var(--font);font-weight:700;font-size:14px;color:#0057B8;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">📊 Movimentação</div>
       <div class="g3 mb12">
         <div><span class="lbl">Pl. Carr.</span><input type="number" id="e-pc" class="inp inp-sm" value="${r.p_c}" oninput="document.getElementById('e-pt').value=(parseInt(document.getElementById('e-pc').value)||0)+(parseInt(document.getElementById('e-pd').value)||0)"></div>
-        <div><span class="lbl">Pl. Desc.</span><input type="number" id="e-pd" class="inp inp-sm" value="${r.p_d}" oninput="document.getElementById('e-pt').value=(parseInt(document.getElementById('e-pc').value)||0)+(parseInt(document.getElementById('e-pd').value)||0)"></div>
+        <div><span class="lbl">Desc. ME</span><input type="number" id="e-pd" class="inp inp-sm" value="${r.p_d}" oninput="document.getElementById('e-pt').value=(parseInt(document.getElementById('e-pc').value)||0)+(parseInt(document.getElementById('e-pd').value)||0)"></div>
         <div><span class="lbl">Total</span><input type="number" id="e-pt" class="inp inp-sm" value="${r.p_t}" disabled></div>
       </div>
       <div class="g2 mb16">
@@ -3911,7 +3912,7 @@ const app = {
 
   exportCSV() {
     const esc = v => '"' + String(v||'').replace(/"/g,"'") + '"';
-    const h = ['Data','Conferente','Turma Saiu','Turma Recebeu','Incidente','Detalhe Incidente','Bloqueio','Detalhe Bloqueio','Pl. Carr.','Pl. Desc.','Pl. Total','NSA Carr.','NSA Total','Baú Repr.','Qtd Baú','Site Registrado','Emp. Parada','Qtd Emp.','Chamado','Sodexo Falta','Função','Reposição','Nome','Relato'];
+    const h = ['Data','Conferente','Turma Saiu','Turma Recebeu','Incidente','Detalhe Incidente','Bloqueio','Detalhe Bloqueio','Pl. Carr.','Descarga ME','Pl. Total','NSA Carr.','NSA Total','Baú Repr.','Qtd Baú','Site Registrado','Emp. Parada','Qtd Emp.','Chamado','Sodexo Falta','Função','Reposição','Nome','Relato'];
     let csv = '\uFEFF' + h.join(';') + '\n';
     this.allTurnos.forEach(r => {
       csv += [new Date(r.data_registro).toLocaleString('pt-BR'), esc(r.conferente), esc(r.turma_sai), esc(r.turma_rec||'—'), r.seg==='sim'?'Sim':'Não', esc(r.relato_seg||''), r.qual==='sim'?'Sim':'Não', esc(r.relato_qual||''), r.p_c, r.p_d, r.p_t, r.n_c, r.n_t, esc(r.bau_s), esc(r.bau_q||'0'), esc(r.bau_site||'Não'), esc(r.emp_s), esc(r.emp_q||'0'), esc(r.emp_cham||'Não'), esc(r.s_falta), esc(r.s_funcao||'—'), esc(r.s_repo), esc(r.s_nome||''), esc(r.relato)].join(';') + '\n';
@@ -4272,7 +4273,7 @@ const app = {
         <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px">📊 Produtividade no período</div>
         <div class="g2" style="gap:10px">
           <div><div style="font-size:11px;color:var(--text3);text-transform:uppercase;font-weight:700">Planta Carreg.</div><div style="font-size:20px;font-weight:800;color:var(--text)">${pc}</div></div>
-          <div><div style="font-size:11px;color:var(--text3);text-transform:uppercase;font-weight:700">Planta Descarreg.</div><div style="font-size:20px;font-weight:800;color:var(--text)">${pd}</div></div>
+          <div><div style="font-size:11px;color:var(--text3);text-transform:uppercase;font-weight:700">Descarga ME</div><div style="font-size:20px;font-weight:800;color:var(--text)">${pd}</div></div>
           <div><div style="font-size:11px;color:var(--text3);text-transform:uppercase;font-weight:700">NSA Carreg.</div><div style="font-size:20px;font-weight:800;color:var(--text)">${nc}</div></div>
           <div><div style="font-size:11px;color:var(--text3);text-transform:uppercase;font-weight:700">Turnos</div><div style="font-size:20px;font-weight:800;color:var(--text)">${turnosPessoa.length}</div></div>
         </div>
