@@ -876,6 +876,7 @@ body.oo-open { overflow:hidden; }
 .oo-brand img { height:clamp(30px, 2.6vw, 48px); }
 .oo-brand .sf-word { font-size:clamp(20px, 1.8vw, 34px); }
 [data-theme="light"] .oo-brand .sf-word { color:#0A1530; }
+[data-theme="light"] .oo-brand img { background:#07102A; border-radius:10px; padding:4px 8px; }
 @media(max-width:700px){ .oo-brand { display:none; } }
 .oo-kpis { display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:clamp(8px, .8vw, 14px); margin-bottom:clamp(12px, 1.2vw, 20px); }
 @media(max-width:1100px){ .oo-kpis { grid-template-columns:repeat(3, minmax(0,1fr)); } }
@@ -993,7 +994,7 @@ body.oo-open { overflow:hidden; }
 .pl-head img { height:34px; }
 .pl-head .sf-word { font-size:24px; } .pl-head .sf-tag { font-size:9px; margin-top:2px; }
 [data-theme="light"] .pl-head .sf-word { color:#0A1530; } [data-theme="light"] .pl-head .sf-tag { color:#33405C; }
-[data-theme="light"] .pl-head img { filter:drop-shadow(0 0 1px #0A1530) drop-shadow(0 0 1px #0A1530); }
+[data-theme="light"] .pl-head img { background:#07102A; border-radius:10px; padding:4px 7px; height:40px; }
 .pl-title { font-family:var(--f-display); font-size:25px; font-weight:700; margin-top:8px; line-height:1.1; }
 .pl-sub { font-size:13px; color:var(--text3); margin-top:3px; }
 .pl-grp { font-family:var(--f-display); font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text2); margin:10px 0 5px; }
@@ -1054,10 +1055,10 @@ body.oo-open { overflow:hidden; }
 .rd-fo { margin:4px 0 0 32px; font-size:12.5px; font-weight:600; } .rd-fo.sem { color:var(--red); } .rd-fo.rep { color:var(--yellow); }
 .rk-share { margin:10px 0 4px; }
 .pl-mes { margin-top:12px; }
-.pl-mes .pl-tr { grid-template-columns:minmax(0,2fr) repeat(6, minmax(0,1fr)); gap:2px; padding:6px 6px; }
+.pl-mes .pl-tr { grid-template-columns:minmax(0,2.2fr) repeat(6, minmax(0,1fr)); gap:2px; padding:6px 6px; font-size:15px; }
 .pl-mes .pl-th { font-size:10.5px; }
-.pl-mes .pl-who b { font-size:14px; line-height:1.1; overflow-wrap:anywhere; }
-.pl-mes .pl-who small { white-space:normal; overflow:visible; line-height:1.2; }
+.pl-mes .pl-who b { font-size:12.5px; line-height:1.15; letter-spacing:-.01em; overflow-wrap:normal; word-break:keep-all; white-space:normal; hyphens:none; }
+.pl-mes .pl-who small { white-space:normal; overflow:visible; line-height:1.2; font-size:10px; }
 .pl-mes .pl-tr > span.top { background:linear-gradient(180deg,#FFD24D,#E0A800); color:#2A1C00; border-radius:7px; padding:2px 0; }
 .pl-mes .pl-tr > span.hl.top { color:#2A1C00; }
 .pl-mes-leg { font-size:11px; color:var(--text3); margin-top:6px; display:flex; align-items:center; gap:6px; }
@@ -3876,6 +3877,7 @@ const app = {
       try { const { data } = await db.from('turnos').select('*').order('data_registro', { ascending:false }); this.allTurnos = data || []; } catch(e) {}
     }
     this._rodIdx = null;   // sempre abre na última rodada terminada
+    this.logoPng();
     const pk = this.periodoAtivo || 'mes:atual';
     const agora = new Date();
     if(pk.startsWith('mes:') && pk !== 'mes:atual') { const [a, m] = pk.replace('mes:', '').split('-').map(Number); this._mesRef = new Date(a, m, 1); }
@@ -3925,7 +3927,7 @@ const app = {
     const car = v => v === 1 ? 'carreta' : 'carretas';
     const head = (titulo, sub) => `
       <div class="pl-head">
-        <img src="logo.svg" alt="">
+        <img src="${this._logoPng || 'logo.svg'}" alt="">
         <div><div class="sf-word">SHIFT <em>FLOW</em></div><div class="sf-tag">EXPEDIÇÃO &nbsp;•&nbsp; BR3R</div></div>
       </div>
       <div class="pl-title">${titulo}</div>
@@ -4059,6 +4061,25 @@ const app = {
     this.renderPlacar('rodada');
   },
 
+  // Converte o logo SVG em PNG (o gerador de imagem não desenha bem SVG com degradês)
+  logoPng() {
+    if(this._logoPngP) return this._logoPngP;
+    this._logoPngP = new Promise(ok => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const c = document.createElement('canvas'); c.width = 720; c.height = 280;
+          c.getContext('2d').drawImage(img, 0, 0, 720, 280);
+          this._logoPng = c.toDataURL('image/png');
+        } catch(e) {}
+        ok(this._logoPng);
+      };
+      img.onerror = () => ok(null);
+      img.src = 'logo.svg';
+    });
+    return this._logoPngP;
+  },
+
   // Gera a imagem do placar e abre o compartilhamento (WhatsApp)
   async compartilharPlacar() {
     const btn = document.getElementById('placar-share');
@@ -4067,6 +4088,9 @@ const app = {
       if(!window.html2canvas) {
         await new Promise((ok, err) => { const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'; sc.onload = ok; sc.onerror = err; document.head.appendChild(sc); });
       }
+      await this.logoPng();
+      const lg = document.querySelector('#placar-shot .pl-head img');
+      if(this._logoPng && lg && lg.getAttribute('src') !== this._logoPng) { lg.src = this._logoPng; await new Promise(r => setTimeout(r, 150)); }
       const node = document.getElementById('placar-shot');
       const bg = getComputedStyle(document.documentElement).getPropertyValue('--card-bg').trim() || '#0B1630';
       const canvas = await window.html2canvas(node, { backgroundColor: bg, scale: 2, useCORS: true, logging: false });
