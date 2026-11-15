@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shift Flow · Painel da Expedição (TV)</title>
+<!--
+  PAINEL DA TV — Shift Flow · Expedição BR3R
+  Arquivo único: deixe na pasta da TV e abra com 2 cliques (precisa de internet).
+  Mostra só números de produção: carregamentos, descarga de ME, tampa básica,
+  devolução e dias sem incidente. NÃO busca Disciplina, relatos, faltas nem o
+  cadastro de usuários. Atualiza os dados sozinho a cada 1 minuto.
+  Tela cheia: clique uma vez na tela (ou aperte F11).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800;1,900&family=Barlow+Semi+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root { --font:'Barlow', system-ui, 'Segoe UI', Roboto, sans-serif; --f-display:'Barlow Semi Condensed', 'Barlow', 'Arial Narrow', sans-serif; --f-logo:'Barlow', 'Arial Black', sans-serif; }
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { height:100%; background:#050B1A; }
+.sf-word { font-family:var(--f-logo); font-style:italic; font-weight:900; letter-spacing:-.5px; line-height:.92; color:#fff; white-space:nowrap; }
+.sf-word em { font-style:italic; color:#2F7BFF; }
+.sf-tag { font-family:var(--f-display); font-weight:600; letter-spacing:.14em; color:#DDE6F7; white-space:nowrap; }
+/* ── MODO TV (100% da tela, escala pela largura da TV) ── */
+body.tv-on { overflow:hidden; }
+.tvm { --k:1; --u:calc(min(1vw, 1.78vh) * var(--k)); position:fixed; inset:0; z-index:4000; overflow:hidden; display:grid; grid-template-rows:auto auto 1fr auto; color:#fff;
+  background:radial-gradient(120vw 60vh at 50% -20vh, rgba(20,99,255,.28), transparent 70%), #050B1A; font-family:var(--font); font-size:calc(var(--u) * 1.15); }
+.tvm[hidden] { display:none; }
+.tvm.nocursor, .tvm.nocursor * { cursor:none !important; }
+.tvm-top { display:flex; align-items:center; gap:calc(var(--u) * 2); padding:calc(var(--u) * .9) calc(var(--u) * 1.6); }
+.tvm-brand { display:flex; align-items:center; gap:calc(var(--u) * .6); }
+.tvm-brand img { height:calc(var(--u) * 4.2); }
+.tvm-brand .sf-word { font-size:calc(var(--u) * 2.9); }
+.tvm-brand .sf-tag { font-size:calc(var(--u) * .85); margin-top:calc(var(--u) * .2); }
+.tvm-title { flex:1; text-align:center; font-family:var(--f-display); font-weight:800; font-size:calc(var(--u) * 2.4); letter-spacing:.12em; color:#DDE6F7; }
+.tvm-title small { display:block; font-family:var(--font); font-weight:500; font-size:calc(var(--u) * .8); letter-spacing:.02em; color:#8391AD; margin-top:calc(var(--u) * .2); }
+.tvm-safe { display:flex; align-items:center; gap:calc(var(--u) * .6); padding:calc(var(--u) * .5) calc(var(--u) * 1.1); border-radius:calc(var(--u) * 1.2); background:rgba(43,208,127,.12); border:1px solid rgba(43,208,127,.45); }
+.tvm-safe .ico { font-size:calc(var(--u) * 2); }
+.tvm-safe b { font-family:var(--f-display); font-size:calc(var(--u) * 3.4); line-height:1; color:#2BD07F; }
+.tvm-safe b.warn { color:#FFC21A; }
+.tvm-safe span { font-size:calc(var(--u) * .9); line-height:1.15; color:#C2CCDF; }
+.tvm-clock { text-align:right; }
+.tvm-clock b { display:block; font-family:var(--f-display); font-weight:800; font-size:calc(var(--u) * 3.6); line-height:1; font-variant-numeric:tabular-nums; }
+.tvm-clock small { font-size:calc(var(--u) * .9); color:#8391AD; text-transform:capitalize; }
+.tvm-hazard { height:calc(var(--u) * .45); background:repeating-linear-gradient(-45deg, #FFC21A 0 calc(var(--u) * .8), #000 calc(var(--u) * .8) calc(var(--u) * 1.6)); }
+.tvm-main { display:grid; grid-template-columns:1fr 1.25fr 1fr; gap:calc(var(--u) * 1.1); padding:calc(var(--u) * 1.1) calc(var(--u) * 1.6); min-height:0; }
+.tvm-load { color:#8391AD; font-size:calc(var(--u) * 1.4); padding:calc(var(--u) * 2); text-align:center; grid-column:1 / -1; }
+.tvc { background:linear-gradient(180deg, #0F1D3D 0%, #0A1430 100%); border:1px solid rgba(86,130,255,.34); border-radius:calc(var(--u) * 1.2); padding:calc(var(--u) * 1.1) calc(var(--u) * 1.3); display:flex; flex-direction:column; gap:calc(var(--u) * .8); min-height:0; overflow:hidden; }
+.tvc h2 { margin:0; font-family:var(--f-display); font-size:calc(var(--u) * 1.9); font-weight:800; letter-spacing:.02em; display:flex; justify-content:space-between; align-items:baseline; gap:calc(var(--u) * .6); flex-wrap:wrap; }
+.tvc h2 span { font-family:var(--font); font-size:calc(var(--u) * .85); font-weight:500; color:#8391AD; letter-spacing:0; }
+.tv-who b { display:block; font-family:var(--f-display); font-size:calc(var(--u) * 2.6); font-weight:800; color:#4D8DFF; line-height:1.05; }
+.tv-who span { font-size:calc(var(--u) * .95); color:#C2CCDF; }
+.tv-me { display:flex; align-items:center; gap:calc(var(--u) * 1.1); padding:calc(var(--u) * .7) calc(var(--u) * 1.1); border-radius:calc(var(--u) * 1); background:linear-gradient(90deg, rgba(43,208,127,.2), rgba(43,208,127,.04)); border:1.5px solid rgba(43,208,127,.55); }
+.tv-me b { font-family:var(--f-display); font-size:calc(var(--u) * 7.5); font-weight:800; line-height:.95; color:#2BD07F; }
+.tv-me span { font-size:calc(var(--u) * 1.25); color:#DDE6F7; line-height:1.2; }
+.tv-me small { display:block; font-size:calc(var(--u) * .85); color:#8391AD; }
+.tv-me.zero { background:linear-gradient(90deg, rgba(255,77,90,.22), rgba(255,77,90,.04)); border-color:rgba(255,77,90,.6); }
+.tv-me.zero b { color:#FF4D5A; }
+.tv-g2 { display:grid; grid-template-columns:1fr 1fr; gap:calc(var(--u) * .7); }
+.tv-t { display:flex; align-items:center; gap:calc(var(--u) * .7); background:rgba(5,12,32,.45); border:1px solid rgba(86,130,255,.25); border-radius:calc(var(--u) * .9); padding:calc(var(--u) * .5) calc(var(--u) * .8); --c:#4D8DFF; }
+.tv-t b { font-family:var(--f-display); font-size:calc(var(--u) * 3.4); font-weight:800; line-height:1; color:var(--c); }
+.tv-t span { font-size:calc(var(--u) * .95); color:#C2CCDF; line-height:1.15; }
+.tv-t strong { color:#fff; }
+.tv-t.p { --c:#8CA3FF; } .tv-t.y { --c:#FFC21A; } .tv-t.v { --c:#B69CFF; }
+.tv-mes { margin-top:auto; border-top:1px solid rgba(86,130,255,.25); padding-top:calc(var(--u) * .7); display:flex; flex-direction:column; gap:calc(var(--u) * .5); }
+.tv-mes-g { display:grid; grid-template-columns:repeat(3, 1fr); gap:calc(var(--u) * .6); }
+.tv-mes-g div { background:rgba(5,12,32,.45); border:1px solid rgba(86,130,255,.25); border-radius:calc(var(--u) * .8); padding:calc(var(--u) * .45) calc(var(--u) * .7); display:flex; flex-direction:column; }
+.tv-mes-g span { font-size:calc(var(--u) * .85); color:#8391AD; }
+.tv-mes-g b { font-family:var(--f-display); font-size:calc(var(--u) * 2.3); line-height:1.05; color:#4D8DFF; } .tv-mes-g b.g { color:#2BD07F; }
+.tv-mes-g em { font-style:normal; font-weight:700; font-size:calc(var(--u) * .9); }
+.tv-mes-g em.up { color:#2BD07F; } .tv-mes-g em.dn { color:#FF4D5A; } .tv-mes-g em.eq { color:#C2CCDF; }
+.tv-mes-n { font-size:calc(var(--u) * .75); color:#8391AD; }
+.tv-fo { font-size:calc(var(--u) * 1); font-weight:700; border-radius:calc(var(--u) * .7); padding:calc(var(--u) * .45) calc(var(--u) * .8); }
+.tv-fo.sem { color:#FF4D5A; background:rgba(255,77,90,.14); } .tv-fo.reposto { color:#FFC21A; background:rgba(255,194,26,.14); }
+.tv-duo { display:grid; grid-template-columns:1fr 1fr; gap:calc(var(--u) * .8); }
+.tv-p { background:rgba(5,12,32,.45); border:1.5px solid rgba(43,208,127,.45); border-radius:calc(var(--u) * 1); padding:calc(var(--u) * .7) calc(var(--u) * .9); display:flex; flex-direction:column; gap:calc(var(--u) * .35); }
+.tv-p.zero { border-color:rgba(255,77,90,.6); }
+.tv-p-n { font-family:var(--f-display); font-size:calc(var(--u) * 1.55); font-weight:800; color:#4D8DFF; line-height:1.05; }
+.tv-p-me { display:flex; align-items:baseline; gap:calc(var(--u) * .5); }
+.tv-p-me b { font-family:var(--f-display); font-size:calc(var(--u) * 4.4); font-weight:800; line-height:1; color:#2BD07F; }
+.tv-p.zero .tv-p-me b { color:#FF4D5A; }
+.tv-p-me span { font-size:calc(var(--u) * 1); color:#C2CCDF; }
+.tv-p-l { display:flex; justify-content:space-between; gap:calc(var(--u) * .5); font-size:calc(var(--u) * .95); color:#8391AD; border-top:1px solid rgba(86,130,255,.2); padding-top:calc(var(--u) * .3); }
+.tv-p-l b { font-family:var(--f-display); font-size:calc(var(--u) * 1.35); color:#fff; }
+.tv-p-l.c b { color:#4D8DFF; }
+.tv-p-fo { font-size:calc(var(--u) * .85); font-weight:700; } .tv-p-fo.sem { color:#FF4D5A; } .tv-p-fo.rep { color:#FFC21A; }
+.tv-sub { font-family:var(--f-display); font-size:calc(var(--u) * 1); font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#C2CCDF; }
+.tv-bars { flex:1; min-height:calc(var(--u) * 7); display:flex; align-items:flex-end; gap:calc(var(--u) * .5); }
+.tv-b { flex:1; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; min-width:0; }
+.tv-b b { font-family:var(--f-display); font-size:calc(var(--u) * 1.35); color:#2BD07F; } .tv-b b.zero { color:#FF4D5A; }
+.tv-b i { display:block; width:70%; min-height:3px; border-radius:calc(var(--u) * .4) calc(var(--u) * .4) 0 0; background:linear-gradient(180deg, #2BD07F, #128a52); }
+.tv-b span { font-size:calc(var(--u) * .72); color:#8391AD; text-align:center; line-height:1.15; margin-top:calc(var(--u) * .25); white-space:nowrap; }
+.tv-tot { font-size:calc(var(--u) * 1.05); color:#C2CCDF; border-top:1px solid rgba(86,130,255,.25); padding-top:calc(var(--u) * .5); }
+.tv-tot b, .tv-prev b { font-family:var(--f-display); font-size:calc(var(--u) * 1.3); }
+.tv-tot .g, .tv-prev .g { color:#2BD07F; }
+.tv-prev { font-size:calc(var(--u) * .9); color:#8391AD; }
+.tv-rt { display:grid; grid-template-columns:calc(var(--u) * 2.6) minmax(0,2.2fr) repeat(4, minmax(0,1fr)); align-items:center; gap:calc(var(--u) * .4); padding:calc(var(--u) * .55) calc(var(--u) * .4); border-top:1px solid rgba(86,130,255,.2); font-family:var(--f-display); font-size:calc(var(--u) * 1.9); font-weight:700; text-align:center; }
+.tv-rt.tv-rh { border-top:0; font-family:var(--font); font-size:calc(var(--u) * .85); font-weight:600; color:#8391AD; padding-bottom:0; }
+.tv-rt .pos { font-size:calc(var(--u) * 1.7); }
+.tv-rt .nm { text-align:left; font-size:calc(var(--u) * 1.4); color:#fff; line-height:1.05; min-width:0; white-space:normal; word-break:keep-all; overflow-wrap:normal; }
+.tv-rt .nm small { display:block; font-family:var(--font); font-size:calc(var(--u) * .78); font-weight:500; color:#8391AD; }
+.tv-rt.lead .nm { color:#4D8DFF; }
+.tv-rt .me { color:#2BD07F; } .tv-rh .me { color:#2BD07F; }
+.tv-rt span.top { background:linear-gradient(180deg,#FFD24D,#E0A800); color:#2A1C00; border-radius:calc(var(--u) * .5); }
+.tv-rt.tv-rtot { font-size:calc(var(--u) * 1.4); color:#C2CCDF; border-top:1.5px solid rgba(86,130,255,.4); }
+.tv-rt.tv-rtot span:nth-child(2) { text-align:left; }
+.tv-leg { margin-top:auto; font-size:calc(var(--u) * .78); color:#8391AD; display:flex; align-items:center; gap:calc(var(--u) * .4); }
+.tv-leg i { display:inline-block; width:calc(var(--u) * 1.4); height:calc(var(--u) * .9); border-radius:4px; background:linear-gradient(180deg,#FFD24D,#E0A800); }
+.tvm-foot { display:flex; gap:calc(var(--u) * 1.2); align-items:center; overflow:hidden; white-space:nowrap; padding:calc(var(--u) * .6) calc(var(--u) * 1.6); background:#07102A; border-top:1px solid rgba(86,130,255,.25); font-size:calc(var(--u) * .95); color:#C2CCDF; }
+.tvf-l { font-family:var(--f-display); font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#FFC21A; }
+.tvf-i b { color:#4D8DFF; font-family:var(--f-display); }
+.tvf-i em { font-style:normal; font-weight:700; color:#2BD07F; } .tvf-i em.zero { color:#FF4D5A; }
+.tvf-i + .tvf-i::before { content:'•'; margin-right:calc(var(--u) * 1.2); color:#4a5a80; }
+.tvm-fs { position:absolute; left:50%; top:calc(var(--u) * 7.2); transform:translateX(-50%); background:rgba(20,99,255,.9); color:#fff; padding:calc(var(--u) * .6) calc(var(--u) * 1.4); border-radius:99px; font-size:calc(var(--u) * 1); font-weight:700; pointer-events:none; }
+.tvm-fs[hidden] { display:none; }
+.tvm-exit { position:absolute; right:calc(var(--u) * .8); bottom:calc(var(--u) * 3.2); opacity:.15; border:1px solid rgba(255,255,255,.3); background:#0B1630; color:#fff; border-radius:8px; padding:6px 12px; font-family:var(--f-display); font-size:14px; cursor:pointer; transition:opacity .2s; }
+.tvm-exit:hover { opacity:1; }
+@media(max-aspect-ratio:1/1){ .tvm-main { grid-template-columns:1fr; overflow-y:auto; } .tvm { overflow-y:auto; } }
+
+
+.tvm-exit { display:none; }
+</style>
+</head>
+<body class="tv-on">
+<div class="tvm" id="tvm">
+  <header class="tvm-top">
+    <div class="tvm-brand"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMTQwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ZUcmwiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMyRjdCRkYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwQTQ3RTAiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJzZkNhYiIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0M5RDNFMyIvPjwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDwhLS0gc3dvb3NoIGF6dWwgKGFyY28gc3VwZXJpb3IpIC0tPgogIDxwYXRoIGQ9Ik0zOCAxMTIgQyA3MCA0MCwgMTkwIDQsIDMzMCAyMiBDIDIwNSAxOCwgMTAwIDQ2LCA1MCAxMTIgWiIgZmlsbD0iIzE0NjNGRiIvPgogIDwhLS0gc3dvb3NoIGJyYW5jbyAoYXJjbyBiYXNlKSAtLT4KICA8cGF0aCBkPSJNMTQgMTMwIEMgMjYgODQsIDEyMCA0MiwgMjUwIDQyIEMgMTQwIDU0LCA1NiA5MiwgNDAgMTMwIFoiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNNDAgMTI0IEwgMzUyIDEyNCBMIDM0MCAxMjkgTCA0NCAxMjkgWiIgZmlsbD0iI0ZGRkZGRiIvPgogIDwhLS0gZW1waWxoYWRlaXJhIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQ0LDY0KSBzY2FsZSgxLjMpIj4KICAgIDxyZWN0IHg9IjMwIiB5PSItNCIgd2lkdGg9IjMiIGhlaWdodD0iNDAiIGZpbGw9IiNFOEVERjUiLz4KICAgIDxyZWN0IHg9IjM0IiB5PSIyOCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjMiIGZpbGw9IiNFOEVERjUiLz4KICAgIDxwYXRoIGQ9Ik0yIDE4IGgyMCBsNiAtMTQgaDMgdjI4IGgtMjkgeiIgZmlsbD0iI0ZGRkZGRiIvPgogICAgPHBhdGggZD0iTTEwIDE4IHYtMTQgaDEyIGwtNCAxNCB6IiBmaWxsPSIjMEIxQTMzIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMiIvPgogICAgPGNpcmNsZSBjeD0iMTUiIGN5PSI5IiByPSIzIiBmaWxsPSIjMTQ2M0ZGIi8+CiAgICA8cmVjdCB4PSIxMyIgeT0iMTIiIHdpZHRoPSI1IiBoZWlnaHQ9IjYiIGZpbGw9IiMxNDYzRkYiLz4KICAgIDxjaXJjbGUgY3g9IjgiIGN5PSIzNCIgcj0iNiIgZmlsbD0iIzBCMUEzMyIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNSIvPgogICAgPGNpcmNsZSBjeD0iMjUiIGN5PSIzNCIgcj0iNSIgZmlsbD0iIzBCMUEzMyIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNSIvPgogICAgPCEtLSBwYWxldGVzIC0tPgogICAgPGcgZmlsbD0iI0ZGRkZGRiI+PHJlY3QgeD0iMzYiIHk9IjEwIiB3aWR0aD0iNyIgaGVpZ2h0PSI3Ii8+PHJlY3QgeD0iNDQiIHk9IjEwIiB3aWR0aD0iNyIgaGVpZ2h0PSI3Ii8+PHJlY3QgeD0iMzYiIHk9IjE4IiB3aWR0aD0iNyIgaGVpZ2h0PSI4Ii8+PHJlY3QgeD0iNDQiIHk9IjE4IiB3aWR0aD0iNyIgaGVpZ2h0PSI4Ii8+PC9nPgogICAgPGcgZmlsbD0iIzBCMUEzMyI+PHJlY3QgeD0iMzkiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxNiIvPjxyZWN0IHg9IjQ3IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMTYiLz48L2c+CiAgPC9nPgogIDwhLS0gY2FycmV0YSAxIC0tPgogIDxnPgogICAgPHJlY3QgeD0iMTI4IiB5PSI3NiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjM0IiByeD0iMiIgZmlsbD0idXJsKCNzZlRybCkiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgICA8ZyBzdHJva2U9IiM3RkIwRkYiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iLjU1Ij48bGluZSB4MT0iMTQwIiB5MT0iNzkiIHgyPSIxNDAiIHkyPSIxMDciLz48bGluZSB4MT0iMTUyIiB5MT0iNzkiIHgyPSIxNTIiIHkyPSIxMDciLz48bGluZSB4MT0iMTY0IiB5MT0iNzkiIHgyPSIxNjQiIHkyPSIxMDciLz48bGluZSB4MT0iMTc2IiB5MT0iNzkiIHgyPSIxNzYiIHkyPSIxMDciLz48L2c+CiAgICA8cmVjdCB4PSIxMjgiIHk9IjExMCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjQiIGZpbGw9IiNFOEVERjUiLz4KICAgIDxjaXJjbGUgY3g9IjE0MCIgY3k9IjExNyIgcj0iNS41IiBmaWxsPSIjMEIxQTMzIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMi41Ii8+PGNpcmNsZSBjeD0iMTUzIiBjeT0iMTE3IiByPSI1LjUiIGZpbGw9IiMwQjFBMzMiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyLjUiLz4KICAgIDxyZWN0IHg9IjE4OCIgeT0iMTA4IiB3aWR0aD0iOCIgaGVpZ2h0PSIzIiBmaWxsPSIjRThFREY1Ii8+CiAgPC9nPgogIDwhLS0gY2FycmV0YSAyIC0tPgogIDxnPgogICAgPHJlY3QgeD0iMTk2IiB5PSI2MiIgd2lkdGg9Ijc0IiBoZWlnaHQ9IjQ4IiByeD0iMiIgZmlsbD0idXJsKCNzZlRybCkiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgICA8ZyBzdHJva2U9IiM3RkIwRkYiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iLjU1Ij48bGluZSB4MT0iMjEwIiB5MT0iNjUiIHgyPSIyMTAiIHkyPSIxMDciLz48bGluZSB4MT0iMjI0IiB5MT0iNjUiIHgyPSIyMjQiIHkyPSIxMDciLz48bGluZSB4MT0iMjM4IiB5MT0iNjUiIHgyPSIyMzgiIHkyPSIxMDciLz48bGluZSB4MT0iMjUyIiB5MT0iNjUiIHgyPSIyNTIiIHkyPSIxMDciLz48L2c+CiAgICA8cmVjdCB4PSIxOTYiIHk9IjExMCIgd2lkdGg9Ijc0IiBoZWlnaHQ9IjQiIGZpbGw9IiNFOEVERjUiLz4KICAgIDxjaXJjbGUgY3g9IjIwOCIgY3k9IjExNyIgcj0iNS41IiBmaWxsPSIjMEIxQTMzIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMi41Ii8+PGNpcmNsZSBjeD0iMjIxIiBjeT0iMTE3IiByPSI1LjUiIGZpbGw9IiMwQjFBMzMiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyLjUiLz4KICAgIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjExNyIgcj0iNS41IiBmaWxsPSIjMEIxQTMzIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMi41Ii8+CiAgPC9nPgogIDwhLS0gY2F2YWxvIG1lY8OibmljbyAoY2FiaW5lKSAtLT4KICA8Zz4KICAgIDxwYXRoIGQ9Ik0yNzIgMTEyIFYgNTIgUSAyNzIgNDQgMjgwIDQ0IEggMzIyIFEgMzMwIDQ0IDMzMiA1MiBMIDM0MCA3OCBWIDExMiBaIiBmaWxsPSJ1cmwoI3NmQ2FiKSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogICAgPHBhdGggZD0iTTMwMCA1MCBIIDMyMiBRIDMyNyA1MCAzMjggNTUgTCAzMzQgNzYgSCAzMDAgWiIgZmlsbD0iIzBCMUEzMyIvPgogICAgPHBhdGggZD0iTTMwNCA1MyBIIDMyMSBMIDMyNiA3MiBIIDMwNCBaIiBmaWxsPSIjMUU0RkI4IiBvcGFjaXR5PSIuNTUiLz4KICAgIDxyZWN0IHg9IjI3OCIgeT0iNTIiIHdpZHRoPSIxNiIgaGVpZ2h0PSIyMiIgcng9IjIiIGZpbGw9IiMwQjFBMzMiLz4KICAgIDxnIGZpbGw9IiMwQjFBMzMiPjxyZWN0IHg9IjMwNCIgeT0iODQiIHdpZHRoPSIzNCIgaGVpZ2h0PSIzIi8+PHJlY3QgeD0iMzA0IiB5PSI5MCIgd2lkdGg9IjM0IiBoZWlnaHQ9IjMiLz48cmVjdCB4PSIzMDQiIHk9Ijk2IiB3aWR0aD0iMzQiIGhlaWdodD0iMyIvPjwvZz4KICAgIDxyZWN0IHg9IjMzNCIgeT0iMTAyIiB3aWR0aD0iOCIgaGVpZ2h0PSI1IiByeD0iMS41IiBmaWxsPSIjQkZFMEZGIi8+CiAgICA8cmVjdCB4PSIyNzIiIHk9IjEwNCIgd2lkdGg9IjcwIiBoZWlnaHQ9IjgiIGZpbGw9IiNFOEVERjUiLz4KICAgIDxyZWN0IHg9IjI3NiIgeT0iNDAiIHdpZHRoPSI0NCIgaGVpZ2h0PSI1IiByeD0iMiIgZmlsbD0iIzE0NjNGRiIvPgogICAgPGNpcmNsZSBjeD0iMjg4IiBjeT0iMTE3IiByPSI2LjUiIGZpbGw9IiMwQjFBMzMiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyLjUiLz4KICAgIDxjaXJjbGUgY3g9IjMyNCIgY3k9IjExNyIgcj0iNi41IiBmaWxsPSIjMEIxQTMzIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMi41Ii8+CiAgPC9nPgo8L3N2Zz4K" alt=""><div><div class="sf-word">SHIFT <em>FLOW</em></div><div class="sf-tag">EXPEDIÇÃO &nbsp;•&nbsp; BR3R</div></div></div>
+    <div class="tvm-title">PAINEL DA EXPEDIÇÃO<small id="tvm-upd">carregando...</small></div>
+    <div class="tvm-safe" id="tvm-safe"></div>
+    <div class="tvm-clock"><b id="tvm-hora">--:--</b><small id="tvm-data"></small></div>
+  </header>
+  <div class="tvm-hazard"></div>
+  <main class="tvm-main" id="tvm-main"><div class="tvm-load">Carregando painel...</div></main>
+  <footer class="tvm-foot" id="tvm-foot"></footer>
+  <div class="tvm-fs" id="tvm-fs" hidden>Clique na tela (ou aperte F11) para tela cheia</div>
+</div>
+<script>
+const SUPA_URL = 'https://qbohupozrbqjplgpqbxr.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFib2h1cG96cmJxanBsZ3BxYnhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NjY3OTgsImV4cCI6MjA5NjQ0Mjc5OH0.wPxRLIGqfooU5bpV5UZICvH34cQrok2p5nHqYWt0Ye0';
+// Só as colunas de produção (sem relatos, faltas, disciplina ou cadastro)
+const COLUNAS = 'data_registro,conferente,turma_sai,turma_rec,p_c,p_d,n_c,seg,tampa_entradas,devolucao_entradas';
+const RODADA_DIAS = 4;
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+let TURNOS = [], ERRO = false;
+
+const $ = id => document.getElementById(id);
+const fmt = v => Number(v).toLocaleString('pt-BR');
+const fmt1 = v => (Math.round(v * 10) / 10).toLocaleString('pt-BR');
+const fd = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+const fh = d => String(d.getHours()).padStart(2, '0') + 'h' + String(d.getMinutes()).padStart(2, '0');
+const norm = n => String(n || '').normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toUpperCase();
+const car = v => v === 1 ? 'carreta' : 'carretas';
+const parse = t => { try { const a = JSON.parse(t || '[]'); return Array.isArray(a) ? a : []; } catch(e) { return []; } };
+let NOMES = {};
+const nome = n => NOMES[norm(n)] || n || '—';
+const curto = n => { const pp = String(nome(n)).split(' ').filter(Boolean); return pp[0] + (pp[1] ? ' ' + pp[1][0] + '.' : ''); };
+
+function nums(regs) {
+  const o = { pc:0, nsa:0, me:0, tampa:0, dev:0 };
+  regs.forEach(r => {
+    o.pc += r.p_c || 0; o.nsa += r.n_c || 0; o.me += r.p_d || 0;
+    parse(r.tampa_entradas).forEach(e => o.tampa += parseInt(e.qtd) || 0);
+    parse(r.devolucao_entradas).forEach(e => o.dev += parseInt(e.qtd) || 0);
+  });
+  return o;
+}
+
+// Rodada: dias seguidos (até 4) em que a mesma dupla trabalhou; o turno da noite
+// registrado de madrugada conta para o dia em que começou. Última = a mais recente já terminada.
+const diaTurno = r => { const d = new Date(+new Date(r.data_registro) - 7 * 3600e3); d.setHours(0, 0, 0, 0); return +d; };
+function rodadas(regs) {
+  const porConf = {};
+  regs.forEach(r => (porConf[norm(r.conferente)] = porConf[norm(r.conferente)] || []).push(r));
+  const cadeias = [];
+  Object.entries(porConf).forEach(([k, rr]) => {
+    const dias = [...new Set(rr.map(diaTurno))].sort((a, b) => b - a);
+    let cur = null;
+    dias.forEach(d => {
+      if(cur && cur.dias.length < RODADA_DIAS && (cur.dias[cur.dias.length - 1] - d) / 86400000 <= 2) cur.dias.push(d);
+      else { cur = { k, dias:[d] }; cadeias.push(cur); }
+    });
+  });
+  cadeias.forEach(c => { c.ini = Math.min(...c.dias); c.fim = Math.max(...c.dias); });
+  cadeias.sort((a, b) => b.fim - a.fim);
+  const gs = [];
+  cadeias.forEach(c => {
+    const g = gs.find(g => c.ini <= g.fim && c.fim >= g.ini);
+    if(g) { g.ini = Math.min(g.ini, c.ini); g.fim = Math.max(g.fim, c.fim); g.confs.add(c.k); g.maxDias = Math.max(g.maxDias, c.dias.length); }
+    else gs.push({ ini:c.ini, fim:c.fim, confs:new Set([c.k]), maxDias:c.dias.length });
+  });
+  gs.forEach(g => {
+    g.regs = regs.filter(r => g.confs.has(norm(r.conferente)) && diaTurno(r) >= g.ini && diaTurno(r) <= g.fim);
+    g.ultimo = Math.max(...g.regs.map(r => +new Date(r.data_registro)));
+    g.completa = g.maxDias >= RODADA_DIAS || (Date.now() - g.ultimo) > 36 * 3600e3;
+    g.dias = Math.round((g.fim - g.ini) / 86400000) + 1;
+  });
+  return gs.sort((a, b) => b.fim - a.fim);
+}
+const nomesRodada = g => [...new Set([...g.regs].sort((a, b) => new Date(a.data_registro) - new Date(b.data_registro)).map(r => norm(r.conferente)))];
+
+async function carregar() {
+  try {
+    const desde = new Date(Date.now() - 75 * 86400000).toISOString();
+    const r = await fetch(`${SUPA_URL}/rest/v1/turnos?select=${COLUNAS}&data_registro=gte.${encodeURIComponent(desde)}&order=data_registro.desc&limit=1000`,
+      { headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY }, cache: 'no-store' });
+    if(!r.ok) throw new Error(r.status);
+    TURNOS = (await r.json()).filter(x => x.turma_sai !== 'ADM');
+    // nome mais completo visto para cada conferente
+    NOMES = {}; TURNOS.forEach(x => { const k = norm(x.conferente); if(!NOMES[k] || String(x.conferente).length > NOMES[k].length) NOMES[k] = x.conferente; });
+    ERRO = false;
+  } catch(e) { ERRO = true; }
+  render();
+}
+
+function render() {
+  const regs = [...TURNOS].sort((a, b) => new Date(b.data_registro) - new Date(a.data_registro));
+  const agora = new Date();
+  $('tvm-upd').textContent = ERRO ? 'sem conexão · tentando de novo' : 'atualizado às ' + agora.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) + ' · atualiza sozinho';
+  const main = $('tvm-main');
+  if(!regs.length) { main.innerHTML = `<div class="tvm-load">${ERRO ? 'Sem conexão com a internet. Tentando de novo...' : 'Sem passagens de turno registradas.'}</div>`; return; }
+
+  const ultInc = regs.find(r => r.seg === 'sim');
+  const dsi = ultInc ? Math.floor((Date.now() - new Date(ultInc.data_registro)) / 86400000) : null;
+  $('tvm-safe').innerHTML = `<span class="ico">🛡️</span><b class="${dsi === null || dsi >= 7 ? 'ok' : 'warn'}">${dsi === null ? '—' : dsi}</b><span>dia${dsi === 1 ? '' : 's'} sem<br>incidente</span>`;
+
+  // último turno
+  const r = regs[0], o = nums([r]);
+  const horas = Math.max(0, Math.round((Date.now() - new Date(r.data_registro)) / 3600000));
+  const i0 = new Date(agora.getFullYear(), agora.getMonth(), 1);
+  const doMes = regs.filter(x => new Date(x.data_registro) >= i0), qm = nums(doMes), nm = Math.max(1, doMes.length);
+  const cmp = (v, med) => v > med * 1.05 ? 'up' : v < med * 0.95 ? 'dn' : 'eq';
+  const turno = `
+    <section class="tvc tv-turno">
+      <h2>🕘 Último turno</h2>
+      <div class="tv-who"><b>${nome(r.conferente)}</b><span>Turma ${r.turma_sai || '?'} → ${r.turma_rec || '?'} · ${fd(new Date(r.data_registro))} às ${fh(new Date(r.data_registro))}${horas < 48 ? ' · há ' + horas + ' h' : ''}</span></div>
+      <div class="tv-me ${o.me ? '' : 'zero'}"><b>${fmt(o.me)}</b><span>${car(o.me)} de <strong>ME</strong> descarregadas<small>folha · quadro de topo · palete</small></span></div>
+      <div class="tv-g2">
+        <div class="tv-t"><b>${fmt(o.pc)}</b><span>carregou na <strong>Planta</strong></span></div>
+        <div class="tv-t p"><b>${fmt(o.nsa)}</b><span>carregou na <strong>NSA</strong></span></div>
+        <div class="tv-t y"><b>${fmt(o.tampa)}</b><span><strong>Tampa básica</strong></span></div>
+        <div class="tv-t v"><b>${fmt(o.dev)}</b><span><strong>Devolução</strong></span></div>
+      </div>
+      ${doMes.length ? `<div class="tv-mes">
+        <div class="tv-sub">📊 ${MESES[agora.getMonth()]} até agora · média por turno</div>
+        <div class="tv-mes-g">
+          <div><span>ME</span><b class="g">${fmt(qm.me)}</b><em class="${cmp(o.me, qm.me / nm)}">${fmt1(qm.me / nm)}/turno</em></div>
+          <div><span>Planta</span><b>${fmt(qm.pc)}</b><em class="${cmp(o.pc, qm.pc / nm)}">${fmt1(qm.pc / nm)}/turno</em></div>
+          <div><span>NSA</span><b>${fmt(qm.nsa)}</b><em class="${cmp(o.nsa, qm.nsa / nm)}">${fmt1(qm.nsa / nm)}/turno</em></div>
+        </div>
+        <div class="tv-mes-n">${doMes.length} passagens de turno no mês · a cor mostra o último turno acima (verde) ou abaixo (vermelho) da média</div>
+      </div>` : ''}
+    </section>`;
+
+  // última rodada
+  const gs = rodadas(regs);
+  const idx = Math.max(0, gs.findIndex(g => g.completa)), g = gs[idx];
+  let rodada = '<section class="tvc"><h2>🔄 Última rodada</h2><div class="tvm-load">Sem rodada completa.</div></section>';
+  if(g) {
+    const porK = {}; g.regs.forEach(x => (porK[norm(x.conferente)] = porK[norm(x.conferente)] || []).push(x));
+    const pessoas = nomesRodada(g).filter(k => porK[k]).map(k => Object.assign({ k, n: porK[k][0].conferente }, nums(porK[k])));
+    const tot = nums(g.regs);
+    const linhas = [...g.regs].sort((a, b) => new Date(a.data_registro) - new Date(b.data_registro));
+    const mx = Math.max(1, ...linhas.map(x => x.p_d || 0));
+    const prev = gs[idx + 1], pv = prev ? nums(prev.regs) : null;
+    rodada = `
+    <section class="tvc tv-rod">
+      <h2>🔄 Última rodada <span>${fd(new Date(g.ini))}${g.fim !== g.ini ? ' a ' + fd(new Date(g.fim)) : ''} · ${g.dias} dias · ${g.regs.length} turnos</span></h2>
+      <div class="tv-duo">
+        ${pessoas.map(p => `<div class="tv-p ${p.me ? '' : 'zero'}">
+          <div class="tv-p-n">${nome(p.n)}</div>
+          <div class="tv-p-me"><b>${fmt(p.me)}</b><span>${car(p.me)} de ME</span></div>
+          <div class="tv-p-l"><span>Tampa <b>${fmt(p.tampa)}</b></span><span>Devol. <b>${fmt(p.dev)}</b></span></div>
+          <div class="tv-p-l c"><span>Planta <b>${fmt(p.pc)}</b></span><span>NSA <b>${fmt(p.nsa)}</b></span></div>
+        </div>`).join('')}
+      </div>
+      <div class="tv-sub">📦 ME turno a turno</div>
+      <div class="tv-bars">${linhas.map(x => `<div class="tv-b"><b class="${x.p_d ? '' : 'zero'}">${fmt(x.p_d || 0)}</b><i style="height:${(x.p_d || 0) / mx * 100}%"></i><span>${String(nome(x.conferente)).split(' ')[0].slice(0, 8)}<br>${fd(new Date(x.data_registro))}</span></div>`).join('')}</div>
+      <div class="tv-tot">Total da rodada: <b class="g">ME ${fmt(tot.me)}</b> · Planta ${fmt(tot.pc)} · NSA ${fmt(tot.nsa)} · Tampa ${fmt(tot.tampa)} · Devol. ${fmt(tot.dev)}</div>
+      ${prev ? `<div class="tv-prev">⏮ Rodada anterior (${fd(new Date(prev.ini))} a ${fd(new Date(prev.fim))} · ${nomesRodada(prev).map(k => String(nome(k)).split(' ')[0]).join(' e ')}): <b class="g">ME ${fmt(pv.me)}</b> · Planta ${fmt(pv.pc)} · NSA ${fmt(pv.nsa)}</div>` : ''}
+    </section>`;
+  }
+
+  // ranking do mês
+  const porK = {}; doMes.forEach(x => { const k = norm(x.conferente); if(k) (porK[k] = porK[k] || []).push(x); });
+  const lin = Object.entries(porK).map(([k, rr]) => Object.assign({ k, n: rr[0].conferente, turnos: rr.length }, nums(rr))).sort((a, b) => b.me - a.me || b.pc - a.pc);
+  const cols = ['me', 'pc', 'nsa', 'turnos'];
+  const max = Object.fromEntries(cols.map(c => [c, Math.max(0, ...lin.map(x => x[c]))]));
+  const top = (x, c) => lin.length > 1 && max[c] > 0 && x[c] === max[c] ? ' top' : '';
+  const ranking = `
+    <section class="tvc tv-rank">
+      <h2>🏆 Ranking de ${MESES[agora.getMonth()]} <span>${doMes.length} passagens · parcial</span></h2>
+      <div class="tv-rt tv-rh"><span></span><span>Conferente</span><span class="me">ME</span><span>Planta</span><span>NSA</span><span>Turnos</span></div>
+      ${lin.map((x, i) => `<div class="tv-rt${i === 0 ? ' lead' : ''}">
+        <span class="pos">${['🥇','🥈','🥉'][i] || (i + 1) + 'º'}</span>
+        <span class="nm">${curto(x.n)}<small>${fmt1(x.me / Math.max(1, x.turnos))} ME/turno</small></span>
+        <span class="me${top(x, 'me')}">${fmt(x.me)}</span><span class="${top(x, 'pc')}">${fmt(x.pc)}</span><span class="${top(x, 'nsa')}">${fmt(x.nsa)}</span><span class="${top(x, 'turnos')}">${fmt(x.turnos)}</span>
+      </div>`).join('') || '<div class="tvm-load">Sem registros no mês.</div>'}
+      <div class="tv-rt tv-rtot"><span></span><span>Total</span><span class="me">${fmt(qm.me)}</span><span>${fmt(qm.pc)}</span><span>${fmt(qm.nsa)}</span><span>${fmt(doMes.length)}</span></div>
+      <div class="tv-leg"><i></i> maior do mês em cada coluna · ME = folha · quadro de topo · palete</div>
+    </section>`;
+
+  main.innerHTML = turno + rodada + ranking;
+  $('tvm-foot').innerHTML = '<span class="tvf-l">Últimos turnos</span>' + regs.slice(0, 8).map(x => {
+    const q = nums([x]);
+    return `<span class="tvf-i"><b>${curto(x.conferente)}</b> ${x.turma_sai || ''} · ${fd(new Date(x.data_registro))} ${fh(new Date(x.data_registro))} · <em class="${q.me ? '' : 'zero'}">ME ${fmt(q.me)}</em> · Planta ${fmt(q.pc)} · NSA ${fmt(q.nsa)}</span>`;
+  }).join('');
+  requestAnimationFrame(ajustar);
+}
+
+// diminui a escala até tudo caber em 100% da tela, sem rolar
+function ajustar() {
+  const el = $('tvm'); el.style.setProperty('--k', '1');
+  const sobra = () => el.scrollHeight > el.clientHeight + 1 || [...el.querySelectorAll('.tvc')].some(c => c.scrollHeight > c.clientHeight + 1);
+  for(let k = 1, i = 0; i < 14 && sobra(); i++) { k -= 0.05; el.style.setProperty('--k', k.toFixed(2)); }
+}
+
+function relogio() {
+  const d = new Date();
+  $('tvm-hora').textContent = d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+  $('tvm-data').textContent = d.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
+}
+
+// tela cheia no primeiro clique/tecla, cursor some parado, tela não apaga
+const full = () => { if(!document.fullscreenElement) document.documentElement.requestFullscreen?.().catch(() => {}); };
+addEventListener('pointerdown', full); addEventListener('keydown', full);
+const dica = () => { const d = $('tvm-fs'); d.hidden = !!document.fullscreenElement; clearTimeout(dica.t); if(!d.hidden) dica.t = setTimeout(() => d.hidden = true, 15000); };
+document.addEventListener('fullscreenchange', () => { dica(); requestAnimationFrame(ajustar); });
+let cur; addEventListener('mousemove', () => { $('tvm').classList.remove('nocursor'); clearTimeout(cur); cur = setTimeout(() => $('tvm').classList.add('nocursor'), 3000); });
+let lock; async function acordado() { try { if(!lock && navigator.wakeLock) { lock = await navigator.wakeLock.request('screen'); lock.addEventListener('release', () => lock = null); } } catch(e) {} }
+document.addEventListener('visibilitychange', () => { if(!document.hidden) { carregar(); acordado(); } });
+addEventListener('resize', () => requestAnimationFrame(ajustar));
+document.fonts?.ready.then(() => requestAnimationFrame(ajustar));
+
+relogio(); setInterval(relogio, 15000);
+carregar(); setInterval(carregar, 60000);
+setInterval(() => location.reload(), 6 * 3600000);   // recarrega a cada 6 h (limpa a memória da TV)
+acordado(); dica();
+</script>
+</body>
+</html>

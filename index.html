@@ -3936,7 +3936,8 @@ const app = {
     document.getElementById('tvm-safe').innerHTML = `<span class="ico">🛡️</span><b class="${dsi === null || dsi >= 7 ? 'ok' : 'warn'}">${dsi === null ? '—' : dsi}</b><span>dia${dsi === 1 ? '' : 's'} sem<br>incidente</span>`;
 
     // 1) último turno
-    const r = regs[0], o = this.placarNums([r]), fo = this.faltaOp(r);
+    // TV é pública: sem faltas/absenteísmo, relatos ou Disciplina
+    const r = regs[0], o = this.placarNums([r]);
     const horas = Math.max(0, Math.round((Date.now() - new Date(r.data_registro)) / 3600000));
     const turno = `
       <section class="tvc tv-turno">
@@ -3949,7 +3950,6 @@ const app = {
           <div class="tv-t y"><b>${fmt(o.tampa)}</b><span><strong>Tampa básica</strong></span></div>
           <div class="tv-t v"><b>${fmt(o.dev)}</b><span><strong>Devolução</strong></span></div>
         </div>
-        ${fo ? `<div class="tv-fo ${fo}">🚜 Faltou operador de empilhadeira${fo === 'sem' ? ' · sem reposição' : ' · reposto'}</div>` : ''}
         ${(() => {
           const h0 = new Date(), i0 = new Date(h0.getFullYear(), h0.getMonth(), 1);
           const mm = regs.filter(x => new Date(x.data_registro) >= i0), q = this.placarNums(mm), n = Math.max(1, mm.length);
@@ -3987,7 +3987,6 @@ const app = {
             <div class="tv-p-me"><b>${fmt(p.me)}</b><span>${car(p.me)} de ME</span></div>
             <div class="tv-p-l"><span>Tampa <b>${fmt(p.tampa)}</b></span><span>Devol. <b>${fmt(p.dev)}</b></span></div>
             <div class="tv-p-l c"><span>Planta <b>${fmt(p.pc)}</b></span><span>NSA <b>${fmt(p.nsa)}</b></span></div>
-            ${p.foSem + p.foRep ? `<div class="tv-p-fo ${p.foSem ? 'sem' : 'rep'}">🚜 ${p.foSem + p.foRep} falta${p.foSem + p.foRep === 1 ? '' : 's'} de operador</div>` : ''}
           </div>`).join('')}
         </div>
         <div class="tv-sub">📦 ME turno a turno</div>
