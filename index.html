@@ -944,6 +944,13 @@ button.drw-row { cursor:pointer; }
 .pl-rd-v .v-me b { color:var(--green); } .pl-rd-v .v-tp b { color:var(--yellow); } .pl-rd-v .v-dv b { color:#8CA3FF; }
 .pl-rd-v .v-c { flex-basis:100%; font-size:12px; } .pl-rd-v .v-c b { font-size:14px; }
 .pl-rd-n { font-size:11.5px; color:var(--yellow); margin-top:3px; }
+.placar-nav { display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:8px; }
+.placar-nav span { font-family:var(--f-display); font-size:15px; font-weight:700; color:var(--text2); }
+.placar-nav button { height:34px; padding:0 12px; border-radius:9px; border:1px solid var(--border2); background:var(--bg4); color:var(--blue-txt); font-family:var(--f-display); font-size:14.5px; font-weight:700; cursor:pointer; }
+.placar-nav button:disabled { opacity:.35; cursor:default; }
+.pl-tr.pl-tot { background:var(--bg4); border-top:1.5px solid var(--border2); }
+.pl-prev { margin-top:10px; padding:9px 11px; border-radius:12px; background:var(--bg4); border:1px dashed var(--border2); font-size:12.5px; color:var(--text2); line-height:1.45; }
+.pl-prev b.g { color:var(--green); font-family:var(--f-display); font-size:15px; }
 .pl-cada { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; margin-top:12px; }
 .pl-c { background:var(--bg4); border:1.5px solid rgba(43,208,127,.45); border-radius:14px; padding:10px; display:flex; flex-direction:column; gap:6px; min-width:0; }
 .pl-c.zero { border-color:rgba(255,77,90,.6); background:linear-gradient(180deg, var(--red-dim), transparent 60%), var(--bg4); }
@@ -1617,7 +1624,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
   <!-- Filtro de Período — gerado dinamicamente por JS -->
   <div id="dash-periodo-btns" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap"></div>
   <div class="conf-bar" data-scope="dash"></div>
-  <button class="placar-btn" onclick="app.abrirPlacar()">📸 Placar para o grupo <small>último turno de cada conferente · descargas e carregamentos</small></button>
+  <button class="placar-btn" onclick="app.abrirPlacar()">📸 Placar para o grupo <small>última rodada · descargas e carregamentos de cada conferente</small></button>
 
   <div class="kpi-g">
     <div class="kc">
@@ -1890,11 +1897,11 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
 <div class="mb" id="placar-modal">
 <div class="mbx placar-box">
   <div class="placar-tabs">
-    <button data-v="cada" onclick="app.renderPlacar('cada')">Cada conferente</button>
+    <button data-v="rodada" onclick="app.renderPlacar('rodada')">Rodada</button>
     <button data-v="turno" onclick="app.renderPlacar('turno')">Último turno</button>
-    <button data-v="rodada" onclick="app.renderPlacar('rodada')">Última rodada</button>
     <button class="mc" onclick="app.fecharPlacar()" aria-label="Fechar">✕</button>
   </div>
+  <div class="placar-nav" id="placar-nav"></div>
   <div id="placar-shot" class="placar-shot"></div>
   <div class="placar-acts">
     <button class="btn-m" onclick="app.compartilharPlacar()" id="placar-share">📤 Compartilhar imagem</button>
@@ -2194,8 +2201,8 @@ const app = {
   rangeFromKey(key) {
     const agora = new Date();
     if(!key || key === 'tudo') return { ini: null, fim: null };
-    if(key === 'rodada') { const rd = Object.values(this.rodadas(this.allTurnos)); if(!rd.length) return { ini: null, fim: null };
-      return { ini: new Date(Math.min(...rd.map(o => +o.ini))), fim: new Date(Math.max(...rd.map(o => +o.fim)) + 86400000 - 1) }; }
+    if(key === 'rodada') { const { g } = this.rodadaAtual(); if(!g) return { ini: null, fim: null };
+      return { ini: new Date(g.ini + 7 * 3600e3), fim: new Date(g.fim + 86400000 + 7 * 3600e3 - 1) }; }
     if(key === 'mes:atual') return { ini: new Date(agora.getFullYear(), agora.getMonth(), 1), fim: null };
     if(key.startsWith('mes:')) {
       const parts = key.replace('mes:', '').split('-');
@@ -3342,44 +3349,68 @@ const app = {
     this.renderDash(this.filtrarPorPeriodo(this.allTurnos));
   },
 
-  // "Última rodada": para CADA conferente, os últimos dias seguidos que ele
-  // trabalhou (até 4 dias). Parte do registro mais recente dele e volta dia a
-  // dia; uma folga de mais de 2 dias encerra a rodada.
+  // "Última rodada": o bloco de dias seguidos (até 4) em que a mesma dupla de
+  // conferentes trabalhou (turno do dia + turno da noite). Montada pelas pessoas
+  // que trabalharam nos mesmos dias, porque a letra da turma às vezes é lançada
+  // errada ou alguém cobre outra turma. O turno da noite registrado de madrugada
+  // conta para o dia em que começou. A rodada que ainda está em andamento fica
+  // de fora: a "última rodada" é a mais recente que já terminou.
   RODADA_DIAS: 4,
-  rodadas(turnos) {
+  diaTurno(r) { const d = new Date(+new Date(r.data_registro) - 7 * 3600e3); d.setHours(0, 0, 0, 0); return +d; },
+
+  rodadaGrupos(turnos) {
+    const regs = (turnos || []).filter(r => r.turma_sai !== 'ADM' && this.normConf(r.conferente));
     const porConf = {};
-    (turnos || []).forEach(r => { const k = this.normConf(r.conferente); if(k) (porConf[k] = porConf[k] || []).push(r); });
-    const diaKey = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); return +x; };
-    const out = {};
-    Object.entries(porConf).forEach(([k, regs]) => {
-      const dias = [...new Set(regs.map(r => diaKey(r.data_registro)))].sort((a, b) => b - a);   // mais recente primeiro
-      // Separa os dias em rodadas: folga de mais de 2 dias (ou 4 dias já contados) começa outra
-      const blocos = [];
+    regs.forEach(r => (porConf[this.normConf(r.conferente)] = porConf[this.normConf(r.conferente)] || []).push(r));
+    const cadeias = [];
+    Object.entries(porConf).forEach(([k, rr]) => {
+      const dias = [...new Set(rr.map(r => this.diaTurno(r)))].sort((a, b) => b - a);
+      let cur = null;
       dias.forEach(d => {
-        const b = blocos[blocos.length - 1];
-        if(b && b.length < this.RODADA_DIAS && (b[b.length - 1] - d) / 86400000 <= 2) b.push(d); else blocos.push([d]);
+        if(cur && cur.dias.length < this.RODADA_DIAS && (cur.dias[cur.dias.length - 1] - d) / 86400000 <= 2) cur.dias.push(d);
+        else { cur = { k, dias: [d] }; cadeias.push(cur); }
       });
-      const montar = sel => {
-        const ini = Math.min(...sel), fimDia = Math.max(...sel) + 86400000 - 1;
-        const rr = regs.filter(r => { const d = +new Date(r.data_registro); return d >= ini && d <= fimDia; });
-        return { regs: rr, ini: new Date(ini), fim: new Date(Math.max(...sel)), dias: sel.length, ultimo: Math.max(...rr.map(r => +new Date(r.data_registro))) };
-      };
-      let r0 = montar(blocos[0]);
-      // Rodada atual ainda em andamento (menos de 4 dias e trabalhou nas últimas 36 h):
-      // compara pela rodada anterior completa, que é a justa
-      const andando = blocos[0].length < this.RODADA_DIAS && (Date.now() - r0.ultimo) < 36 * 3600 * 1000;
-      let anterior = false;
-      if(andando && blocos[1]) { r0 = montar(blocos[1]); anterior = true; }
-      out[k] = Object.assign({ k, emAndamento: andando && !anterior, atualEmAndamento: andando && anterior }, r0);
     });
-    return out;
+    cadeias.forEach(c => { c.ini = Math.min(...c.dias); c.fim = Math.max(...c.dias); });
+    cadeias.sort((a, b) => b.fim - a.fim);
+    const grupos = [];
+    cadeias.forEach(c => {
+      const g = grupos.find(g => c.ini <= g.fim && c.fim >= g.ini);
+      if(g) { g.ini = Math.min(g.ini, c.ini); g.fim = Math.max(g.fim, c.fim); g.confs.add(c.k); g.maxDias = Math.max(g.maxDias, c.dias.length); }
+      else grupos.push({ ini: c.ini, fim: c.fim, confs: new Set([c.k]), maxDias: c.dias.length });
+    });
+    grupos.forEach(g => {
+      g.regs = regs.filter(r => g.confs.has(this.normConf(r.conferente)) && this.diaTurno(r) >= g.ini && this.diaTurno(r) <= g.fim);
+      g.ultimo = Math.max(...g.regs.map(r => +new Date(r.data_registro)));
+      g.completa = g.maxDias >= this.RODADA_DIAS || (Date.now() - g.ultimo) > 36 * 3600e3;
+      g.dias = Math.round((g.fim - g.ini) / 86400000) + 1;
+    });
+    grupos.sort((a, b) => b.fim - a.fim);
+    return grupos;
+  },
+
+  // Rodada escolhida (padrão: a mais recente que já terminou)
+  rodadaAtual(turnos) {
+    const gs = this.rodadaGrupos(turnos || this.allTurnos);
+    if(!gs.length) return { gs, idx: -1, g: null };
+    const padrao = Math.max(0, gs.findIndex(g => g.completa));
+    const idx = this._rodIdx == null ? padrao : Math.min(Math.max(0, this._rodIdx), gs.length - 1);
+    return { gs, idx, g: gs[idx], padrao };
+  },
+
+  rodadaNomes(g) {
+    const nomes = Object.fromEntries(this.confNomes());
+    // ordem: quem registrou primeiro na rodada
+    const ord = [...g.regs].sort((a, b) => new Date(a.data_registro) - new Date(b.data_registro)).map(r => this.normConf(r.conferente));
+    return [...new Set(ord)].map(k => nomes[k] || k);
   },
 
   filtrarPorPeriodo(turnos) {
     const agora = new Date();
     if(this.periodoAtivo === 'tudo') return turnos;
     if(this.periodoAtivo === 'rodada') {
-      return Object.values(this.rodadas(turnos)).flatMap(o => o.regs);
+      const { g } = this.rodadaAtual(turnos);
+      return g ? g.regs : [];
     }
     if(this.periodoAtivo === 'mes:atual') {
       const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
@@ -3455,7 +3486,8 @@ const app = {
     const n = v => parseInt(v) || 0;
     const rod = this.periodoAtivo === 'rodada';
     const fd = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
-    if(sub) sub.textContent = (rod ? 'Última rodada de cada conferente (até ' + this.RODADA_DIAS + ' dias seguidos)' : 'Lançado na passagem de turno · ' + (this._periodoLabel || 'período')) + (this.confSel ? ' · ' + this.confSelNome() : '');
+    const RA = rod ? this.rodadaAtual() : null;
+    if(sub) sub.textContent = (rod ? (RA.g ? 'Rodada ' + fd(new Date(RA.g.ini)) + (RA.g.fim !== RA.g.ini ? ' a ' + fd(new Date(RA.g.fim)) : '') + ' · ' + this.rodadaNomes(RA.g).join(' e ') + (RA.g.completa ? '' : ' · em andamento') : 'Sem rodada') : 'Lançado na passagem de turno · ' + (this._periodoLabel || 'período')) + (this.confSel ? ' · ' + this.confSelNome() : '');
     if(!turnos.length) { el.innerHTML = '<p style="text-align:center;color:var(--text3);font-size:15px;padding:16px">Sem passagens de turno no período.</p>'; return; }
     // Totais do conjunto
     const soma = regs => {
@@ -3474,14 +3506,19 @@ const app = {
 
     let comparativo = '';
     if(rod) {
-      // recalcula a partir de todos os registros (do conferente escolhido) para saber quem tem rodada em andamento
-      const rds = Object.values(this.rodadas(this.filtraConf(this.allTurnos || []))).map(o => Object.assign(o, soma(o.regs)));
-      rds.forEach(o => { o.nome = (this.confNomes().find(([k]) => k === o.k) || [o.k, o.regs[0]?.conferente || o.k])[1]; o.turnos = o.regs.length; });
+      // conferentes da rodada (o filtro de conferente já foi aplicado em "turnos")
+      const porK = {};
+      turnos.forEach(r => (porK[this.normConf(r.conferente)] = porK[this.normConf(r.conferente)] || []).push(r));
+      const nomes = Object.fromEntries(this.confNomes());
+      const rds = Object.entries(porK).map(([k, rr]) => {
+        const ds = rr.map(r => this.diaTurno(r));
+        return Object.assign({ k, regs: rr, nome: nomes[k] || rr[0].conferente, turnos: rr.length, ini: new Date(Math.min(...ds)), fim: new Date(Math.max(...ds)), dias: new Set(ds).size }, soma(rr));
+      });
       rds.sort((a, b) => b.desc - a.desc || b.me - a.me);
       const max = Math.max(1, ...rds.map(o => o.desc));
       const medal = ['🥇','🥈','🥉'];
       comparativo = `<div class="me-sec">
-        <div class="me-sh">⚖️ Quem mais descarregou na última rodada</div>
+        <div class="me-sh">⚖️ Quem mais descarregou na rodada</div>
         <div class="me-leg"><span class="lg-me">ME</span><span class="lg-tp">Tampa básica</span><span class="lg-dv">Devolução</span></div>
         ${rds.map((o, i) => `
           <button class="rd-row" onclick="app.rkAbrir('${o.k.replace(/'/g, "\\'")}')">
@@ -3490,7 +3527,7 @@ const app = {
               <span class="rd-n">${o.nome}</span>
               <span class="rd-tot">${fmt(o.desc)}<small> descarga${o.desc === 1 ? '' : 's'}</small></span>
             </div>
-            <div class="rd-sub">${fd(o.ini)}${o.dias > 1 ? ' a ' + fd(o.fim) : ''} · ${o.dias} dia${o.dias === 1 ? '' : 's'} · ${o.turnos} turno${o.turnos === 1 ? '' : 's'} · média ${fmt(Math.round(o.desc / Math.max(1, o.turnos) * 10) / 10)}/turno${o.emAndamento ? ' · <em>rodada em andamento</em>' : ''}${o.atualEmAndamento ? ' · <em>rodada anterior (a atual está em andamento)</em>' : ''}</div>
+            <div class="rd-sub">${fd(o.ini)}${o.dias > 1 ? ' a ' + fd(o.fim) : ''} · ${o.dias} dia${o.dias === 1 ? '' : 's'} · ${o.turnos} turno${o.turnos === 1 ? '' : 's'} · média ${fmt(Math.round(o.desc / Math.max(1, o.turnos) * 10) / 10)}/turno</div>
             <div class="rd-bar">
               <i class="b-me" style="width:${o.me / max * 100}%"></i><i class="b-tp" style="width:${o.tampa / max * 100}%"></i><i class="b-dv" style="width:${o.dev / max * 100}%"></i>
             </div>
@@ -3527,9 +3564,14 @@ const app = {
       document.getElementById('placar-shot').innerHTML = '<div style="text-align:center;color:var(--text3);padding:30px 0">Carregando...</div>';
       try { const { data } = await db.from('turnos').select('*').order('data_registro', { ascending:false }); this.allTurnos = data || []; } catch(e) {}
     }
-    this.renderPlacar(view || this._placarView || 'cada');
+    this._rodIdx = null;   // sempre abre na última rodada terminada
+    this.renderPlacar(view || 'rodada');
   },
-  fecharPlacar() { document.getElementById('placar-modal').classList.remove('on'); },
+  fecharPlacar() {
+    document.getElementById('placar-modal').classList.remove('on');
+    this._rodIdx = null;   // o BI volta para a última rodada terminada
+    if(this.periodoAtivo === 'rodada' && document.getElementById('sc-dash').classList.contains('on')) this.renderDash(this.filtrarPorPeriodo(this.allTurnos || []));
+  },
 
   placarNums(regs) {
     const n = v => parseInt(v) || 0;
@@ -3544,6 +3586,7 @@ const app = {
 
   renderPlacar(view) {
     this._placarView = view;
+    const navEl = document.getElementById('placar-nav'); if(navEl) { navEl.style.display = view === 'rodada' ? '' : 'none'; }
     document.querySelectorAll('.placar-tabs [data-v]').forEach(b => b.classList.toggle('on', b.dataset.v === view));
     const el = document.getElementById('placar-shot');
     const regs = [...(this.allTurnos || [])].sort((a, b) => new Date(b.data_registro) - new Date(a.data_registro));
@@ -3559,31 +3602,6 @@ const app = {
       <div class="pl-title">${titulo}</div>
       <div class="pl-sub">${sub}</div>`;
     if(!regs.length) { el.innerHTML = head('Placar', 'Sem passagens de turno registradas.'); return; }
-
-    if(view === 'cada') {
-      // Último turno de CADA conferente das turmas A–D (registros dos últimos 30 dias)
-      const lim = Date.now() - 30 * 86400000;
-      const vistos = {};
-      regs.forEach(r => {
-        const k = this.normConf(r.conferente);
-        if(!k || vistos[k] || !['A','B','C','D'].includes(r.turma_sai) || +new Date(r.data_registro) < lim) return;
-        vistos[k] = r;
-      });
-      const lista = Object.values(vistos).sort((a, b) => String(a.turma_sai).localeCompare(String(b.turma_sai)) || new Date(b.data_registro) - new Date(a.data_registro));
-      if(!lista.length) { el.innerHTML = head('Último turno de cada conferente', 'Sem passagens das turmas A–D nos últimos 30 dias.'); return; }
-      el.innerHTML = head('Último turno de cada conferente', 'O que cada um carregou e descarregou no seu último turno') + `
-        <div class="pl-cada">
-          ${lista.map(r => { const o = this.placarNums([r]); const nome = (this.confNomes().find(([k]) => k === this.normConf(r.conferente)) || [0, r.conferente])[1]; return `
-          <div class="pl-c ${o.me ? '' : 'zero'}">
-            <div class="pl-c-h"><b>${nome}</b><span>Turma ${r.turma_sai} · ${fdt(new Date(r.data_registro))}</span></div>
-            <div class="pl-c-me"><b>${fmt(o.me)}</b><span>${car(o.me)} de <strong>ME</strong></span></div>
-            <div class="pl-c-l"><span>Tampa básica <b class="y">${fmt(o.tampa)}</b></span><span>Devolução <b class="v">${fmt(o.dev)}</b></span></div>
-            <div class="pl-c-l c"><span>Carregou planta <b>${fmt(o.pc)}</b></span><span>NSA <b>${fmt(o.nsa)}</b></span></div>
-          </div>`; }).join('')}
-        </div>
-        <div class="pl-foot">ME = folha · quadro de topo · palete. Valores em carretas, lançados pelos conferentes na passagem de turno · Shift Flow</div>`;
-      return;
-    }
 
     if(view === 'turno') {
       const r = regs[0], o = this.placarNums([r]);
@@ -3617,21 +3635,55 @@ const app = {
       return;
     }
 
-    // Última rodada: comparação por conferente
-    const rds = Object.values(this.rodadas(regs)).map(o => Object.assign(o, this.placarNums(o.regs)));
-    rds.forEach(o => { o.nome = (this.confNomes().find(([k]) => k === o.k) || [o.k, o.regs[0]?.conferente || o.k])[1]; });
-    rds.sort((a, b) => b.me - a.me || (b.tampa + b.dev) - (a.tampa + a.dev));
-    const max = Math.max(1, ...rds.map(o => o.me + o.tampa + o.dev));
-    el.innerHTML = head('Descargas · Última rodada', 'Últimos dias seguidos trabalhados por cada conferente (até ' + this.RODADA_DIAS + ' dias)') + `
-      <div class="pl-leg"><span class="lg-me">ME</span><span class="lg-tp">Tampa básica</span><span class="lg-dv">Devolução</span></div>
-      ${rds.map((o, i) => `
-        <div class="pl-rd">
-          <div class="pl-rd-h"><span class="pl-pos">${['🥇','🥈','🥉'][i] || (i + 1) + 'º'}</span><b>${o.nome}</b><span class="pl-rd-d">${fd(o.ini)}${o.dias > 1 ? '–' + fd(o.fim) : ''} · ${o.dias}d</span></div>
-          <div class="rd-bar"><i class="b-me" style="width:${o.me / max * 100}%"></i><i class="b-tp" style="width:${o.tampa / max * 100}%"></i><i class="b-dv" style="width:${o.dev / max * 100}%"></i></div>
-          <div class="pl-rd-v"><span class="v-me">ME <b>${fmt(o.me)}</b></span><span class="v-tp">Tampa <b>${fmt(o.tampa)}</b></span><span class="v-dv">Devol. <b>${fmt(o.dev)}</b></span><span class="v-c">Carregou <b>${fmt(o.pc)}</b> planta · <b>${fmt(o.nsa)}</b> NSA</span></div>
-          ${o.atualEmAndamento ? '<div class="pl-rd-n">rodada anterior · a atual está em andamento</div>' : o.emAndamento ? '<div class="pl-rd-n">rodada em andamento</div>' : ''}
+    // ── Rodada: a dupla que trabalhou nos mesmos dias, lado a lado ──
+    const { gs, idx, g } = this.rodadaAtual(regs);
+    const nav = document.getElementById('placar-nav');
+    if(!g) { el.innerHTML = head('Rodada', 'Sem rodadas registradas.'); if(nav) nav.innerHTML = ''; return; }
+    if(nav) nav.innerHTML = `
+      <button onclick="app.navRodada(1)" ${idx >= gs.length - 1 ? 'disabled' : ''} aria-label="Rodada anterior">◀ Anterior</button>
+      <span>${idx === this.rodadaAtual(regs).padrao ? 'Última rodada' : idx < this.rodadaAtual(regs).padrao ? 'Rodada atual' : 'Rodada mais antiga'}</span>
+      <button onclick="app.navRodada(-1)" ${idx <= 0 ? 'disabled' : ''} aria-label="Rodada seguinte">Seguinte ▶</button>`;
+    const nomes = Object.fromEntries(this.confNomes());
+    const porK = {};
+    g.regs.forEach(r => (porK[this.normConf(r.conferente)] = porK[this.normConf(r.conferente)] || []).push(r));
+    const ordem = this.rodadaNomes(g).map(n => this.normConf(n));
+    const pessoas = ordem.filter(k => porK[k]).map(k => Object.assign({ k, nome: nomes[k] || porK[k][0].conferente, turnos: porK[k].length }, this.placarNums(porK[k])));
+    const tot = this.placarNums(g.regs);
+    const linhas = [...g.regs].sort((a, b) => new Date(a.data_registro) - new Date(b.data_registro));
+    const fcurta = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' }) + ' ' + String(d.getHours()).padStart(2, '0') + 'h';
+    const prev = gs[idx + 1];
+    const pv = prev ? this.placarNums(prev.regs) : null;
+    el.innerHTML = head('Rodada ' + fd(new Date(g.ini)) + (g.fim !== g.ini ? ' a ' + fd(new Date(g.fim)) : ''),
+        this.rodadaNomes(g).join(' e ') + ' · ' + g.dias + ' dia' + (g.dias === 1 ? '' : 's') + ' · ' + g.regs.length + ' turno' + (g.regs.length === 1 ? '' : 's') + (g.completa ? '' : ' · <b style="color:var(--yellow)">em andamento</b>')) + `
+      <div class="pl-cada">
+        ${pessoas.map(o => `
+        <div class="pl-c ${o.me ? '' : 'zero'}">
+          <div class="pl-c-h"><b>${o.nome}</b><span>${o.turnos} turno${o.turnos === 1 ? '' : 's'} na rodada</span></div>
+          <div class="pl-c-me"><b>${fmt(o.me)}</b><span>${car(o.me)} de <strong>ME</strong></span></div>
+          <div class="pl-c-l"><span>Tampa básica <b class="y">${fmt(o.tampa)}</b></span><span>Devolução <b class="v">${fmt(o.dev)}</b></span></div>
+          <div class="pl-c-l c"><span>Carregou planta <b>${fmt(o.pc)}</b></span><span>NSA <b>${fmt(o.nsa)}</b></span></div>
         </div>`).join('')}
-      <div class="pl-foot">Valores em carretas, lançados pelos conferentes na passagem de turno · Shift Flow</div>`;
+      </div>
+      <div class="pl-grp">📋 Turno a turno</div>
+      <div class="pl-tab">
+        <div class="pl-tr pl-th"><span>Conferente</span><span>Carr. Planta</span><span>Carr. NSA</span><span class="hl">ME</span><span>Tampa</span><span>Devol.</span></div>
+        ${linhas.map(x => { const q = this.placarNums([x]); return `
+        <div class="pl-tr">
+          <span class="pl-who"><b>${(x.conferente || '—').split(' ')[0]}</b><small>${fcurta(new Date(x.data_registro))}</small></span>
+          <span>${fmt(q.pc)}</span><span>${fmt(q.nsa)}</span>
+          <span class="hl ${q.me ? '' : 'zero'}"><em>${fmt(q.me)}</em></span>
+          <span>${fmt(q.tampa)}</span><span>${fmt(q.dev)}</span>
+        </div>`; }).join('')}
+        <div class="pl-tr pl-tot"><span class="pl-who"><b>Total</b></span><span>${fmt(tot.pc)}</span><span>${fmt(tot.nsa)}</span><span class="hl"><em>${fmt(tot.me)}</em></span><span>${fmt(tot.tampa)}</span><span>${fmt(tot.dev)}</span></div>
+      </div>
+      ${prev ? `<div class="pl-prev">Rodada anterior (${fd(new Date(prev.ini))} a ${fd(new Date(prev.fim))} · ${this.rodadaNomes(prev).map(n => n.split(' ')[0]).join(' e ')}): <b class="g">ME ${fmt(pv.me)}</b> · Tampa ${fmt(pv.tampa)} · Devol. ${fmt(pv.dev)} · Carregou ${fmt(pv.pc)} planta / ${fmt(pv.nsa)} NSA</div>` : ''}
+      <div class="pl-foot">ME = folha · quadro de topo · palete. Valores em carretas, lançados pelos conferentes na passagem de turno · Shift Flow</div>`;
+  },
+
+  navRodada(d) {
+    const { idx } = this.rodadaAtual();
+    this._rodIdx = idx + d;
+    this.renderPlacar('rodada');
   },
 
   // Gera a imagem do placar e abre o compartilhamento (WhatsApp)
