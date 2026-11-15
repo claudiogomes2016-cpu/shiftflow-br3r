@@ -942,6 +942,38 @@ body.tv-on #sc-login, body.tv-on #app { display:none !important; }
 .tvm-exit:hover { opacity:1; }
 @media(max-aspect-ratio:1/1){ .tvm-main { grid-template-columns:1fr; overflow-y:auto; } .tvm { overflow-y:auto; } }
 
+
+.tv-atual { border-color:rgba(255,138,61,.55); box-shadow:inset 0 0 0 1px rgba(255,138,61,.15); }
+.tv-atual h2 span { color:#FFB27A; }
+.tv-p-me small { font-size:calc(var(--u) * .8); color:#8391AD; }
+.tv-race { display:flex; flex-direction:column; gap:calc(var(--u) * .5); }
+.tv-rr { display:grid; grid-template-columns:calc(var(--u) * 9.5) 1fr calc(var(--u) * 3.6); align-items:center; gap:calc(var(--u) * .6); }
+.tv-rr .l { font-family:var(--f-display); font-weight:700; font-size:calc(var(--u) * 1.15); line-height:1.05; }
+.tv-rr .l small { display:block; font-family:var(--font); font-weight:500; font-size:calc(var(--u) * .75); color:#8391AD; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tv-rr .tr { position:relative; height:calc(var(--u) * 1.6); background:rgba(86,130,255,.15); border-radius:99px; overflow:hidden; }
+.tv-rr .tr i { position:absolute; left:0; top:0; bottom:0; border-radius:99px; }
+.tv-rr.now .tr i { background:linear-gradient(90deg, #FF8A3D, #FFC21A); z-index:2; }
+.tv-rr.now .tr i.proj { background:repeating-linear-gradient(-45deg, rgba(255,194,26,.35) 0 6px, transparent 6px 12px); z-index:1; }
+.tv-rr.ref .tr i { background:linear-gradient(90deg, #128a52, #2BD07F); }
+.tv-rr b { font-family:var(--f-display); font-size:calc(var(--u) * 2.3); text-align:right; }
+.tv-rr.now b { color:#FFC21A; } .tv-rr.ref b { color:#2BD07F; }
+.tv-proj { display:flex; flex-direction:column; gap:calc(var(--u) * .35); font-size:calc(var(--u) * 1.05); color:#DDE6F7; background:rgba(5,12,32,.45); border:1px solid rgba(86,130,255,.25); border-radius:calc(var(--u) * .8); padding:calc(var(--u) * .6) calc(var(--u) * .8); }
+.tv-proj b { font-family:var(--f-display); font-size:calc(var(--u) * 1.3); }
+.tv-proj b.y { color:#FFC21A; } .tv-proj b.g { color:#2BD07F; }
+.tv-last { margin-top:auto; font-size:calc(var(--u) * .9); color:#8391AD; border-top:1px solid rgba(86,130,255,.25); padding-top:calc(var(--u) * .5); }
+.tv-last b { color:#4D8DFF; font-family:var(--f-display); }
+/* letras maiores para ler de longe: ranking e dias sem incidente */
+.tv-rt { font-size:calc(var(--u) * 2.35) !important; padding:calc(var(--u) * .7) calc(var(--u) * .4) !important; }
+.tv-rt .nm { font-size:calc(var(--u) * 1.75) !important; }
+.tv-rt .nm small { font-size:calc(var(--u) * .95) !important; }
+.tv-rt.tv-rh { font-size:calc(var(--u) * 1.05) !important; }
+.tv-rt .pos { font-size:calc(var(--u) * 2.1) !important; }
+.tv-rt.tv-rtot { font-size:calc(var(--u) * 1.8) !important; }
+.tv-leg { font-size:calc(var(--u) * .95) !important; }
+.tvm-safe b { font-size:calc(var(--u) * 4.4) !important; }
+.tvm-safe span { font-size:calc(var(--u) * 1.15) !important; }
+.tvm-safe .ico { font-size:calc(var(--u) * 2.6) !important; }
+
 /* ── PAINEL ONE-ON-ONE ── */
 body.oo-open { overflow:hidden; }
 .oo { position:fixed; inset:0; z-index:2500; background:var(--bg); overflow-y:auto; display:flex; flex-direction:column; }
@@ -3967,6 +3999,24 @@ const app = {
         })()}
       </section>`;
 
+    // 1b) rodada atual (em andamento) no lugar do "Último turno", com a meta da última rodada
+    let atual = '';
+    {
+      const gsA = this.rodadaGrupos(regs), ga = gsA[0], ref = gsA.find(x => x.completa);
+      if(ga && !ga.completa && ref && ref !== ga) {
+        const porKa = {}; ga.regs.forEach(x => (porKa[this.normConf(x.conferente)] = porKa[this.normConf(x.conferente)] || []).push(x));
+        const nmA = this.rodadaNomes(ga), nmR = this.rodadaNomes(ref);
+        const ur = regs[0], uq = this.placarNums([ur]);
+        atual = this.tvAtualHTML({
+          ini: new Date(ga.ini), dias: ga.dias, diasPrev: this.RODADA_DIAS, previstos: this.RODADA_DIAS * 2, turnos: ga.regs.length,
+          pessoas: nmA.map(n => this.normConf(n)).filter(k => porKa[k]).map(k => Object.assign({ nome: nome(porKa[k][0].conferente), turnos: porKa[k].length }, this.placarNums(porKa[k]))),
+          qa: this.placarNums(ga.regs), qr: this.placarNums(ref.regs),
+          nomesAtual: nmA.map(n => String(n).split(' ')[0]).join(' e '), nomesRef: nmR.map(n => String(n).split(' ')[0]).join(' e '),
+          ultimo: { nome: nome(ur.conferente), turma: ur.turma_sai || '?', quando: new Date(ur.data_registro), me: uq.me, pc: uq.pc, nsa: uq.nsa },
+        });
+      }
+    }
+
     // 2) última rodada
     const { gs, g, idx } = this.rodadaAtual(regs);
     let rodada = '<section class="tvc"><h2>🔄 Última rodada</h2><div class="tvm-load">Sem rodada completa.</div></section>';
@@ -4020,7 +4070,7 @@ const app = {
         <div class="tv-leg"><i></i> maior do mês em cada coluna · ME = folha · quadro de topo · palete</div>
       </section>`;
 
-    main.innerHTML = turno + rodada + ranking;
+    main.innerHTML = (atual || turno) + rodada + ranking;
 
     // rodapé: últimos turnos
     document.getElementById('tvm-foot').innerHTML = '<span class="tvf-l">Últimos turnos</span>' + regs.slice(0, 8).map(x => {
@@ -4028,6 +4078,49 @@ const app = {
       return `<span class="tvf-i"><b>${curto(x.conferente)}</b> ${x.turma_sai || ''} · ${fd(new Date(x.data_registro))} ${fh(new Date(x.data_registro))} · <em class="${q.me ? '' : 'zero'}">ME ${fmt(q.me)}</em> · Planta ${fmt(q.pc)} · NSA ${fmt(q.nsa)}</span>`;
     }).join('');
     requestAnimationFrame(() => this.tvAjustar());
+  },
+
+  // Bloco "Rodada atual" da TV (o mesmo código vai no arquivo tv/painel-tv.html)
+  tvAtualHTML: (d) => {
+    const fmt = v => Number(v).toLocaleString('pt-BR');
+    const fmt1 = v => (Math.round(v * 10) / 10).toLocaleString('pt-BR');
+    const fd = x => x.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+    const fh = x => String(x.getHours()).padStart(2, '0') + 'h' + String(x.getMinutes()).padStart(2, '0');
+    const car = v => v === 1 ? 'carreta' : 'carretas';
+    const prev = d.previstos, feitos = d.turnos, falta = Math.max(0, prev - feitos);
+    const ritmo = feitos ? d.qa.me / feitos : 0;
+    const proj = Math.round(ritmo * prev);
+    const meta = d.qr.me, passou = d.qa.me > meta;
+    const precisa = Math.max(0, meta - d.qa.me + 1);
+    const porTurno = falta ? precisa / falta : 0;
+    const w = v => Math.min(100, v / Math.max(1, meta, d.qa.me, proj) * 100);
+    const diaN = Math.min(d.diasPrev, Math.max(1, d.dias));
+    let msg;
+    if(passou) msg = `<b class="g">🔥 Já passaram a última rodada!</b> ${fmt(d.qa.me)} contra ${fmt(meta)} de ME`;
+    else if(!falta) msg = `Faltaram <b>${fmt(precisa)}</b> de ME para passar a última rodada`;
+    else msg = `Para passar ${d.nomesRef} (<b>${fmt(meta)}</b>): faltam <b class="y">${fmt(precisa)}</b> de ME em ${falta} turno${falta === 1 ? '' : 's'} · ≈ <b class="y">${fmt1(porTurno)}</b> por turno`;
+    return `
+    <section class="tvc tv-atual">
+      <h2>🔥 Rodada atual <span>começou ${fd(d.ini)} · dia ${diaN} de ${d.diasPrev} · ${feitos} de ${prev} turnos</span></h2>
+      <div class="tv-duo">
+        ${d.pessoas.map(p => `<div class="tv-p ${p.me ? '' : 'zero'}">
+          <div class="tv-p-n">${p.nome}</div>
+          <div class="tv-p-me"><b>${fmt(p.me)}</b><span>${car(p.me)} de ME<br><small>${p.turnos} turno${p.turnos === 1 ? '' : 's'} · ${fmt1(p.me / Math.max(1, p.turnos))}/turno</small></span></div>
+          <div class="tv-p-l"><span>Tampa <b>${fmt(p.tampa)}</b></span><span>Devol. <b>${fmt(p.dev)}</b></span></div>
+          <div class="tv-p-l c"><span>Planta <b>${fmt(p.pc)}</b></span><span>NSA <b>${fmt(p.nsa)}</b></span></div>
+        </div>`).join('')}
+      </div>
+      <div class="tv-sub">📦 Corrida da descarga de ME</div>
+      <div class="tv-race">
+        <div class="tv-rr now"><span class="l">Rodada atual<small>${d.nomesAtual}</small></span><div class="tr"><i style="width:${w(d.qa.me)}%"></i>${proj > d.qa.me && !passou && falta ? `<i class="proj" style="width:${w(proj)}%"></i>` : ''}</div><b>${fmt(d.qa.me)}</b></div>
+        <div class="tv-rr ref"><span class="l">Última rodada<small>${d.nomesRef}</small></span><div class="tr"><i style="width:${w(meta)}%"></i></div><b>${fmt(meta)}</b></div>
+      </div>
+      <div class="tv-proj">
+        ${falta && feitos ? `<div>📈 No ritmo atual (<b>${fmt1(ritmo)}</b> de ME por turno), fecham a rodada com <b>≈ ${fmt(proj)}</b> de ME</div>` : ''}
+        <div>${msg}</div>
+      </div>
+      <div class="tv-last">🕘 Último registro: <b>${d.ultimo.nome}</b> · Turma ${d.ultimo.turma} · ${fd(d.ultimo.quando)} ${fh(d.ultimo.quando)} · ME ${fmt(d.ultimo.me)} · Planta ${fmt(d.ultimo.pc)} · NSA ${fmt(d.ultimo.nsa)}</div>
+    </section>`;
   },
 
   // Diminui a escala até tudo caber em 100% da tela, sem rolar
