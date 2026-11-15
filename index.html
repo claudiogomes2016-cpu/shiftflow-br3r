@@ -893,7 +893,7 @@ button.drw-row { cursor:pointer; }
 .placar-btn:active { transform:scale(.98); }
 .placar-box { max-width:520px; padding:14px; }
 .placar-tabs { display:flex; gap:6px; align-items:center; margin-bottom:10px; }
-.placar-tabs [data-v] { flex:1; height:40px; border-radius:10px; border:1px solid var(--border2); background:var(--bg4); color:var(--text2); font-family:var(--f-display); font-size:16px; font-weight:700; cursor:pointer; }
+.placar-tabs [data-v] { flex:1; min-width:0; height:40px; padding:0 4px; border-radius:10px; border:1px solid var(--border2); background:var(--bg4); color:var(--text2); font-family:var(--f-display); font-size:14.5px; line-height:1.05; font-weight:700; cursor:pointer; }
 .placar-tabs [data-v].on { background:linear-gradient(180deg,#2F7BFF,#1463FF); border-color:#1463FF; color:#fff; }
 .placar-tabs .mc { width:40px; }
 .placar-shot { background:var(--card-bg); border-radius:14px; padding:14px; }
@@ -944,6 +944,21 @@ button.drw-row { cursor:pointer; }
 .pl-rd-v .v-me b { color:var(--green); } .pl-rd-v .v-tp b { color:var(--yellow); } .pl-rd-v .v-dv b { color:#8CA3FF; }
 .pl-rd-v .v-c { flex-basis:100%; font-size:12px; } .pl-rd-v .v-c b { font-size:14px; }
 .pl-rd-n { font-size:11.5px; color:var(--yellow); margin-top:3px; }
+.pl-cada { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; margin-top:12px; }
+.pl-c { background:var(--bg4); border:1.5px solid rgba(43,208,127,.45); border-radius:14px; padding:10px; display:flex; flex-direction:column; gap:6px; min-width:0; }
+.pl-c.zero { border-color:rgba(255,77,90,.6); background:linear-gradient(180deg, var(--red-dim), transparent 60%), var(--bg4); }
+.pl-c-h b { display:block; font-family:var(--f-display); font-size:16px; font-weight:700; color:var(--blue-txt); line-height:1.1; overflow-wrap:anywhere; }
+.pl-c-h span { font-size:11.5px; color:var(--text3); }
+.pl-c-me { display:flex; align-items:baseline; gap:6px; }
+.pl-c-me b { font-family:var(--f-display); font-size:44px; font-weight:800; line-height:1; color:var(--green); }
+.pl-c.zero .pl-c-me b { color:var(--red); }
+.pl-c-me span { font-size:13px; color:var(--text2); line-height:1.2; }
+.pl-c-me strong { color:var(--text); }
+.pl-c-l { display:flex; flex-direction:column; gap:1px; font-size:12.5px; color:var(--text3); border-top:1px solid var(--border); padding-top:5px; }
+.pl-c-l span { display:flex; justify-content:space-between; gap:6px; }
+.pl-c-l b { font-family:var(--f-display); font-size:16px; color:var(--text); }
+.pl-c-l b.y { color:var(--yellow); } .pl-c-l b.v { color:#8CA3FF; }
+.pl-c-l.c b { color:var(--blue-txt); }
 .pl-foot { font-size:10.5px; color:var(--text3); text-align:center; margin-top:8px; }
 .pl-t.pl-me { padding:8px 12px; }
 
@@ -1602,7 +1617,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
   <!-- Filtro de Período — gerado dinamicamente por JS -->
   <div id="dash-periodo-btns" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap"></div>
   <div class="conf-bar" data-scope="dash"></div>
-  <button class="placar-btn" onclick="app.abrirPlacar()">📸 Placar para o grupo <small>último turno · descargas e carregamentos</small></button>
+  <button class="placar-btn" onclick="app.abrirPlacar()">📸 Placar para o grupo <small>último turno de cada conferente · descargas e carregamentos</small></button>
 
   <div class="kpi-g">
     <div class="kc">
@@ -1875,6 +1890,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
 <div class="mb" id="placar-modal">
 <div class="mbx placar-box">
   <div class="placar-tabs">
+    <button data-v="cada" onclick="app.renderPlacar('cada')">Cada conferente</button>
     <button data-v="turno" onclick="app.renderPlacar('turno')">Último turno</button>
     <button data-v="rodada" onclick="app.renderPlacar('rodada')">Última rodada</button>
     <button class="mc" onclick="app.fecharPlacar()" aria-label="Fechar">✕</button>
@@ -3511,7 +3527,7 @@ const app = {
       document.getElementById('placar-shot').innerHTML = '<div style="text-align:center;color:var(--text3);padding:30px 0">Carregando...</div>';
       try { const { data } = await db.from('turnos').select('*').order('data_registro', { ascending:false }); this.allTurnos = data || []; } catch(e) {}
     }
-    this.renderPlacar(view || this._placarView || 'turno');
+    this.renderPlacar(view || this._placarView || 'cada');
   },
   fecharPlacar() { document.getElementById('placar-modal').classList.remove('on'); },
 
@@ -3543,6 +3559,31 @@ const app = {
       <div class="pl-title">${titulo}</div>
       <div class="pl-sub">${sub}</div>`;
     if(!regs.length) { el.innerHTML = head('Placar', 'Sem passagens de turno registradas.'); return; }
+
+    if(view === 'cada') {
+      // Último turno de CADA conferente das turmas A–D (registros dos últimos 30 dias)
+      const lim = Date.now() - 30 * 86400000;
+      const vistos = {};
+      regs.forEach(r => {
+        const k = this.normConf(r.conferente);
+        if(!k || vistos[k] || !['A','B','C','D'].includes(r.turma_sai) || +new Date(r.data_registro) < lim) return;
+        vistos[k] = r;
+      });
+      const lista = Object.values(vistos).sort((a, b) => String(a.turma_sai).localeCompare(String(b.turma_sai)) || new Date(b.data_registro) - new Date(a.data_registro));
+      if(!lista.length) { el.innerHTML = head('Último turno de cada conferente', 'Sem passagens das turmas A–D nos últimos 30 dias.'); return; }
+      el.innerHTML = head('Último turno de cada conferente', 'O que cada um carregou e descarregou no seu último turno') + `
+        <div class="pl-cada">
+          ${lista.map(r => { const o = this.placarNums([r]); const nome = (this.confNomes().find(([k]) => k === this.normConf(r.conferente)) || [0, r.conferente])[1]; return `
+          <div class="pl-c ${o.me ? '' : 'zero'}">
+            <div class="pl-c-h"><b>${nome}</b><span>Turma ${r.turma_sai} · ${fdt(new Date(r.data_registro))}</span></div>
+            <div class="pl-c-me"><b>${fmt(o.me)}</b><span>${car(o.me)} de <strong>ME</strong></span></div>
+            <div class="pl-c-l"><span>Tampa básica <b class="y">${fmt(o.tampa)}</b></span><span>Devolução <b class="v">${fmt(o.dev)}</b></span></div>
+            <div class="pl-c-l c"><span>Carregou planta <b>${fmt(o.pc)}</b></span><span>NSA <b>${fmt(o.nsa)}</b></span></div>
+          </div>`; }).join('')}
+        </div>
+        <div class="pl-foot">ME = folha · quadro de topo · palete. Valores em carretas, lançados pelos conferentes na passagem de turno · Shift Flow</div>`;
+      return;
+    }
 
     if(view === 'turno') {
       const r = regs[0], o = this.placarNums([r]);
