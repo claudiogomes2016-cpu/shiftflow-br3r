@@ -887,6 +887,66 @@ button.drw-row { cursor:pointer; }
 .me-row-v b { color:var(--text); font-family:var(--f-display); font-size:16px; }
 @media(max-width:420px){ .me-t b { font-size:26px; } .me-l { font-size:11.5px; } .me-t small { display:none; } }
 
+/* ── PLACAR PARA O GRUPO ── */
+.placar-btn { width:100%; display:flex; flex-direction:column; align-items:center; gap:2px; padding:12px 16px; margin:0 0 16px; border:1.5px solid rgba(43,208,127,.55); border-radius:14px; background:linear-gradient(135deg, rgba(43,208,127,.18), rgba(20,99,255,.12)); color:var(--text); font-family:var(--f-display); font-size:20px; font-weight:700; cursor:pointer; }
+.placar-btn small { font-family:var(--font); font-size:12.5px; font-weight:500; color:var(--text3); }
+.placar-btn:active { transform:scale(.98); }
+.placar-box { max-width:520px; padding:14px; }
+.placar-tabs { display:flex; gap:6px; align-items:center; margin-bottom:10px; }
+.placar-tabs [data-v] { flex:1; height:40px; border-radius:10px; border:1px solid var(--border2); background:var(--bg4); color:var(--text2); font-family:var(--f-display); font-size:16px; font-weight:700; cursor:pointer; }
+.placar-tabs [data-v].on { background:linear-gradient(180deg,#2F7BFF,#1463FF); border-color:#1463FF; color:#fff; }
+.placar-tabs .mc { width:40px; }
+.placar-shot { background:var(--card-bg); border-radius:14px; padding:14px; }
+.placar-acts { margin-top:10px; }
+.pl-head { display:flex; align-items:center; gap:6px; }
+.pl-head img { height:34px; }
+.pl-head .sf-word { font-size:24px; } .pl-head .sf-tag { font-size:9px; margin-top:2px; }
+[data-theme="light"] .pl-head .sf-word { color:#0A1530; } [data-theme="light"] .pl-head .sf-tag { color:#33405C; }
+[data-theme="light"] .pl-head img { filter:drop-shadow(0 0 1px #0A1530) drop-shadow(0 0 1px #0A1530); }
+.pl-title { font-family:var(--f-display); font-size:25px; font-weight:700; margin-top:8px; line-height:1.1; }
+.pl-sub { font-size:13px; color:var(--text3); margin-top:3px; }
+.pl-grp { font-family:var(--f-display); font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text2); margin:10px 0 5px; }
+.pl-g2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.pl-t { display:flex; align-items:center; gap:10px; background:var(--bg4); border:1px solid var(--border2); border-radius:12px; padding:7px 11px; --c:var(--blue-txt); min-width:0; }
+.pl-t b { font-family:var(--f-display); font-size:34px; font-weight:800; line-height:1; color:var(--c); min-width:36px; }
+.pl-t span { font-size:13.5px; color:var(--text2); line-height:1.2; min-width:0; }
+.pl-t span strong { display:block; font-family:var(--f-display); font-size:16px; }
+.pl-t span strong { color:var(--text); }
+.pl-t small { display:block; font-size:12px; color:var(--text3); }
+.pl-t.c-p { --c:#8CA3FF; } .pl-t.c-y { --c:var(--yellow); } .pl-t.c-v { --c:#B69CFF; }
+.pl-t.pl-me { --c:var(--green); margin-bottom:6px; border-color:rgba(43,208,127,.55); background:linear-gradient(90deg, var(--green-dim), transparent), var(--bg4); }
+.pl-t.pl-me b { font-size:46px; }
+.pl-t.pl-me span { font-size:15px; }
+.pl-t.pl-me span strong { display:inline; font-size:inherit; font-family:var(--font); }
+.pl-t.zero { --c:var(--red); border-color:rgba(255,77,90,.5); background:linear-gradient(90deg, var(--red-dim), transparent), var(--bg4); }
+.pl-tab { border:1px solid var(--border2); border-radius:12px; overflow:hidden; }
+.pl-tr { display:grid; grid-template-columns:minmax(0,1.9fr) repeat(5, minmax(0,1fr)); align-items:center; gap:4px; padding:5px 8px; font-family:var(--f-display); font-size:16px; font-weight:700; text-align:center; border-top:1px solid var(--border); }
+.pl-tr:first-child { border-top:0; }
+.pl-th { background:var(--bg4); font-size:11px; font-weight:600; color:var(--text3); line-height:1.1; }
+.pl-tr.cur { background:var(--blue-dim); }
+.pl-who { text-align:left; min-width:0; }
+.pl-who b { display:block; font-size:14.5px; line-height:1.1; } .pl-who small { display:block; font-size:10.5px; font-weight:500; color:var(--text3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pl-tr .hl { position:relative; color:var(--green); }
+.pl-th .hl { color:var(--green); font-weight:800; }
+.pl-tr .hl i { position:absolute; left:0; top:50%; height:20px; transform:translateY(-50%); background:var(--green-dim); border-radius:6px; }
+.pl-tr .hl em { position:relative; font-style:normal; }
+.pl-tr .hl.zero { color:var(--red); }
+.pl-leg { display:flex; gap:12px; flex-wrap:wrap; font-size:12.5px; color:var(--text3); margin:10px 0 8px; }
+.pl-leg span::before { content:''; display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; vertical-align:-1px; }
+.pl-rd { background:var(--bg4); border:1px solid var(--border); border-radius:12px; padding:9px 11px; margin-bottom:7px; }
+.pl-rd-h { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.pl-pos { font-size:16px; min-width:22px; font-family:var(--f-display); font-weight:700; color:var(--text3); }
+.pl-rd-h b { flex:1; min-width:0; font-family:var(--f-display); font-size:17px; color:var(--blue-txt); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pl-rd-d { font-size:12px; color:var(--text3); white-space:nowrap; }
+.pl-rd .rd-bar { margin-left:0; }
+.pl-rd-v { display:flex; flex-wrap:wrap; gap:3px 12px; margin-top:6px; font-size:13px; color:var(--text3); }
+.pl-rd-v b { font-family:var(--f-display); font-size:17px; color:var(--text); }
+.pl-rd-v .v-me b { color:var(--green); } .pl-rd-v .v-tp b { color:var(--yellow); } .pl-rd-v .v-dv b { color:#8CA3FF; }
+.pl-rd-v .v-c { flex-basis:100%; font-size:12px; } .pl-rd-v .v-c b { font-size:14px; }
+.pl-rd-n { font-size:11.5px; color:var(--yellow); margin-top:3px; }
+.pl-foot { font-size:10.5px; color:var(--text3); text-align:center; margin-top:8px; }
+.pl-t.pl-me { padding:8px 12px; }
+
 /* ── DESTAQUES DOS CONFERENTES ── */
 .rkc-g { display:grid; grid-template-columns:1fr; gap:10px; margin-top:10px; }
 @media(min-width:620px){ .rkc-g { grid-template-columns:repeat(2, 1fr); } }
@@ -1542,6 +1602,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
   <!-- Filtro de Período — gerado dinamicamente por JS -->
   <div id="dash-periodo-btns" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap"></div>
   <div class="conf-bar" data-scope="dash"></div>
+  <button class="placar-btn" onclick="app.abrirPlacar()">📸 Placar para o grupo <small>último turno · descargas e carregamentos</small></button>
 
   <div class="kpi-g">
     <div class="kc">
@@ -1807,6 +1868,21 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
     <textarea id="disc-plano" class="inp ta" style="min-height:70px" placeholder="Ações corretivas..."></textarea>
   </div>
   <button onclick="app.saveDisc()" class="btn-m">💾 Salvar Ocorrência</button>
+</div>
+</div>
+
+<!-- MODAL PLACAR (para print / WhatsApp) -->
+<div class="mb" id="placar-modal">
+<div class="mbx placar-box">
+  <div class="placar-tabs">
+    <button data-v="turno" onclick="app.renderPlacar('turno')">Último turno</button>
+    <button data-v="rodada" onclick="app.renderPlacar('rodada')">Última rodada</button>
+    <button class="mc" onclick="app.fecharPlacar()" aria-label="Fechar">✕</button>
+  </div>
+  <div id="placar-shot" class="placar-shot"></div>
+  <div class="placar-acts">
+    <button class="btn-m" onclick="app.compartilharPlacar()" id="placar-share">📤 Compartilhar imagem</button>
+  </div>
 </div>
 </div>
 
@@ -3426,6 +3502,121 @@ const app = {
         <div class="me-sh">🔄 Devolução por cliente <b>${fmt(T.dev)} carreta${T.dev === 1 ? '' : 's'}</b></div>
         <div class="me-chips">${chips(T.devs, 'Nenhuma devolução')}</div>
       </div>`;
+  },
+
+  // ── PLACAR PARA O GRUPO ──
+  async abrirPlacar(view) {
+    document.getElementById('placar-modal').classList.add('on');
+    if(!this.allTurnos || !this.allTurnos.length) {
+      document.getElementById('placar-shot').innerHTML = '<div style="text-align:center;color:var(--text3);padding:30px 0">Carregando...</div>';
+      try { const { data } = await db.from('turnos').select('*').order('data_registro', { ascending:false }); this.allTurnos = data || []; } catch(e) {}
+    }
+    this.renderPlacar(view || this._placarView || 'turno');
+  },
+  fecharPlacar() { document.getElementById('placar-modal').classList.remove('on'); },
+
+  placarNums(regs) {
+    const n = v => parseInt(v) || 0;
+    const o = { pc:0, nsa:0, me:0, tampa:0, dev:0 };
+    regs.forEach(r => {
+      o.pc += r.p_c || 0; o.nsa += r.n_c || 0; o.me += r.p_d || 0;
+      this.meParse(r.tampa_entradas).forEach(e => o.tampa += n(e.qtd));
+      this.meParse(r.devolucao_entradas).forEach(e => o.dev += n(e.qtd));
+    });
+    return o;
+  },
+
+  renderPlacar(view) {
+    this._placarView = view;
+    document.querySelectorAll('.placar-tabs [data-v]').forEach(b => b.classList.toggle('on', b.dataset.v === view));
+    const el = document.getElementById('placar-shot');
+    const regs = [...(this.allTurnos || [])].sort((a, b) => new Date(b.data_registro) - new Date(a.data_registro));
+    const fmt = v => Number(v).toLocaleString('pt-BR');
+    const fdt = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' }) + ' ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+    const fd = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+    const car = v => v === 1 ? 'carreta' : 'carretas';
+    const head = (titulo, sub) => `
+      <div class="pl-head">
+        <img src="logo.svg" alt="">
+        <div><div class="sf-word">SHIFT <em>FLOW</em></div><div class="sf-tag">EXPEDIÇÃO &nbsp;•&nbsp; BR3R</div></div>
+      </div>
+      <div class="pl-title">${titulo}</div>
+      <div class="pl-sub">${sub}</div>`;
+    if(!regs.length) { el.innerHTML = head('Placar', 'Sem passagens de turno registradas.'); return; }
+
+    if(view === 'turno') {
+      const r = regs[0], o = this.placarNums([r]);
+      const ult = regs.slice(0, 6);
+      const fcurta = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' }) + ' ' + String(d.getHours()).padStart(2, '0') + 'h';
+      const maxMe = Math.max(1, ...ult.map(x => x.p_d || 0));
+      el.innerHTML = head('Último turno', `Turma ${r.turma_sai || '?'} → ${r.turma_rec || '?'} · ${r.conferente || '—'} · ${fdt(new Date(r.data_registro))}`) + `
+        <div class="pl-grp">🚛 Carregou</div>
+        <div class="pl-g2">
+          <div class="pl-t c-b"><b>${fmt(o.pc)}</b><span><strong>Planta</strong><small>${car(o.pc)}</small></span></div>
+          <div class="pl-t c-p"><b>${fmt(o.nsa)}</b><span><strong>NSA</strong><small>${car(o.nsa)}</small></span></div>
+        </div>
+        <div class="pl-grp">📥 Descarregou</div>
+        <div class="pl-t pl-me ${o.me ? '' : 'zero'}"><b>${fmt(o.me)}</b><span>${car(o.me)} de <strong>ME</strong><small>folha · quadro de topo · palete</small></span></div>
+        <div class="pl-g2">
+          <div class="pl-t c-y"><b>${fmt(o.tampa)}</b><span><strong>Tampa básica</strong><small>${car(o.tampa)}</small></span></div>
+          <div class="pl-t c-v"><b>${fmt(o.dev)}</b><span><strong>Devolução</strong><small>${car(o.dev)} · latas/tampas</small></span></div>
+        </div>
+        <div class="pl-grp">📋 Últimos turnos</div>
+        <div class="pl-tab">
+          <div class="pl-tr pl-th"><span>Conferente · turma</span><span>Carr. Planta</span><span>Carr. NSA</span><span class="hl">ME</span><span>Tampa</span><span>Devol.</span></div>
+          ${ult.map(x => { const q = this.placarNums([x]); return `
+          <div class="pl-tr${x === r ? ' cur' : ''}">
+            <span class="pl-who"><b>${(x.conferente || '—').split(' ')[0]}</b><small>${x.turma_sai || '?'} · ${fcurta(new Date(x.data_registro))}</small></span>
+            <span>${fmt(q.pc)}</span><span>${fmt(q.nsa)}</span>
+            <span class="hl ${q.me ? '' : 'zero'}"><i style="width:${(q.me / maxMe) * 100}%"></i><em>${fmt(q.me)}</em></span>
+            <span>${fmt(q.tampa)}</span><span>${fmt(q.dev)}</span>
+          </div>`; }).join('')}
+        </div>
+        <div class="pl-foot">Valores em carretas, lançados pelos conferentes na passagem de turno · Shift Flow</div>`;
+      return;
+    }
+
+    // Última rodada: comparação por conferente
+    const rds = Object.values(this.rodadas(regs)).map(o => Object.assign(o, this.placarNums(o.regs)));
+    rds.forEach(o => { o.nome = (this.confNomes().find(([k]) => k === o.k) || [o.k, o.regs[0]?.conferente || o.k])[1]; });
+    rds.sort((a, b) => b.me - a.me || (b.tampa + b.dev) - (a.tampa + a.dev));
+    const max = Math.max(1, ...rds.map(o => o.me + o.tampa + o.dev));
+    el.innerHTML = head('Descargas · Última rodada', 'Últimos dias seguidos trabalhados por cada conferente (até ' + this.RODADA_DIAS + ' dias)') + `
+      <div class="pl-leg"><span class="lg-me">ME</span><span class="lg-tp">Tampa básica</span><span class="lg-dv">Devolução</span></div>
+      ${rds.map((o, i) => `
+        <div class="pl-rd">
+          <div class="pl-rd-h"><span class="pl-pos">${['🥇','🥈','🥉'][i] || (i + 1) + 'º'}</span><b>${o.nome}</b><span class="pl-rd-d">${fd(o.ini)}${o.dias > 1 ? '–' + fd(o.fim) : ''} · ${o.dias}d</span></div>
+          <div class="rd-bar"><i class="b-me" style="width:${o.me / max * 100}%"></i><i class="b-tp" style="width:${o.tampa / max * 100}%"></i><i class="b-dv" style="width:${o.dev / max * 100}%"></i></div>
+          <div class="pl-rd-v"><span class="v-me">ME <b>${fmt(o.me)}</b></span><span class="v-tp">Tampa <b>${fmt(o.tampa)}</b></span><span class="v-dv">Devol. <b>${fmt(o.dev)}</b></span><span class="v-c">Carregou <b>${fmt(o.pc)}</b> planta · <b>${fmt(o.nsa)}</b> NSA</span></div>
+          ${o.atualEmAndamento ? '<div class="pl-rd-n">rodada anterior · a atual está em andamento</div>' : o.emAndamento ? '<div class="pl-rd-n">rodada em andamento</div>' : ''}
+        </div>`).join('')}
+      <div class="pl-foot">Valores em carretas, lançados pelos conferentes na passagem de turno · Shift Flow</div>`;
+  },
+
+  // Gera a imagem do placar e abre o compartilhamento (WhatsApp)
+  async compartilharPlacar() {
+    const btn = document.getElementById('placar-share');
+    const txt0 = btn.textContent; btn.textContent = 'Gerando imagem...'; btn.disabled = true;
+    try {
+      if(!window.html2canvas) {
+        await new Promise((ok, err) => { const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'; sc.onload = ok; sc.onerror = err; document.head.appendChild(sc); });
+      }
+      const node = document.getElementById('placar-shot');
+      const bg = getComputedStyle(document.documentElement).getPropertyValue('--card-bg').trim() || '#0B1630';
+      const canvas = await window.html2canvas(node, { backgroundColor: bg, scale: 2, useCORS: true, logging: false });
+      const blob = await new Promise(ok => canvas.toBlob(ok, 'image/png'));
+      const nome = 'placar-' + (this._placarView || 'turno') + '-' + new Date().toISOString().slice(0, 10) + '.png';
+      const file = new File([blob], nome, { type: 'image/png' });
+      if(navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'Placar Shift Flow' });
+      } else {
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nome; document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      }
+    } catch(e) {
+      if(e?.name !== 'AbortError') alert('Não foi possível gerar a imagem. Tire um print da tela.');
+    }
+    btn.textContent = txt0; btn.disabled = false;
   },
 
   renderOpsKpis(turnos, tp, tn) {
