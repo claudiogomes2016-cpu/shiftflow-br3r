@@ -845,6 +845,94 @@ button.drw-row { cursor:pointer; }
 .pf-rel { font-size:13px; color:var(--text2); line-height:1.5; margin-top:4px; }
 .pf-rel.inc b { color:var(--red); } .pf-rel.blq b { color:var(--yellow); }
 
+/* ── PAINEL ONE-ON-ONE ── */
+body.oo-open { overflow:hidden; }
+.oo { position:fixed; inset:0; z-index:2500; background:var(--bg); overflow-y:auto; display:flex; flex-direction:column; }
+.oo[hidden] { display:none; }
+[data-theme="dark"] .oo { background:radial-gradient(1200px 600px at 50% -200px, rgba(20,99,255,.25), transparent 70%), var(--bg); }
+.oo-bar { position:sticky; top:0; z-index:2; display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:10px 14px; background:var(--nav-bg); border-bottom:1px solid var(--border); }
+.oo-sel { flex:0 1 280px; height:40px; }
+.oo-pers { display:flex; gap:6px; flex-wrap:wrap; flex:1; }
+.oo-pers button { height:36px; padding:0 12px; border-radius:99px; border:1px solid var(--border2); background:var(--card-bg); color:var(--text2); font-family:var(--f-display); font-size:15px; font-weight:600; cursor:pointer; }
+.oo-pers button.on { background:linear-gradient(180deg,#2F7BFF,#1463FF); border-color:#1463FF; color:#fff; }
+@media(max-width:700px){
+  .oo-bar { padding:8px 10px; }
+  .oo-sel { order:1; flex:1 1 0; min-width:0; }
+  .oo-bar .oo-ico { order:2; }
+  .oo-pers { order:3; flex:1 1 100%; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .oo-pers::-webkit-scrollbar { display:none; }
+  .oo-pers button { flex-shrink:0; white-space:nowrap; }
+}
+.oo-ico { width:40px; height:40px; border-radius:10px; border:1px solid var(--border2); background:var(--card-bg); color:var(--text); font-size:18px; cursor:pointer; }
+.oo-body { padding:clamp(14px, 2vw, 32px); max-width:1800px; width:100%; margin:0 auto; font-size:clamp(14px, 1.05vw, 20px); }
+.oo-load { padding:60px; text-align:center; color:var(--text3); }
+.oo-head { display:flex; align-items:center; gap:clamp(12px, 1.5vw, 24px); margin-bottom:clamp(12px, 1.5vw, 24px); }
+.oo-av { width:clamp(56px, 5vw, 96px); height:clamp(56px, 5vw, 96px); border-radius:50%; background:linear-gradient(180deg,#2F7BFF,#1463FF); color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--f-display); font-weight:800; font-size:clamp(22px, 2vw, 38px); flex-shrink:0; box-shadow:0 8px 24px rgba(20,99,255,.4); }
+.oo-hn { flex:1; min-width:0; }
+.oo-eyebrow { font-family:var(--f-display); font-size:.8em; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--blue-txt); }
+.oo-hn h1 { margin:2px 0; font-family:var(--f-display); font-size:clamp(28px, 3vw, 58px); font-weight:800; line-height:1; color:var(--text); }
+.oo-sub { color:var(--text3); font-size:.95em; }
+.oo-brand { display:flex; align-items:center; gap:6px; }
+.oo-brand img { height:clamp(30px, 2.6vw, 48px); }
+.oo-brand .sf-word { font-size:clamp(20px, 1.8vw, 34px); }
+[data-theme="light"] .oo-brand .sf-word { color:#0A1530; }
+@media(max-width:700px){ .oo-brand { display:none; } }
+.oo-kpis { display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:clamp(8px, .8vw, 14px); margin-bottom:clamp(12px, 1.2vw, 20px); }
+@media(max-width:1100px){ .oo-kpis { grid-template-columns:repeat(3, minmax(0,1fr)); } }
+@media(max-width:560px){ .oo-kpis { grid-template-columns:repeat(2, minmax(0,1fr)); } }
+.oo-k { background:var(--card-grad); border:1px solid var(--border2); border-radius:16px; padding:clamp(10px, 1vw, 18px); display:flex; flex-direction:column; min-width:0; }
+.oo-k-l { font-family:var(--f-display); font-weight:700; color:var(--text2); font-size:.95em; }
+.oo-k b { font-family:var(--f-display); font-size:clamp(34px, 3.2vw, 64px); font-weight:800; line-height:1.05; color:var(--blue-txt); }
+.oo-k-u { font-size:.8em; color:var(--text3); }
+.oo-k-c { margin-top:6px; font-size:.82em; font-weight:700; }
+.oo-k-c em { display:block; font-style:normal; font-weight:500; color:var(--text3); }
+.oo-k-c.up { color:var(--green); } .oo-k-c.dn { color:var(--red); } .oo-k-c.eq { color:var(--text2); }
+.oo-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:clamp(10px, 1vw, 18px); }
+@media(min-width:1400px){ .oo-grid { grid-template-columns:1fr 1fr 1.3fr; } .oo-card.bad { grid-row:span 2; } }
+@media(max-width:860px){ .oo-grid { grid-template-columns:1fr; } }
+.oo-card { background:var(--card-grad); border:1px solid var(--border2); border-radius:18px; padding:clamp(12px, 1.2vw, 22px); min-width:0; }
+.oo-card.ok { border-top:4px solid var(--green); } .oo-card.warn { border-top:4px solid var(--yellow); } .oo-card.bad { border-top:4px solid var(--red); }
+.oo-card.wide { grid-column:1 / -1; }
+.oo-card h2 { margin:0 0 10px; font-family:var(--f-display); font-size:1.35em; font-weight:700; color:var(--text); display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap; }
+.oo-card h2 span { font-size:.62em; font-weight:500; color:var(--text3); }
+.oo-r { display:flex; align-items:center; gap:12px; padding:8px 0; border-top:1px solid var(--border); }
+.oo-r:first-of-type { border-top:0; }
+.oo-r-m { font-family:var(--f-display); font-size:1.7em; font-weight:800; min-width:1.6em; text-align:center; color:var(--text3); }
+.oo-r.weak .oo-r-m { font-size:1.2em; color:var(--yellow); }
+.oo-r-t { font-weight:600; color:var(--text); }
+.oo-r-t small { display:block; font-weight:500; color:var(--text3); font-size:.85em; }
+.oo-empty { color:var(--text3); padding:8px 0; } .oo-empty.good { color:var(--green); font-weight:600; }
+.oo-chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+.oo-chips span { padding:4px 12px; border-radius:99px; background:var(--red-dim); color:var(--red); font-weight:600; font-size:.88em; }
+.oo-chips b { margin-left:4px; }
+.oo-d { border-left:4px solid var(--yellow); background:var(--bg4); border-radius:0 10px 10px 0; padding:8px 12px; margin-bottom:8px; }
+.oo-d.grave { border-left-color:var(--red); } .oo-d.leve { border-left-color:var(--text3); }
+.oo-d-h { display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+.oo-d-h b { font-family:var(--f-display); font-size:1.08em; color:var(--text); }
+.oo-d-h span { font-size:.82em; color:var(--text3); }
+.oo-d-t { font-size:.9em; color:var(--text2); line-height:1.45; margin-top:3px; }
+.oo-ss { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.oo-s { background:var(--bg4); border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:10px; }
+.oo-s b { font-family:var(--f-display); font-size:2em; font-weight:800; color:var(--blue-txt); line-height:1; }
+.oo-s.bad b { color:var(--red); }
+.oo-s span { font-size:.85em; color:var(--text2); line-height:1.25; }
+.oo-evo { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:4px 18px; }
+@media(max-width:860px){ .oo-evo { grid-template-columns:1fr; } }
+.oo-evo-l { grid-row:1; font-size:.85em; color:var(--text2); font-weight:600; }
+.oo-evo-l i { display:inline-block; width:10px; height:10px; border-radius:3px; margin:0 4px 0 10px; vertical-align:-1px; }
+.oo-evo-l .lg-a { background:var(--green); } .oo-evo-l .lg-b { background:var(--border2); }
+@media(max-width:860px){ .oo-evo-l { grid-row:auto; } }
+.oo-bars { display:flex; align-items:flex-end; gap:6px; height:clamp(120px, 12vw, 220px); }
+.oo-col { flex:1; display:flex; flex-direction:column; align-items:center; height:100%; min-width:0; }
+.oo-bw { flex:1; width:100%; display:flex; align-items:flex-end; justify-content:center; gap:3px; }
+.oo-bw i { display:block; width:42%; border-radius:6px 6px 0 0; min-height:2px; }
+.oo-bw i.a { background:var(--green); } .oo-bw i.b { background:var(--border2); } .oo-bw i.c { background:var(--blue); width:60%; } .oo-bw i.d { background:var(--red); width:60%; }
+.oo-col b { font-family:var(--f-display); font-size:1em; color:var(--text); margin-top:3px; } .oo-col b.bad { color:var(--red); }
+.oo-col span { font-size:.78em; color:var(--text3); text-transform:uppercase; }
+.oo-foot { text-align:center; color:var(--text3); font-size:.8em; margin-top:16px; }
+.oo-pf { margin-bottom:14px; }
+.conf-perfil.oo-go { background:var(--card-bg); color:var(--blue-txt); border:1.5px solid var(--blue); box-shadow:none; }
+
 /* ── MOVIMENTAÇÃO E ME ── */
 .periodo-btn.pb-ult { border-color:rgba(255,194,26,.55); }
 .periodo-btn.pb-ult.on { background:linear-gradient(180deg,#FFD24D,#E0A800); border-color:#E0A800; color:#2A1C00; box-shadow:0 4px 14px rgba(255,194,26,.35); }
@@ -1369,6 +1457,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
     <button onclick="app.goTab('dash')"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="13" width="4.5" height="8" rx="1"/><rect x="9.75" y="8" width="4.5" height="13" rx="1"/><rect x="16.5" y="3" width="4.5" height="18" rx="1"/></svg>BI Gestão</button>
     <button onclick="app.goTab('ocorr')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Relatórios · Ocorrências</button>
     <button class="gestor-only" onclick="app.goTab('disc')"><svg fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Disciplina</button>
+    <button class="gestor-only" onclick="app.closeDrawer(); app.abrirOneOnOne()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="4" width="20" height="13" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>One-on-one</button>
     <button class="gestor-only" onclick="app.goHist()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><polyline points="3 3 3 8 8 8"/><polyline points="12 7 12 12 15 14"/></svg>Histórico</button>
   </nav>
   <div class="drw-sep"></div>
@@ -1914,6 +2003,20 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
 </div>
 </div>
 
+<!-- PAINEL ONE-ON-ONE (tela cheia, para a TV) -->
+<div class="oo" id="oo" hidden>
+  <div class="oo-bar">
+    <label class="conf-sel oo-sel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <select id="oo-conf" onchange="app.abrirOneOnOne(this.value)" aria-label="Conferente"></select>
+    </label>
+    <div class="oo-pers" id="oo-pers"></div>
+    <button class="oo-ico" onclick="app.ooTelaCheia()" title="Tela cheia (TV)" aria-label="Tela cheia">⛶</button>
+    <button class="oo-ico" onclick="app.fecharOneOnOne()" title="Fechar" aria-label="Fechar">✕</button>
+  </div>
+  <div class="oo-body" id="oo-body"></div>
+</div>
+
 <!-- MODAL PLACAR (para print / WhatsApp) -->
 <div class="mb" id="placar-modal">
 <div class="mbx placar-box">
@@ -2206,7 +2309,8 @@ const app = {
           <svg class="conf-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </label>
         ${this.confSel ? `<button class="conf-x" onclick="app.setConfSel('')" aria-label="Limpar filtro de conferente">✕</button>` : ''}
-        ${this.confSel ? `<button class="conf-perfil gestor-only" onclick="app.abrirPerfilConferente(app.confSelNome(), '${bar.dataset.scope}')">Ver tudo do conferente</button>` : ''}`;
+        ${this.confSel ? `<button class="conf-perfil gestor-only" onclick="app.abrirPerfilConferente(app.confSelNome(), '${bar.dataset.scope}')">Ver tudo do conferente</button>` : ''}
+        ${this.confSel ? `<button class="conf-perfil oo-go gestor-only" onclick="app.abrirOneOnOne(app.confSelNome())">📺 One-on-one</button>` : ''}`;
     });
   },
 
@@ -3580,6 +3684,168 @@ const app = {
       </div>`;
   },
 
+  // ── PAINEL ONE-ON-ONE ──
+  OO_PERS: [ ['m0','Este mês'], ['m1','Mês passado'], ['n2','Últimos 2 meses'], ['n3','3 meses'], ['n6','6 meses'] ],
+
+  ooRange(per) {
+    const h = new Date(), y = h.getFullYear(), m = h.getMonth();
+    if(per === 'm0') return { ini: new Date(y, m, 1), fim: h };
+    if(per === 'm1') return { ini: new Date(y, m - 1, 1), fim: new Date(y, m, 1) };
+    const n = { n2: 2, n3: 3, n6: 6 }[per] || 2;
+    return { ini: new Date(y, m - (n - 1), 1), fim: h };   // mês atual + anteriores
+  },
+
+  async ooGarantirDados() {
+    if(!this.allTurnos || !this.allTurnos.length) {
+      try { const { data } = await db.from('turnos').select('*').order('data_registro', { ascending:false }); this.allTurnos = data || []; } catch(e) {}
+    }
+    if(!this._discData || !this._discData.length) {
+      try {
+        const { data } = await db.from('disciplina').select('*').order('created_at', { ascending:false }).limit(500);
+        const sup = data || [];
+        const promoted = new Set(sup.map(r => r._seed_origin).filter(Boolean));
+        this._discData = this._applyDiscOverrides([...SEED_DISC.filter(x => !promoted.has(x.id)), ...sup]);
+      } catch(e) { this._discData = this._applyDiscOverrides([...SEED_DISC]); }
+    }
+  },
+
+  async abrirOneOnOne(nome) {
+    if(!this.isGestor()) return;
+    const el = document.getElementById('oo');
+    el.hidden = false; document.body.classList.add('oo-open');
+    document.getElementById('oo-body').innerHTML = '<div class="oo-load">Carregando...</div>';
+    await this.ooGarantirDados();
+    const nomes = this.confNomes().filter(([k]) => (this.allTurnos || []).some(r => this.normConf(r.conferente) === k && r.turma_sai !== 'ADM' && Date.now() - new Date(r.data_registro) < 120 * 86400000));
+    const k = this.normConf(nome || '') || this._ooConf || (nomes[0] || [''])[0];
+    this._ooConf = k;
+    this._ooPer = this._ooPer || 'n2';
+    document.getElementById('oo-conf').innerHTML = nomes.map(([kk, n]) => `<option value="${n.replace(/"/g, '&quot;')}"${kk === k ? ' selected' : ''}>${n}</option>`).join('')
+      + (nomes.some(([kk]) => kk === k) ? '' : `<option selected>${nome || k}</option>`);
+    this.renderOneOnOne();
+  },
+
+  fecharOneOnOne() {
+    document.getElementById('oo').hidden = true; document.body.classList.remove('oo-open');
+    if(document.fullscreenElement) document.exitFullscreen?.();
+  },
+
+  ooTelaCheia() {
+    const el = document.getElementById('oo');
+    if(document.fullscreenElement) document.exitFullscreen?.(); else el.requestFullscreen?.().catch(() => {});
+  },
+
+  ooPeriodo(per) { this._ooPer = per; this.renderOneOnOne(); },
+
+  renderOneOnOne() {
+    const k = this._ooConf, per = this._ooPer || 'n2';
+    document.getElementById('oo-pers').innerHTML = this.OO_PERS.map(([v, l]) => `<button class="${v === per ? 'on' : ''}" onclick="app.ooPeriodo('${v}')">${l}</button>`).join('');
+    const { ini, fim } = this.ooRange(per);
+    const fmt = v => Number(v).toLocaleString('pt-BR');
+    const fmt1 = v => (Math.round(v * 10) / 10).toLocaleString('pt-BR');
+    const fd = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'2-digit' });
+    const MES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+    const noPer = r => { const d = new Date(r.data_registro); return d >= ini && d < fim && r.turma_sai !== 'ADM'; };
+    const equipe = (this.allTurnos || []).filter(noPer);
+    const meus = equipe.filter(r => this.normConf(r.conferente) === k);
+    const nomes = Object.fromEntries(this.confNomes());
+    const nome = nomes[k] || (meus[0] && meus[0].conferente) || k;
+    const pessoa = Object.values(this.conferentesMap || {}).find(c => this.normConf(c.nome) === k);
+    const turmas = [...new Set(meus.map(r => r.turma_sai))].filter(Boolean);
+    const perLbl = (this.OO_PERS.find(([v]) => v === per) || [0, ''])[1] + ' · ' + fd(ini) + ' a ' + fd(new Date(Math.min(+fim, Date.now())));
+
+    // números: dele x média da equipe (por turno)
+    const eu = this.placarNums(meus), eq = this.placarNums(equipe);
+    const nConf = new Set(equipe.map(r => this.normConf(r.conferente))).size || 1;
+    const kpi = (l, c, unid) => {
+      const v = eu[c], mt = meus.length ? v / meus.length : 0, et = equipe.length ? eq[c] / equipe.length : 0;
+      const dif = et ? (mt - et) / et : 0;
+      const seta = !meus.length || Math.abs(dif) < 0.05 || fmt1(mt) === fmt1(et) ? ['=', 'eq'] : dif > 0 ? ['▲', 'up'] : ['▼', 'dn'];
+      return `<div class="oo-k"><span class="oo-k-l">${l}</span><b>${fmt(v)}</b><span class="oo-k-u">${unid}</span>
+        <span class="oo-k-c ${seta[1]}">${seta[0]} ${fmt1(mt)}/turno <em>equipe ${fmt1(et)}</em></span></div>`;
+    };
+    const kpis = `
+      <div class="oo-k"><span class="oo-k-l">Turnos</span><b>${fmt(meus.length)}</b><span class="oo-k-u">passagens</span><span class="oo-k-c eq">equipe ${fmt1(equipe.length / nConf)} por conferente</span></div>
+      ${kpi('Carregou planta', 'pc', 'carregamentos')}${kpi('Carregou NSA', 'nsa', 'carregamentos')}
+      ${kpi('Descarga de ME', 'me', 'carretas')}${kpi('Tampa básica', 'tampa', 'carretas')}${kpi('Devolução', 'dev', 'carretas')}`;
+
+    // ranking: destaques e onde pode melhorar
+    const st = this.confStats(equipe);
+    const total = Object.keys(st).length;
+    const pos = this.RK_CATS.map(c => { const rk = this.rankBy(st, c.k); const i = rk.findIndex(o => o.k === k); return { c, i, n: rk.length, v: st[k] ? st[k][c.k] : 0, lider: rk[0] }; });
+    const bons = pos.filter(p => p.i >= 0 && p.i < 3 && p.n > 1).sort((a, b) => a.i - b.i);
+    // só categorias em que alguém da equipe pontuou (senão não diz nada sobre o conferente)
+    const fracos = pos.filter(p => total > 2 && p.n > 0 && p.lider && (p.i < 0 || (p.i >= 3 && p.i >= Math.ceil(p.n / 2))) && !bons.includes(p));
+    const medal = ['🥇','🥈','🥉'];
+    const bonsHtml = bons.length ? bons.map(p => `<div class="oo-r good"><span class="oo-r-m">${medal[p.i]}</span><span class="oo-r-t">${p.c.i} ${p.c.l}<small>${p.i + 1}º de ${p.n} · ${fmt(p.v)} ${this.rkUn(p.c, p.v)}</small></span></div>`).join('')
+      : '<div class="oo-empty">Não ficou entre os 3 primeiros em nenhuma categoria neste período.</div>';
+    // abaixo da média da equipe por turno (mais de 10% abaixo)
+    const abaixo = meus.length ? [['me', '📦 Descarga de ME'], ['pc', '🏆 Carregamentos na planta'], ['nsa', '🚚 Carregamentos na NSA']].map(([c, l]) => {
+      const mt = eu[c] / meus.length, et = equipe.length ? eq[c] / equipe.length : 0;
+      return et > 0 && mt < et * 0.9 ? `<div class="oo-r weak"><span class="oo-r-m">▼</span><span class="oo-r-t">${l} abaixo da média<small>${fmt1(mt)} por turno · equipe ${fmt1(et)} (${Math.round((mt - et) / et * 100)}%)</small></span></div>` : '';
+    }).join('') : '';
+    const fracosHtml = (abaixo || fracos.length) ? abaixo + fracos.map(p => `<div class="oo-r weak"><span class="oo-r-m">${p.i >= 0 ? (p.i + 1) + 'º' : '—'}</span><span class="oo-r-t">${p.c.i} ${p.c.l}<small>${p.i >= 0 ? (p.i + 1) + 'º de ' + p.n + ' · ' + fmt(p.v) + ' ' + this.rkUn(p.c, p.v) + ' · ' : 'nenhum registro · '}líder: ${(nomes[p.lider?.k] || p.lider?.nome || '—').split(' ')[0]} com ${fmt(p.lider ? p.lider[p.c.k] : 0)}</small></span></div>`).join('')
+      : '<div class="oo-empty good">Acima ou na média da equipe em tudo. 👏</div>';
+
+    // pontos de atenção: Disciplina no período
+    const dDisc = r => r.data_ocorrencia ? new Date(r.data_ocorrencia + 'T12:00:00') : new Date(r.created_at);
+    const disc = (this._discData || []).filter(r => this.normConf(r.conferente) === k && dDisc(r) >= ini && dDisc(r) < fim).sort((a, b) => dDisc(b) - dDisc(a));
+    const porTipo = {}; disc.forEach(r => porTipo[r.tipo || 'Outro'] = (porTipo[r.tipo || 'Outro'] || 0) + 1);
+    const grav = g => ({ grave:'Grave', media:'Média', leve:'Leve' })[String(g || '').toLowerCase()] || '';
+    const discHtml = disc.length ? `
+      <div class="oo-chips">${Object.entries(porTipo).sort((a, b) => b[1] - a[1]).map(([t, n]) => `<span>${t} <b>${n}</b></span>`).join('')}</div>
+      ${disc.map(r => `<div class="oo-d ${String(r.gravidade || '').toLowerCase()}">
+        <div class="oo-d-h"><b>${r.tipo || 'Outro'}</b><span>${fd(dDisc(r))}${grav(r.gravidade) ? ' · ' + grav(r.gravidade) : ''}${r.acao ? ' · ação: ' + r.acao : ''}</span></div>
+        <div class="oo-d-t">${r.descricao || ''}</div></div>`).join('')}`
+      : '<div class="oo-empty good">Nenhuma ocorrência disciplinar neste período. 👏</div>';
+
+    // segurança e operação
+    let tma = 0; meus.forEach(r => { try { tma += JSON.parse(r.tma_justificativas || '[]').length; } catch(e) {} });
+    const inc = meus.filter(r => r.seg === 'sim'), blq = meus.filter(r => r.qual === 'sim');
+    const seg = `
+      <div class="oo-s"><b>${inc.length}</b><span>incidentes de segurança relatados</span></div>
+      <div class="oo-s"><b>${blq.length}</b><span>bloqueios de qualidade relatados</span></div>
+      <div class="oo-s"><b>${tma}</b><span>veículos acima de 4 h justificados</span></div>
+      <div class="oo-s ${eu.foSem ? 'bad' : ''}"><b>${eu.foSem + eu.foRep}</b><span>turno${eu.foSem + eu.foRep === 1 ? '' : 's'} com falta de operador${eu.foSem ? ` (${eu.foSem} sem reposição)` : ''}</span></div>`;
+
+    // evolução: últimos 6 meses
+    const h = new Date(); const meses = [];
+    for(let i = 5; i >= 0; i--) {
+      const a = new Date(h.getFullYear(), h.getMonth() - i, 1), b = new Date(h.getFullYear(), h.getMonth() - i + 1, 1);
+      const rr = (this.allTurnos || []).filter(r => this.normConf(r.conferente) === k && r.turma_sai !== 'ADM' && new Date(r.data_registro) >= a && new Date(r.data_registro) < b);
+      const ee = (this.allTurnos || []).filter(r => r.turma_sai !== 'ADM' && new Date(r.data_registro) >= a && new Date(r.data_registro) < b);
+      const q = this.placarNums(rr), qe = this.placarNums(ee);
+      const dd = (this._discData || []).filter(r => this.normConf(r.conferente) === k && dDisc(r) >= a && dDisc(r) < b).length;
+      meses.push({ l: MES[a.getMonth()], t: rr.length, me: rr.length ? q.me / rr.length : 0, meEq: ee.length ? qe.me / ee.length : 0, pc: rr.length ? q.pc / rr.length : 0, dd });
+    }
+    const mxMe = Math.max(0.1, ...meses.map(x => Math.max(x.me, x.meEq))), mxPc = Math.max(1, ...meses.map(x => x.pc)), mxD = Math.max(1, ...meses.map(x => x.dd));
+    const evo = `
+      <div class="oo-evo">
+        <div class="oo-evo-l"><span>ME por turno <i class="lg-a"></i>dele <i class="lg-b"></i>equipe</span></div>
+        <div class="oo-bars">${meses.map(x => `<div class="oo-col"><div class="oo-bw"><i class="a" style="height:${x.me / mxMe * 100}%"></i><i class="b" style="height:${x.meEq / mxMe * 100}%"></i></div><b>${x.t ? fmt1(x.me) : '—'}</b><span>${x.l}</span></div>`).join('')}</div>
+        <div class="oo-evo-l"><span>Carregamentos na planta por turno</span></div>
+        <div class="oo-bars">${meses.map(x => `<div class="oo-col"><div class="oo-bw"><i class="c" style="height:${x.pc / mxPc * 100}%"></i></div><b>${x.t ? fmt1(x.pc) : '—'}</b><span>${x.l}</span></div>`).join('')}</div>
+        <div class="oo-evo-l"><span>Ocorrências disciplinares</span></div>
+        <div class="oo-bars sm">${meses.map(x => `<div class="oo-col"><div class="oo-bw"><i class="d" style="height:${x.dd / mxD * 100}%"></i></div><b class="${x.dd ? 'bad' : ''}">${x.dd}</b><span>${x.l}</span></div>`).join('')}</div>
+      </div>`;
+
+    document.getElementById('oo-body').innerHTML = `
+      <div class="oo-head">
+        <div class="oo-av">${(nome || '?').split(' ').map(p => p[0]).slice(0, 2).join('')}</div>
+        <div class="oo-hn"><div class="oo-eyebrow">One-on-one · Expedição BR3R</div><h1>${nome}</h1>
+          <div class="oo-sub">Turma ${turmas.join(', ') || pessoa?.turma || '—'} · ${perLbl} · ${meus.length} turno${meus.length === 1 ? '' : 's'}</div></div>
+        <div class="oo-brand"><img src="logo.svg" alt=""><span class="sf-word">SHIFT <em>FLOW</em></span></div>
+      </div>
+      <div class="oo-kpis">${kpis}</div>
+      <div class="oo-grid">
+        <section class="oo-card ok"><h2>🏆 Onde você se destacou</h2>${bonsHtml}</section>
+        <section class="oo-card warn"><h2>📉 Onde pode melhorar</h2>${fracosHtml}</section>
+        <section class="oo-card bad"><h2>⚠️ Pontos de atenção <span>${disc.length} ocorrência${disc.length === 1 ? '' : 's'} na Disciplina</span></h2>${discHtml}</section>
+        <section class="oo-card"><h2>🛡️ Segurança e operação</h2><div class="oo-ss">${seg}</div></section>
+        <section class="oo-card wide"><h2>📅 Evolução mês a mês <span>últimos 6 meses</span></h2>${evo}</section>
+      </div>
+      <div class="oo-foot">Comparação com a média da equipe por turno (turmas A–D, mesmo período) · Shift Flow · ${new Date().toLocaleDateString('pt-BR')}</div>`;
+  },
+
   // ── PLACAR PARA O GRUPO ──
   async abrirPlacar(view) {
     document.getElementById('placar-modal').classList.add('on');
@@ -4634,6 +4900,7 @@ const app = {
     }).join('') : '<div style="text-align:center;color:var(--text3);padding:14px 0;font-size:14px">Nenhuma ocorrência disciplinar neste período. 👏</div>';
 
     content.innerHTML = `
+      ${this.isGestor() ? `<button class="placar-btn oo-pf" onclick="app.fecharPerfilModal(); app.abrirOneOnOne('${(pessoa?.nome || nomeOriginal).replace(/'/g, "\\'")}')">📺 Abrir painel do one-on-one <small>destaques, pontos de atenção e evolução · tela cheia para a TV</small></button>` : ''}
       <div style="margin-bottom:16px">
         <div style="font-size:20px;font-weight:800;color:var(--text)">${pessoa?.nome || nomeOriginal}</div>
         <div style="font-size:13px;color:var(--text3);margin-top:2px;text-transform:capitalize">Turma ${turma} · ${periodoLabel}</div>
