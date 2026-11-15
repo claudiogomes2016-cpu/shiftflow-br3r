@@ -3282,7 +3282,7 @@ const app = {
     const tiles = [
       { go:"app.goOcorrFiltro('incidente')", l:'Dias sem incidente', v: diasSemInc === null ? '—' : diasSemInc, s: diasSemInc === null ? 'nenhum incidente registrado' : 'desde o último registro', c: diasSemInc === null || diasSemInc >= 30 ? 'good' : diasSemInc >= 7 ? 'warn' : 'bad', bar: diasSemInc === null ? 100 : Math.min(100, diasSemInc / 30 * 100), i:'🛡️' },
       { go: this.isGestor() ? "app.goHist('')" : '', l:'Registros', v: total, s: 'passagens de turno no período', c:'info', bar: 100, i:'📝' },
-      { go:"app.scrollToEl('chart-prod')", l:'Média por turno', v: media, s: 'paletes movimentados (planta + NSA)', c:'info', bar: 100, i:'📦' },
+      { go:"app.scrollToEl('chart-prod')", l:'Média por turno', v: media, s: 'carregamentos e descarregamentos (planta + NSA)', c:'info', bar: 100, i:'📦' },
       { go: this.isGestor() ? "app.goHist('tma')" : '', l:'TMA > 4h', v: tmaVeic, s: tmaTurnos + ' turno' + (tmaTurnos!==1?'s':'') + ' com veículos parados', c: tmaVeic === 0 ? 'good' : tmaVeic <= 5 ? 'warn' : 'bad', bar: pct(tmaTurnos, total), i:'⏱️' },
       { go: this.isGestor() ? "app.goHist('falta')" : '', l:'Absenteísmo', v: absPct + '%', s: faltas + ' falta' + (faltas!==1?'s':'') + ' · ' + repos + ' reposta' + (repos!==1?'s':''), c: absPct === 0 ? 'good' : absPct <= 10 ? 'warn' : 'bad', bar: absPct, i:'👥' },
       { go: this.isGestor() ? "app.goHist('equip')" : '', l:'Equipamentos', v: emp, s: 'empilhadeira parada · ' + bau + ' baú reprovado' + (bau!==1?'s':''), c: emp === 0 ? 'good' : empCham === emp ? 'warn' : 'bad', bar: pct(empCham, emp || 1), i:'🔧', foot: emp ? (empCham + '/' + emp + ' com chamado') : 'operação sem paradas' },
@@ -3426,9 +3426,9 @@ const app = {
 
   // ── RANKING / DESTAQUES DOS CONFERENTES ──
   RK_CATS: [
-    { k:'pc',   i:'🏆', l:'Mais carregou na planta',      u:'paletes', us:'palete', med:true },
-    { k:'nc',   i:'🚚', l:'Mais carregou na NSA',         u:'paletes', us:'palete', med:true },
-    { k:'pd',   i:'📦', l:'Mais descarregou na planta',   u:'paletes', us:'palete', med:true },
+    { k:'pc',   i:'🏆', l:'Mais carregou na planta',      u:'carregamentos', us:'carregamento', med:true },
+    { k:'nc',   i:'🚚', l:'Mais carregou na NSA',         u:'carregamentos', us:'carregamento', med:true },
+    { k:'pd',   i:'📦', l:'Mais descarregou na planta',   u:'descarregamentos', us:'descarregamento', med:true },
     { k:'n',    i:'📝', l:'Mais passagens de turno',      u:'turnos', us:'turno' },
     { k:'inc',  i:'🛡️', l:'Mais incidentes relatados',    u:'relatos', us:'relato',   d:'incidentes de segurança registrados com descrição' },
     { k:'blq',  i:'⚠️', l:'Mais bloqueios relatados',     u:'relatos', us:'relato',   d:'bloqueios de qualidade registrados com descrição' },
@@ -3475,7 +3475,8 @@ const app = {
         <button class="rkc-row${this.normConf(o.k) === this.confSel ? ' me' : ''}" onclick="app.rkAbrir('${o.k.replace(/'/g, "\\'")}')">
           <span class="rkc-m">${medal[i]}</span><span class="rkc-n">${o.nome}</span><span class="rkc-v">${fmt(o[c.k])}</span>
         </button>`).join('');
-      const media = c.med && top.n ? `<span class="rkc-med">${fmt(Math.round(top[c.k] / top.n))} ${c.u}/turno</span>` : '';
+      const mVal = c.med && top.n ? Math.round(top[c.k] / top.n) : 0;
+      const media = c.med && top.n ? `<span class="rkc-med">${fmt(mVal)} ${this.rkUn(c, mVal)}/turno</span>` : '';
       return `<div class="rkc">
         <div class="rkc-h"><span>${c.i}</span><b>${c.l}</b></div>
         <div class="rkc-top"><span class="rkc-tn">${top.nome}</span><span class="rkc-tv">${fmt(top[c.k])} <small>${this.rkUn(c, top[c.k])}</small></span>${media}</div>
