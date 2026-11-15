@@ -995,6 +995,23 @@ body.oo-open { overflow:hidden; }
 .placar-msg { margin-top:8px; font-size:13px; color:var(--text2); }
 .placar-msg summary { cursor:pointer; color:var(--blue-txt); font-weight:600; padding:4px 0; }
 .placar-msg pre { white-space:pre-wrap; font-family:var(--font); font-size:13px; line-height:1.45; background:var(--bg4); border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin:6px 0 0; color:var(--text); max-height:260px; overflow:auto; }
+.placar-nums { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text2); margin-top:8px; cursor:pointer; }
+.placar-nums input { width:18px; height:18px; accent-color:#1463FF; }
+.rk-shares { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0 4px; }
+.rk-shares .rk-share { margin:0; font-size:17px; padding:10px 8px; }
+.placar-tabs [data-v] { font-size:13.5px; }
+.pl-dg { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:7px; margin-top:12px; }
+.pl-dc { background:var(--bg4); border:1px solid var(--border2); border-radius:12px; padding:8px 9px; min-width:0; }
+.pl-dc-h { display:flex; align-items:flex-start; gap:5px; margin-bottom:4px; }
+.pl-dc-h span { font-size:13px; line-height:1.2; }
+.pl-dc-h b { font-family:var(--f-display); font-size:12.5px; font-weight:700; color:var(--text2); line-height:1.15; }
+.pl-dc-r { display:flex; align-items:center; gap:4px; padding:2px 0; font-size:12px; color:var(--text2); }
+.pl-dc-r .m { width:16px; font-size:11px; }
+.pl-dc-r .n { flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:600; }
+.pl-dc-r .v { font-family:var(--f-display); font-weight:700; color:var(--text); font-size:13.5px; }
+.pl-dc-r.p1 .n { color:var(--blue-txt); font-family:var(--f-display); font-size:14px; }
+.pl-dc-r.p1 .v { font-size:17px; color:var(--blue-txt); }
+.pl-dc-e { font-size:11.5px; color:var(--text3); }
 .placar-dica { font-size:12px; color:var(--text3); text-align:center; margin-top:6px; }
 .pl-head { display:flex; align-items:center; gap:6px; }
 .pl-head img { height:34px; }
@@ -1851,7 +1868,10 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
       </div>
       <span style="font-size:26px">🏆</span>
     </div>
-    <button class="placar-btn rk-share" onclick="app.abrirPlacar('mes')">📤 Compartilhar ranking do mês <small>tabela pronta para o grupo do WhatsApp</small></button>
+    <div class="rk-shares">
+      <button class="placar-btn rk-share" onclick="app.abrirPlacar('dest')">🏅 Compartilhar destaques <small>painel + mensagem para o grupo</small></button>
+      <button class="placar-btn rk-share" onclick="app.abrirPlacar('mes')">📤 Compartilhar ranking <small>tabela do mês + mensagem</small></button>
+    </div>
     <div class="rkc-g" id="rk-conf"></div>
   </div>
 
@@ -2034,6 +2054,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
     <button data-v="rodada" onclick="app.renderPlacar('rodada')">Rodada</button>
     <button data-v="turno" onclick="app.renderPlacar('turno')">Último turno</button>
     <button data-v="mes" onclick="app.renderPlacar('mes')">Mês</button>
+    <button data-v="dest" onclick="app.renderPlacar('dest')">Destaques</button>
     <button class="mc" onclick="app.fecharPlacar()" aria-label="Fechar">✕</button>
   </div>
   <div class="placar-nav" id="placar-nav"></div>
@@ -2042,6 +2063,7 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
     <button class="btn-s placar-copy" onclick="app.copiarMsgPlacar()" id="placar-copy">📋 Copiar mensagem</button>
     <button class="btn-m" onclick="app.compartilharPlacar()" id="placar-share">📤 Compartilhar imagem</button>
   </div>
+  <label class="placar-nums" id="placar-nums-wrap"><input type="checkbox" id="placar-nums" onchange="app._msgNums = this.checked; app.renderPlacar(app._placarView)"> Incluir os números do ranking na mensagem</label>
   <details class="placar-msg"><summary>Ver a mensagem que será copiada</summary><pre id="placar-msg"></pre></details>
   <div class="placar-dica">1º copie a mensagem e cole no grupo · 2º compartilhe a imagem</div>
 </div>
@@ -3926,7 +3948,9 @@ const app = {
 
   renderPlacar(view) {
     this._placarView = view;
-    const navEl = document.getElementById('placar-nav'); if(navEl) { navEl.style.display = (view === 'rodada' || view === 'mes') ? '' : 'none'; }
+    const navEl = document.getElementById('placar-nav'); if(navEl) { navEl.style.display = (view === 'rodada' || view === 'mes' || view === 'dest') ? '' : 'none'; }
+    const numOpt = document.getElementById('placar-nums-wrap'); if(numOpt) numOpt.style.display = view === 'mes' ? '' : 'none';
+    const numCb = document.getElementById('placar-nums'); if(numCb) numCb.checked = !!this._msgNums;
     document.querySelectorAll('.placar-tabs [data-v]').forEach(b => b.classList.toggle('on', b.dataset.v === view));
     const el = document.getElementById('placar-shot');
     const regs = [...(this.allTurnos || [])].sort((a, b) => new Date(b.data_registro) - new Date(a.data_registro));
@@ -3967,10 +3991,7 @@ const app = {
         const nm = o => this.nomeMsg(o.nome);
         const lista = (c) => linhas.filter(o => o[c] > 0).sort((a, b) => b[c] - a[c]).map(o => nm(o) + ' ' + fmt(o[c])).join(' · ') || 'nenhuma';
         const fo = linhas.filter(o => o.foSem + o.foRep).map(o => nm(o) + ' ' + (o.foSem + o.foRep) + (o.foSem ? ` (${o.foSem} sem reposição)` : ''));
-        this.setMsgPlacar(!linhas.length ? `📊 *Ranking de ${MESES[ini.getMonth()]}* — Expedição BR3R\nSem passagens de turno neste mês.` : [
-          `📊 *Ranking de ${MESES[ini.getMonth()]}${ehAtual ? ' (parcial)' : ''}* — Expedição BR3R`,
-          `_${doMes.length} passagens de turno${ehAtual ? ' · até ' + fdt(hoje) : ''}_`,
-          ``,
+        const detalhe = !linhas.length ? '' : [
           `📦 *Descarga de ME* (carretas)`,
           ...linhas.map((o, i) => `${['🥇','🥈','🥉'][i] || (i + 1) + 'º'} ${nm(o)} — *${fmt(o.me)}* (${fmt(Math.round(o.me / Math.max(1, o.turnos) * 10) / 10)} por turno)`),
           ``,
@@ -3982,7 +4003,19 @@ const app = {
           ...(fo.length ? [`🚜 *Falta de operador:* ${fo.join(' · ')}`] : []),
           ``,
           `*Total do mês:* ME ${fmt(tot.me)} · Planta ${fmt(tot.pc)} · NSA ${fmt(tot.nsa)} · Tampa ${fmt(tot.tampa)} · Devolução ${fmt(tot.dev)}`,
-          `👇 Detalhe na imagem`].join('\n'));
+        ].join('\n');
+        const mesUp = MESES[ini.getMonth()].toUpperCase();
+        const intro = [
+          `🏆 *SHIFT FLOW | EXPEDIÇÃO BR3R*`,
+          ``,
+          `${this.saudacao()}, pessoal!`,
+          ``,
+          ehAtual
+            ? `Segue o *RANKING PARCIAL DE ${mesUp}*, com a evolução e os resultados acumulados de todos os turnos até o momento.`
+            : `Segue o *RANKING DE ${mesUp}*, com os resultados de todos os turnos do mês.`,
+          ``,
+          `Vamos acompanhar nosso desempenho e buscar sempre melhorar os resultados! 👊`].join('\n');
+        this.setMsgPlacar(intro + (this._msgNums && detalhe ? '\n\n' + detalhe : ''), !!linhas.length);
       }
       el.innerHTML = head('Ranking de ' + MESES[ini.getMonth()] + (ehAtual ? ' (parcial)' : ''),
           doMes.length ? `${doMes.length} passagens de turno · ${linhas.length} conferentes${ehAtual ? ' · até ' + fdt(hoje) : ''}` : 'Sem passagens de turno neste mês.') +
@@ -3997,6 +4030,43 @@ const app = {
           <div class="pl-tr pl-tot"><span class="pl-who"><b>Total</b></span><span>${fmt(doMes.length)}</span><span>${fmt(tot.pc)}</span><span>${fmt(tot.nsa)}</span><span class="hl"><em>${fmt(tot.me)}</em></span><span>${fmt(tot.tampa)}</span><span>${fmt(tot.dev)}</span></div>
         </div>
         <div class="pl-mes-leg"><span class="top-ex">00</span> maior do mês em cada coluna · ordenado por descarga de ME</div>` : '') + `
+        <div class="pl-foot">ME = folha · quadro de topo · palete. Valores em carretas, lançados pelos conferentes na passagem de turno · Shift Flow</div>`;
+      return;
+    }
+
+    if(view === 'dest') {
+      const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+      const ref = this._mesRef || new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const ini = new Date(ref.getFullYear(), ref.getMonth(), 1), fim = new Date(ref.getFullYear(), ref.getMonth() + 1, 1);
+      const hoje = new Date(); const ehAtual = ini.getFullYear() === hoje.getFullYear() && ini.getMonth() === hoje.getMonth();
+      const nav = document.getElementById('placar-nav');
+      if(nav) nav.innerHTML = `
+        <button onclick="app.navMes(-1, 'dest')" aria-label="Mês anterior">◀ ${MESES[(ini.getMonth() + 11) % 12].slice(0, 3)}</button>
+        <span>${MESES[ini.getMonth()]} ${ini.getFullYear()}</span>
+        <button onclick="app.navMes(1, 'dest')" ${ehAtual ? 'disabled' : ''} aria-label="Próximo mês">${MESES[(ini.getMonth() + 1) % 12].slice(0, 3)} ▶</button>`;
+      const doMes = regs.filter(r => { const d = new Date(r.data_registro); return d >= ini && d < fim && r.turma_sai !== 'ADM'; });
+      const st = this.confStats(doMes);
+      const medal = ['🥇','🥈','🥉'];
+      const curto = n => { const pp = String(n || '').split(' ').filter(Boolean); return pp[0] + (pp[1] ? ' ' + pp[1][0] + '.' : ''); };
+      const cards = this.RK_CATS.map(c => {
+        const rk = this.rankBy(st, c.k).slice(0, 3);
+        return `<div class="pl-dc">
+          <div class="pl-dc-h"><span>${c.i}</span><b>${c.l}</b></div>
+          ${rk.length ? rk.map((o, i) => `<div class="pl-dc-r${i === 0 ? ' p1' : ''}"><span class="m">${medal[i]}</span><span class="n">${curto(o.nome)}</span><span class="v">${fmt(o[c.k])}</span></div>`).join('') : '<div class="pl-dc-e">Ninguém no período</div>'}
+        </div>`;
+      }).join('');
+      const mesUp = MESES[ini.getMonth()].toUpperCase();
+      this.setMsgPlacar([
+        `🏅 *SHIFT FLOW | DESTAQUES DOS CONFERENTES*`,
+        ``,
+        `Segue o painel de *DESTAQUES DE ${mesUp}*, mostrando os conferentes que mais se destacaram em cada indicador.`,
+        ``,
+        `Reconhecimento pelo trabalho realizado e incentivo para que todos continuem evoluindo!`,
+        ``,
+        `*Parabéns, equipe!* 👏`].join('\n'), !!doMes.length);
+      el.innerHTML = head('Destaques de ' + MESES[ini.getMonth()] + (ehAtual ? ' (parcial)' : ''),
+          doMes.length ? `Quem mais se destacou em cada indicador · ${doMes.length} passagens de turno${ehAtual ? ' · até ' + fdt(hoje) : ''}` : 'Sem passagens de turno neste mês.') +
+        (doMes.length ? `<div class="pl-dg">${cards}</div>` : '') + `
         <div class="pl-foot">ME = folha · quadro de topo · palete. Valores em carretas, lançados pelos conferentes na passagem de turno · Shift Flow</div>`;
       return;
     }
@@ -4133,11 +4203,13 @@ const app = {
     if(!ok) document.querySelector('.placar-msg')?.setAttribute('open', '');
   },
 
-  navMes(d) {
+  navMes(d, view) {
     const r = this._mesRef || new Date();
     this._mesRef = new Date(r.getFullYear(), r.getMonth() + d, 1);
-    this.renderPlacar('mes');
+    this.renderPlacar(view || 'mes');
   },
+
+  saudacao() { const h = new Date().getHours(); return h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'; },
 
   navRodada(d) {
     const { idx } = this.rodadaAtual();
