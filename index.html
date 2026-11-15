@@ -845,6 +845,30 @@ button.drw-row { cursor:pointer; }
 .pf-rel { font-size:13px; color:var(--text2); line-height:1.5; margin-top:4px; }
 .pf-rel.inc b { color:var(--red); } .pf-rel.blq b { color:var(--yellow); }
 
+/* ── MOVIMENTAÇÃO E ME ── */
+.periodo-btn.pb-ult { border-color:rgba(255,194,26,.55); }
+.periodo-btn.pb-ult.on { background:linear-gradient(180deg,#FFD24D,#E0A800); border-color:#E0A800; color:#2A1C00; box-shadow:0 4px 14px rgba(255,194,26,.35); }
+.me-g { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; }
+.me-t { background:var(--bg4); border:1px solid var(--border); border-radius:12px; padding:10px; display:flex; flex-direction:column; min-width:0; }
+.me-l { font-size:12px; color:var(--text3); font-weight:600; line-height:1.2; }
+.me-t b { font-family:var(--f-display); font-size:30px; font-weight:700; line-height:1.05; margin-top:4px; color:var(--blue-txt); }
+.me-t.g b { color:var(--green); } .me-t.p b { color:#8CA3FF; }
+.me-t small { font-size:11.5px; color:var(--text3); }
+.me-sec { margin-top:12px; padding-top:10px; border-top:1px solid var(--border); }
+.me-sh { display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-family:var(--f-display); font-size:16px; font-weight:600; color:var(--text2); margin-bottom:8px; }
+.me-sh b { font-size:18px; color:var(--text); white-space:nowrap; }
+.me-chips { display:flex; flex-wrap:wrap; gap:6px; }
+.me-chip { font-size:13.5px; padding:5px 11px; border-radius:99px; background:var(--bg4); border:1px solid var(--border2); color:var(--text2); }
+.me-chip b { color:var(--text); margin-left:4px; }
+.me-none { font-size:13.5px; color:var(--text3); }
+.me-row { background:var(--bg4); border:1px solid var(--border); border-radius:12px; padding:10px 12px; margin-bottom:8px; }
+.me-row-h { display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px 10px; margin-bottom:6px; }
+.me-row-h b { font-family:var(--f-display); font-size:17px; color:var(--blue-txt); }
+.me-row-h span { font-size:12.5px; color:var(--text3); }
+.me-row-v { display:flex; flex-wrap:wrap; gap:6px 14px; font-size:13.5px; color:var(--text3); }
+.me-row-v b { color:var(--text); font-family:var(--f-display); font-size:16px; }
+@media(max-width:420px){ .me-t b { font-size:26px; } .me-l { font-size:11.5px; } .me-t small { display:none; } }
+
 /* ── DESTAQUES DOS CONFERENTES ── */
 .rkc-g { display:grid; grid-template-columns:1fr; gap:10px; margin-top:10px; }
 @media(min-width:620px){ .rkc-g { grid-template-columns:repeat(2, 1fr); } }
@@ -1546,6 +1570,18 @@ body:not(.is-gestor) .tiles { grid-template-columns:repeat(2, 1fr); }
   </div>
 
   <!-- KPIs operacionais extras -->
+  <!-- Movimentação e material de embalagem (o que é lançado na tela de Registro) -->
+  <div class="cw" id="me-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px">
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.3px">Movimentação e Material de Embalagem</div>
+        <div style="font-size:13px;color:var(--text3);margin-top:2px" id="me-sub">Lançado na passagem de turno</div>
+      </div>
+      <span style="font-size:24px">📦</span>
+    </div>
+    <div id="me-body"></div>
+  </div>
+
   <div class="shd">Indicadores Operacionais</div>
   <div class="ops-g" id="ops-kpis"></div>
 
@@ -2047,6 +2083,7 @@ const app = {
   rangeFromKey(key) {
     const agora = new Date();
     if(!key || key === 'tudo') return { ini: null, fim: null };
+    if(key === 'ultimo') { const rg = this.ultimoTurnoRange(this.allTurnos); return rg ? { ini: new Date(+rg.ini + 1), fim: rg.fim } : { ini: null, fim: null }; }
     if(key === 'mes:atual') return { ini: new Date(agora.getFullYear(), agora.getMonth(), 1), fim: null };
     if(key.startsWith('mes:')) {
       const parts = key.replace('mes:', '').split('-');
@@ -3160,7 +3197,7 @@ const app = {
     const container = document.getElementById('dash-periodo-btns');
     if(!container) return;
     const meses = this.gerarMeses(5);
-    let html = '';
+    let html = `<button class="periodo-btn pb-ult${this.periodoAtivo === 'ultimo' ? ' on' : ''}" onclick="app.setPeriodo('ultimo',this)">⏮ Último turno</button>`;
     meses.forEach((m, i) => {
       const isOn = this.periodoAtivo === m.key;
       html += `<button class="periodo-btn${isOn ? ' on' : ''}" onclick="app.setPeriodo('${m.key}',this)">${m.label}</button>`;
@@ -3187,15 +3224,31 @@ const app = {
     this.periodoAtivo = periodo;
     document.querySelectorAll('#dash-periodo-btns .periodo-btn').forEach(b => b.classList.remove('on'));
     if(btn) btn.classList.add('on');
-    this.renderDash(this.filtrarPorPeriodo(this.allTurnos));
     const meses = this.gerarMeses(5);
     const mesInfo = meses.find(m => m.key === periodo);
-    this._periodoLabel = mesInfo ? mesInfo.label : (periodo === 'tudo' ? 'Todos os registros' : periodo);
+    this._periodoLabel = mesInfo ? mesInfo.label : (periodo === 'tudo' ? 'Todos os registros' : periodo === 'ultimo' ? 'Último turno' : periodo);
+    this.renderDash(this.filtrarPorPeriodo(this.allTurnos));
+  },
+
+  // "Último turno": as passagens registradas nas 24 h que terminam no registro
+  // mais recente (cobre o turno do dia e o da noite do último ciclo).
+  // Com um conferente escolhido, considera o último turno dele.
+  ultimoTurnoRange(turnos) {
+    const base = this.filtraConf(turnos || []);
+    if(!base.length) return null;
+    const fim = new Date(Math.max(...base.map(r => +new Date(r.data_registro))));
+    const ini = new Date(+fim - 24 * 3600 * 1000);
+    return { ini, fim };
   },
 
   filtrarPorPeriodo(turnos) {
     const agora = new Date();
     if(this.periodoAtivo === 'tudo') return turnos;
+    if(this.periodoAtivo === 'ultimo') {
+      const rg = this.ultimoTurnoRange(turnos);
+      if(!rg) return [];
+      return turnos.filter(r => { const d = new Date(r.data_registro); return d > rg.ini && d <= rg.fim; });
+    }
     if(this.periodoAtivo === 'mes:atual') {
       const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
       return turnos.filter(r => new Date(r.data_registro) >= inicioMes);
@@ -3251,12 +3304,67 @@ const app = {
     const confTxt = this.confSel ? ' · ' + this.confSelNome() : '';
     document.getElementById('dash-per').textContent = (total > 0 ? `${total} registro${total!==1?'s':''} · ${periodoLabel}` : `Sem registros · ${periodoLabel}`) + confTxt;
 
+    this.renderME(turnos);
     this.renderOpsKpis(turnos, tp, tn);
     this.renderGroupedChart(byT);
     this.renderStatCard('card-seg', seg, Math.max(0,total-seg), 'Incidentes','Sem Ocorrências','var(--red)','var(--blue-txt)');
     this.renderStatCard('card-qual', qual, Math.max(0,total-qual), 'Bloqueios','Sem Bloqueios','var(--yellow)','var(--blue-txt)');
     this.renderRanking(byT);
     if(this.user?.role === 'gestor') this.renderHist();
+  },
+
+  // ── MOVIMENTAÇÃO E MATERIAL DE EMBALAGEM (ME) ──
+  meParse(txt) { try { const a = JSON.parse(txt || '[]'); return Array.isArray(a) ? a : []; } catch(e) { return []; } },
+
+  renderME(turnos) {
+    const el = document.getElementById('me-body'); if(!el) return;
+    const sub = document.getElementById('me-sub');
+    const fmt = v => Number(v).toLocaleString('pt-BR');
+    const n = v => parseInt(v) || 0;
+    const ult = this.periodoAtivo === 'ultimo';
+    const fdt = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' }) + ' ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+    if(sub) {
+      if(ult && turnos.length) {
+        const ds = turnos.map(r => new Date(r.data_registro)).sort((a, b) => a - b);
+        sub.textContent = 'Último turno · ' + (ds.length > 1 ? fdt(ds[0]) + ' até ' + fdt(ds[ds.length - 1]) : fdt(ds[0])) + (this.confSel ? ' · ' + this.confSelNome() : '');
+      } else sub.textContent = 'Lançado na passagem de turno · ' + (this._periodoLabel || 'período') + (this.confSel ? ' · ' + this.confSelNome() : '');
+    }
+    if(!turnos.length) { el.innerHTML = '<p style="text-align:center;color:var(--text3);font-size:15px;padding:16px">Sem passagens de turno no período.</p>'; return; }
+    let pc = 0, pd = 0, nc = 0;
+    const tampas = {}, devs = {}; let tTampa = 0, tDev = 0;
+    turnos.forEach(r => {
+      pc += r.p_c || 0; pd += r.p_d || 0; nc += r.n_c || 0;
+      this.meParse(r.tampa_entradas).forEach(e => { const q = n(e.qtd); const k = [e.tipo || 'Sem tipo', e.origem].filter(Boolean).join(' · '); tampas[k] = (tampas[k] || 0) + q; tTampa += q; });
+      this.meParse(r.devolucao_entradas).forEach(e => { const q = n(e.qtd); const k = (e.origem || 'Sem cliente').trim(); devs[k] = (devs[k] || 0) + q; tDev += q; });
+    });
+    const tile = (l, v, u, cls) => `<div class="me-t ${cls || ''}"><span class="me-l">${l}</span><b>${fmt(v)}</b><small>${u}</small></div>`;
+    const chips = (o, vazio) => { const e = Object.entries(o).sort((a, b) => b[1] - a[1]); return e.length ? e.map(([k, v]) => `<span class="me-chip">${k} <b>${fmt(v)}</b></span>`).join('') : `<span class="me-none">${vazio}</span>`; };
+    const linhas = ult ? [...turnos].sort((a, b) => new Date(a.data_registro) - new Date(b.data_registro)).map(r => {
+      const tp = this.meParse(r.tampa_entradas).reduce((a, e) => a + n(e.qtd), 0);
+      const dv = this.meParse(r.devolucao_entradas).reduce((a, e) => a + n(e.qtd), 0);
+      return `<div class="me-row">
+        <div class="me-row-h"><b>${r.conferente || '—'}</b><span>Turma ${r.turma_sai || '?'}→${r.turma_rec || '?'} · ${fdt(new Date(r.data_registro))}</span></div>
+        <div class="me-row-v">
+          <span>Carreg. <b>${fmt(r.p_c || 0)}</b></span><span>Descarreg. <b>${fmt(r.p_d || 0)}</b></span><span>NSA <b>${fmt(r.n_c || 0)}</b></span>
+          <span>Tampa <b>${fmt(tp)}</b></span><span>Devol. <b>${fmt(dv)}</b></span>
+        </div>
+      </div>`;
+    }).join('') : '';
+    el.innerHTML = `
+      <div class="me-g">
+        ${tile('Planta · carregados', pc, pc === 1 ? 'carregamento' : 'carregamentos', 'b')}
+        ${tile('Planta · descarregados', pd, pd === 1 ? 'descarregamento' : 'descarregamentos', 'g')}
+        ${tile('NSA · carregados', nc, nc === 1 ? 'carregamento' : 'carregamentos', 'p')}
+      </div>
+      <div class="me-sec">
+        <div class="me-sh">🔲 Entrada de tampa básica <b>${fmt(tTampa)} carreta${tTampa === 1 ? '' : 's'}</b></div>
+        <div class="me-chips">${chips(tampas, 'Nenhuma entrada de tampa')}</div>
+      </div>
+      <div class="me-sec">
+        <div class="me-sh">🔄 Devolução de latas/tampas <b>${fmt(tDev)} carreta${tDev === 1 ? '' : 's'}</b></div>
+        <div class="me-chips">${chips(devs, 'Nenhuma devolução')}</div>
+      </div>
+      ${ult ? `<div class="me-sec"><div class="me-sh">📝 Passagens do último turno <b>${turnos.length}</b></div>${linhas}</div>` : ''}`;
   },
 
   renderOpsKpis(turnos, tp, tn) {
