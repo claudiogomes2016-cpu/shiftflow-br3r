@@ -234,10 +234,12 @@ function rodadas(regs) {
   gs.forEach(g => {
     g.regs = regs.filter(r => g.confs.has(norm(r.conferente)) && diaTurno(r) >= g.ini && diaTurno(r) <= g.fim);
     g.ultimo = Math.max(...g.regs.map(r => +new Date(r.data_registro)));
-    g.completa = g.maxDias >= RODADA_DIAS || (Date.now() - g.ultimo) > 36 * 3600e3;
     g.dias = Math.round((g.fim - g.ini) / 86400000) + 1;
   });
-  return gs.sort((a, b) => b.fim - a.fim);
+  gs.sort((a, b) => b.fim - a.fim);
+  // terminada = 8 turnos registrados, ou já começou a rodada seguinte, ou 36 h sem registro
+  gs.forEach((g, i) => { g.completa = i > 0 || g.regs.length >= RODADA_DIAS * 2 || (Date.now() - g.ultimo) > 36 * 3600e3; });
+  return gs;
 }
 const nomesRodada = g => [...new Set([...g.regs].sort((a, b) => new Date(a.data_registro) - new Date(b.data_registro)).map(r => norm(r.conferente)))];
 

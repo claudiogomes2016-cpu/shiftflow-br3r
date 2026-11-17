@@ -3706,10 +3706,13 @@ const app = {
     grupos.forEach(g => {
       g.regs = regs.filter(r => g.confs.has(this.normConf(r.conferente)) && this.diaTurno(r) >= g.ini && this.diaTurno(r) <= g.fim);
       g.ultimo = Math.max(...g.regs.map(r => +new Date(r.data_registro)));
-      g.completa = g.maxDias >= this.RODADA_DIAS || (Date.now() - g.ultimo) > 36 * 3600e3;
       g.dias = Math.round((g.fim - g.ini) / 86400000) + 1;
     });
     grupos.sort((a, b) => b.fim - a.fim);
+    // Rodada terminada = os 8 turnos registrados (4 dias × dia e noite), ou já começou a
+    // rodada seguinte, ou 36 h sem registro. (Não basta um dos dois completar os 4 dias:
+    // o turno da noite do último dia só é registrado na madrugada seguinte.)
+    grupos.forEach((g, i) => { g.completa = i > 0 || g.regs.length >= this.RODADA_DIAS * 2 || (Date.now() - g.ultimo) > 36 * 3600e3; });
     return grupos;
   },
 
