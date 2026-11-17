@@ -985,6 +985,17 @@ body.tv-on #sc-login, body.tv-on #app { display:none !important; }
 .tvm-safe span { font-size:calc(var(--u) * 1.15) !important; }
 .tvm-safe .ico { font-size:calc(var(--u) * 2.6) !important; }
 
+
+.tv-prox { border-color:rgba(43,208,127,.6); box-shadow:inset 0 0 0 1px rgba(43,208,127,.15); }
+.tv-prox h2 span { color:#7EE8B5; }
+.tv-prox-n { text-align:center; padding:calc(var(--u) * .4) 0; }
+.tv-prox-n small { display:block; font-family:var(--f-display); font-size:calc(var(--u) * 1.3); font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#FFC21A; }
+.tv-prox-n b { display:block; font-family:var(--f-display); font-size:calc(var(--u) * 2.5); font-weight:800; line-height:1.05; color:#4D8DFF; }
+.tv-meta { align-items:center; text-align:center; }
+.tv-meta-n { display:flex; align-items:center; justify-content:center; gap:calc(var(--u) * .8); }
+.tv-meta-n > b { font-family:var(--f-display); font-size:calc(var(--u) * 5) !important; line-height:1; }
+.tv-meta-n span { text-align:left; font-size:calc(var(--u) * 1.05); line-height:1.3; }
+
 /* ── PAINEL ONE-ON-ONE ── */
 body.oo-open { overflow:hidden; }
 .oo { position:fixed; inset:0; z-index:2500; background:var(--bg); overflow-y:auto; display:flex; flex-direction:column; }
@@ -4028,6 +4039,18 @@ const app = {
           nomesAtual: nmA.map(n => String(n).split(' ')[0]).join(' e '), nomesRef: nmR.map(n => String(n).split(' ')[0]).join(' e '),
           ultimo: { nome: nome(ur.conferente), turma: ur.turma_sai || '?', quando: new Date(ur.data_registro), me: uq.me, pc: uq.pc, nsa: uq.nsa },
         });
+      } else if(ga && ga.completa && gsA[1] && Date.now() - ga.ultimo < 48 * 3600e3) {
+        // rodada acabou e a próxima dupla ainda não registrou: desafio para quem está chegando
+        // (as duplas se revezam: quem começa agora é a dupla da rodada antes da última)
+        const ur = regs[0], uq = this.placarNums([ur]), sg = gsA[1];
+        atual = this.tvProximaHTML({
+          previstos: this.RODADA_DIAS * 2,
+          nomes: this.rodadaNomes(sg).map(n => nome(n)),
+          seu: this.placarNums(sg.regs), seuIni: new Date(sg.ini), seuFim: new Date(sg.fim),
+          ult: this.placarNums(ga.regs), ultIni: new Date(ga.ini), ultFim: new Date(ga.fim),
+          ultNomes: this.rodadaNomes(ga).map(n => String(n).split(' ')[0]).join(' e '),
+          ultimo: { nome: nome(ur.conferente), turma: ur.turma_sai || '?', quando: new Date(ur.data_registro), me: uq.me, pc: uq.pc, nsa: uq.nsa },
+        });
       }
     }
 
@@ -4092,6 +4115,37 @@ const app = {
       return `<span class="tvf-i"><b>${curto(x.conferente)}</b> ${x.turma_sai || ''} · ${fd(new Date(x.data_registro))} ${fh(new Date(x.data_registro))} · <em class="${q.me ? '' : 'zero'}">ME ${fmt(q.me)}</em> · Planta ${fmt(q.pc)} · NSA ${fmt(q.nsa)}</span>`;
     }).join('');
     requestAnimationFrame(() => this.tvAjustar());
+  },
+
+  // Card "Nova rodada" da TV (entre o fim de uma rodada e o 1º registro da dupla seguinte)
+  tvProximaHTML: (d) => {
+    const fmt = v => Number(v).toLocaleString('pt-BR');
+    const fmt1 = v => (Math.round(v * 10) / 10).toLocaleString('pt-BR');
+    const fd = x => x.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+    const fh = x => String(x.getHours()).padStart(2, '0') + 'h' + String(x.getMinutes()).padStart(2, '0');
+    const prev = d.previstos, meta = d.ult.me + 1, lidera = d.seu.me > d.ult.me;
+    const w = v => Math.min(100, v / Math.max(1, d.ult.me, d.seu.me) * 100);
+    const wp = v => Math.min(100, v / Math.max(1, d.ult.pc, d.seu.pc) * 100);
+    return `
+    <section class="tvc tv-atual tv-prox">
+      <h2>🎯 Nova rodada <span>começa hoje · ${prev} turnos pela frente</span></h2>
+      <div class="tv-prox-n"><small>É a vez de vocês!</small><b>${d.nomes.join(' e ')}</b></div>
+      <div class="tv-sub">📦 Descarga de ME: rodada passada</div>
+      <div class="tv-race">
+        <div class="tv-rr ref"><span class="l">Vocês<small>${fd(d.seuIni)} a ${fd(d.seuFim)}</small></span><div class="tr"><i style="width:${w(d.seu.me)}%"></i></div><b>${fmt(d.seu.me)}</b></div>
+        <div class="tv-rr now"><span class="l">${d.ultNomes}<small>${fd(d.ultIni)} a ${fd(d.ultFim)} · acabou agora</small></span><div class="tr"><i style="width:${w(d.ult.me)}%"></i></div><b>${fmt(d.ult.me)}</b></div>
+      </div>
+      <div class="tv-proj tv-meta">
+        <div>${lidera ? `🏆 <b class="g">Vocês estão na frente!</b> Para continuar na frente de ${d.ultNomes}:` : `🔥 Para passar ${d.ultNomes}:`}</div>
+        <div class="tv-meta-n"><b class="y">${fmt(meta)}</b><span>carretas de ME ou mais<br>nos ${prev} turnos · ≈ <b class="y">${fmt1(meta / prev)}</b> por turno</span></div>
+      </div>
+      <div class="tv-race tv-race2">
+        <div class="tv-sub2">🚛 Carregamento na planta · rodada passada</div>
+        <div class="tv-rr ref"><span class="l">Vocês</span><div class="tr"><i style="width:${wp(d.seu.pc)}%"></i></div><b>${fmt(d.seu.pc)}</b></div>
+        <div class="tv-rr now"><span class="l">Eles</span><div class="tr"><i style="width:${wp(d.ult.pc)}%"></i></div><b>${fmt(d.ult.pc)}</b></div>
+      </div>
+      <div class="tv-last">🕘 Último registro: <b>${d.ultimo.nome}</b> · Turma ${d.ultimo.turma} · ${fd(d.ultimo.quando)} ${fh(d.ultimo.quando)} · ME ${fmt(d.ultimo.me)} · Planta ${fmt(d.ultimo.pc)} · NSA ${fmt(d.ultimo.nsa)}</div>
+    </section>`;
   },
 
   // Bloco "Rodada atual" da TV (o mesmo código vai no arquivo tv/painel-tv.html)
