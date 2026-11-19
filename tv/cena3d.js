@@ -7,7 +7,8 @@
    câmera faz um close no assunto e aparece uma regra de segurança; depois segue.
    A cada 5 carregamentos, a finalização: carreta completa, big bag inflado pelo
    auxiliar na escada com guarda-corpo, porta rápida fechada, nota fiscal e chave
-   com o conferente, trava-rodas retirado e o caminhão saindo da doca.
+   com o conferente, trava-rodas retirado; o caminhão adianta um pouco, o motorista
+   fecha as duas portas do baú, coloca o lacre e então sai da doca.
 
    · Three.js (WebGL), carregado só quando o painel abre; nada de vídeo.
    · Tudo modelado em código, em metros, com dimensões reais.
@@ -414,6 +415,7 @@
         add(caixa(largP, h - 0.04, 0.05), MT.bauLiso, p, -largP / 2, h / 2, 0);
         for (const k of [0.22, 0.78]) { add(cil(0.016, 0.016, h - 0.1, 8), MT.cromo, p, -largP * k, h / 2, s * 0.04); for (const y of [0.4, 1.4, 2.4]) add(caixa(0.05, 0.04, 0.04), MT.cromo, p, -largP * k, y, s * 0.04, false); }
         for (const y of [0.3, 1.4, 2.5]) add(caixa(0.16, 0.06, 0.03), MT.aco, p, -0.06, y, s * 0.03, false);
+        (g.userData.portas = g.userData.portas || []).push({ p, s }); if (rodasSoltas) p.userData.manter = true;
         if (abertas) p.position.set(0.0, 0, s * (LARG / 2 + 0.085));
         else { p.position.set(0.03, 0, s * (LARG / 2 - 0.02)); p.rotation.y = -s * Math.PI / 2; }
       }
@@ -936,6 +938,10 @@
       haste([0.75, 2.0, -0.38], [0.75, 2.0, 0.38], 0.02, am, escada, 6);
       fundirFilhas(escada);
     }
+    // lacre de segurança nas travas das portas (aparece depois de colocado)
+    const lacre = new THREE.Group(); lacre.userData.manter = true; car1.add(lacre); lacre.visible = false;
+    { add(caixa(0.012, 0.09, 0.035), std({ color: 0xf2c200, roughness: 0.5 }), lacre, 0, -0.06, 0, false); add(cil(0.004, 0.004, 0.08, 6), MT.cromo, lacre, 0, 0.0, 0, false); add(caixa(0.014, 0.02, 0.03), std({ color: 0xc8202a, roughness: 0.5 }), lacre, 0, -0.115, 0, false); }
+    lacre.position.set(0.075, 0.42, 0.0);
     // mangueira de ar comprimido (refeita só enquanto alguém a segura) e bico
     const SAIDA_ENROLADOR = new THREE.Vector3(0.56, 2.12, 1.55), BICO_DESCANSO = new THREE.Vector3(0.56, 1.5, 1.62);
     const mangueira = new THREE.Mesh(new THREE.BufferGeometry(), std({ color: 0x2f6fd6, roughness: 0.5 })); mangueira.castShadow = true; cena.add(mangueira);
@@ -1079,6 +1085,7 @@
     }
     fundirTudo(amb); fundirTudo(car1); fundirTudo(car2); fundirTudo(cavalo);
     [...car1.userData.rodas, ...cavalo.userData.rodas].forEach(r => fundirFilhas(r));
+    car1.userData.portas.forEach(o => fundirFilhas(o.p));
     cargaFundo.children.forEach(p => fundirTudo(p)); cargaCheia.children.forEach(p => fundirTudo(p));
     [torre, interna, carro, tronco, cabeca, volante].forEach(g => fundirFilhas(g, (torre.userData.corr || [])));
     fundirFilhas(fk, [giro, fk.userData.spot]);
@@ -1237,7 +1244,7 @@
     }
 
     // ═════════════ FINALIZAÇÃO DO CARREGAMENTO (linha do tempo, ~65 s) ═════════════
-    const FIM = 65.2, PI = Math.PI;
+    const FIM = 87.0, PI = Math.PI;
     function trilha(keys) {                       // [t, x, y, z, rumo parado, 're' = anda de costas]
       const pos = (t) => {
         if (t <= keys[0][0]) return keys[0];
@@ -1262,12 +1269,20 @@
     // motorista: pendura a armação, busca NF e chave, desce para o pátio, tira o trava-rodas e vai à cabine
     const tMot = trilha([[0, 1.71, 0, -2.2, PI], [21.8, 1.71, 0, -2.2, PI], [23.7, 1.16, 0, -2.1, PI], [24.6, 1.16, 0, -2.1, PI], [28.0, 5.0, 0, -4.15, PI / 2], [32.0, 5.0, 0, -4.15, PI / 2],
       [37.0, 0.2, 0, 2.65, PI], [39.4, -1.75, -1.25, 2.65, PI], [41.6, -5.15, -1.25, 1.8, PI / 2], [43.5, -5.15, -1.25, 1.8, PI / 2], [44.6, -4.6, -1.25, 2.75, PI / 2], [45.8, -4.6, -1.25, 2.75, PI / 2],
-      [53.0, -18.25, -1.25, 1.85, PI / 2], [54.4, -18.25, -0.3, 1.3, PI / 2]]);
+      [53.0, -18.25, -1.25, 1.85, PI / 2], [54.4, -18.25, -0.3, 1.3, PI / 2],
+      // caminhão adianta 3,5 m; o motorista desce, vai até a traseira (corte de câmera), fecha as portas e lacra
+      [59.0, -21.75, -0.3, 1.3, PI / 2], [60.2, -21.75, -1.25, 1.85, 0], [61.4, -19.9, -1.25, 1.95, 0],
+      [61.4, -5.9, -1.25, 2.1, 0], [62.8, -5.13, -1.25, 1.635, 0],
+      [65.4, -3.05, -1.25, 0.105, PI], [66.4, -2.3, -1.25, -1.0, PI], [67.4, -3.2, -1.25, -2.2, PI], [68.4, -5.13, -1.25, -1.635, 0],
+      [71.0, -3.05, -1.25, -0.105, PI], [71.4, -2.95, -1.25, 0.0, PI], [72.4, -2.95, -1.25, 0.0, PI],
+      [73.2, -2.75, -1.25, 1.9, PI / 2], [74.4, -5.0, -1.25, 2.0, PI],
+      [74.4, -20.0, -1.25, 1.95, PI], [75.8, -21.75, -1.25, 1.85, PI / 2], [77.2, -21.75, -0.3, 1.3, PI / 2]]);
     // conferente: vai ao claviculário e volta ao balcão
     const tConf = trilha([[0, 5.0, 0, -5.1, -PI / 2], [28.4, 5.0, 0, -5.1, -PI / 2], [29.1, 5.25, 0, -5.85, PI / 2], [29.6, 5.25, 0, -5.85, PI / 2], [30.3, 5.0, 0, -5.1, -PI / 2]]);
-    const ETAPAS = [[0, '1/6', 'Escada com guarda-corpo posicionada na porta do baú'], [7.6, '2/6', 'Big bag inflado entre o teto e os pallets · motorista na faixa'],
-      [13.8, '3/6', 'Escada retirada e porta rápida da doca fechada'], [24.6, '4/6', 'Nota fiscal e chave do claviculário com o conferente'],
-      [32.0, '5/6', 'Motorista retira o trava-rodas e vai para a cabine'], [54.4, '6/6', 'Carregamento finalizado · caminhão liberado']];
+    const ETAPAS = [[0, '1/7', 'Escada com guarda-corpo posicionada na porta do baú'], [7.6, '2/7', 'Big bag inflado entre o teto e os pallets · motorista na faixa'],
+      [13.8, '3/7', 'Escada retirada e porta rápida da doca fechada'], [24.6, '4/7', 'Nota fiscal e chave do claviculário com o conferente'],
+      [32.0, '5/7', 'Motorista retira o trava-rodas e vai para a cabine'], [56.0, '6/7', 'Caminhão um pouco à frente: portas do baú fechadas e lacradas'],
+      [77.2, '7/7', 'Carregamento finalizado · caminhão liberado']];
     const TOMADAS = [
       [0, () => [6.8, 2.4, 5.6], () => [0.2, 1.3, 0.2]],
       [7.6, () => [3.4, 2.6, 3.4], () => [-0.2, 2.0, -0.1]],
@@ -1277,16 +1292,25 @@
       [39.4, () => [-1.4, 0.4, 6.4], () => [-4.9, -0.9, 1.9]],
       [45.8, (d) => [d[0] + 2.6, d[1] + 1.6, d[2] + 5.2], (d) => [d[0] - 1.2, d[1] + 0.8, d[2] - 0.6]],
       [54.4, () => [-27.0, 0.8, 8.5], (d, cx) => [cx, 0.7, 0.5]],
+      [61.4, () => [-0.9, 1.3, 10.2], () => [-3.6, 0.15, -0.1], true],        // corte para a traseira
+      [74.4, () => [-27.0, 0.8, 8.5], (d, cx) => [cx, 0.7, 0.5], true],       // corte de volta para a cabine
     ];
     const _w1 = new THREE.Vector3(), _w2 = new THREE.Vector3(), _w3 = new THREE.Vector3(), _w4 = new THREE.Vector3();
     let etapaAtual = '';
-    function deslocCaminhao(tf) { return tf < 56 ? 0 : 0.45 * (tf - 56) * (tf - 56); }
+    function deslocCaminhao(tf) { return tf < 56 ? 0 : tf < 59 ? 3.5 * suave(lin(56, 59, tf)) : tf < 78 ? 3.5 : 3.5 + 0.45 * (tf - 78) * (tf - 78); }
+    // porta do baú: fase 1 = sai de encostada na lateral até apontar para trás; fase 2 = fecha
+    function portaBau(o, u1, u2) {
+      const sg = o.s, phi = sg > 0 ? -2 * PI + PI * u1 + PI / 2 * u2 : 2 * PI - PI * u1 - PI / 2 * u2;
+      o.p.rotation.y = phi; o.p.position.set(0.03 * u2, 0, sg * (LARG / 2 + 0.085 - 0.105 * u2));
+      return phi;
+    }
+    const PORTA_T = { 1: [62.8, 64.4, 65.4], '-1': [68.4, 70.0, 71.0] };
     function camFinal(tf, mot) {
       let i = 0; while (i < TOMADAS.length - 1 && tf >= TOMADAS[i + 1][0]) i++;
       const cx = -17.6 - deslocCaminhao(tf);
       const P = (k) => [TOMADAS[k][1](mot, cx), TOMADAS[k][2](mot, cx)];
       let [p, a] = P(i);
-      const u = i > 0 ? lin(TOMADAS[i][0], TOMADAS[i][0] + 1.6, tf) : 1;
+      const u = i > 0 && !TOMADAS[i][3] ? lin(TOMADAS[i][0], TOMADAS[i][0] + 1.6, tf) : 1;
       if (u < 1) { const [p0, a0] = P(i - 1), e = suave(u); p = p.map((v, k) => p0[k] + (v - p0[k]) * e); a = a.map((v, k) => a0[k] + (v - a0[k]) * e); }
       cam.position.set(...p); cam.lookAt(...a);
     }
@@ -1328,8 +1352,24 @@
       const pjx = 1.15 + (0.6 - 1.15) * suave(lin(21.8, 23.7, tf)), pjz = -2.2 + 0.1 * suave(lin(21.8, 23.7, tf));
       pj.position.set(pjx, PISO, pjz); arm.position.y = 0.04 + 0.32 * suave(lin(23.7, 24.3, tf));
       // motorista
-      const m = tMot(tf);
-      MOT2.g.visible = tf < 54.4;
+      let m = tMot(tf);
+      MOT2.g.visible = tf < 54.4 || (tf >= 59.0 && tf < 77.2);
+      // portas do baú: posição de cada uma e o motorista acompanhando a ponta da porta
+      let maosPorta = null;
+      for (const o of car1.userData.portas) {
+        const [a0, a1, a2] = PORTA_T[o.s], u1 = suave(lin(a0, a1, tf)), u2 = suave(lin(a1, a2, tf));
+        const phi = portaBau(o, u1, u2);
+        if (tf >= a0 && tf < a2) {
+          const dx = -Math.cos(phi), dz = Math.sin(phi), hx = car1.position.x + o.p.position.x, hz = o.p.position.z;
+          const tx = hx + dx * 1.28, tz = hz + dz * 1.28;
+          let px, pz, yaw;
+          if (tf < a1) { px = tx + dx * 0.35 + o.s * dz * 0.25; pz = tz + dz * 0.35 - o.s * dx * 0.25; yaw = Math.atan2(-(tz - pz), tx - px); }
+          else { px = tx + 0.45; pz = tz; yaw = PI; }
+          const andou = PI * 1.6 * u1 + PI / 2 * 1.28 * u2;
+          m = [px, -1.25, pz, yaw, andou, (tf < a2 - 0.05 && tf > a0 + 0.05) ? 0.45 : 0];
+          maosPorta = [_w1.set(tx, 0.45, tz), _w2.set(tx, 0.22, tz)];
+        }
+      }
       let maosM = null, ag = 0;
       if (tf < 24.3) maosM = [_w1.set(pjx + 0.03, 1.22 + arm.position.y - 0.04, pjz + 0.24), _w2.set(pjx + 0.03, 1.22 + arm.position.y - 0.04, pjz - 0.24)];
       else if (tf >= 30.3 && tf < 30.9) maosM = [null, _w2.set(5.0, 1.22, -4.45)];
@@ -1339,7 +1379,11 @@
           if (base) maosM = [_w1.copy(base).add(_w3.set(0.12, 0, 0.08)), _w2.copy(base).add(_w3.set(-0.12, 0, 0.08))];
           else { MOT2.g.updateMatrixWorld(true); const fr = MOT2.g.localToWorld(_w4.set(0.36, 0.55 + 0.25 * (1 - ag), 0)); maosM = [_w1.copy(fr).add(_w3.set(0, 0, 0.12)), _w2.copy(fr).add(_w3.set(0, 0, -0.12))]; } }
       }
-      if (tf >= 53.0) maosM = [_w1.set(-18.0, 1.2, 1.28), _w2.set(-18.4, 1.45, 1.28)];
+      if (tf >= 53.0 && tf < 54.4) maosM = [_w1.set(-18.0, 1.2, 1.28), _w2.set(-18.4, 1.45, 1.28)];
+      if ((tf >= 59.0 && tf < 60.2) || tf >= 75.8) maosM = [_w1.set(-21.5, 1.2, 1.28), _w2.set(-21.9, 1.45, 1.28)];
+      if (maosPorta) maosM = maosPorta;
+      if (tf >= 71.4 && tf < 72.4) maosM = [_w1.set(car1.position.x + 0.07, 0.38, 0.05), _w2.set(car1.position.x + 0.07, 0.42, -0.05)];
+      lacre.visible = tf >= 72.1;
       vestir(MOT2, m, { maosMundo: maosM, agacha: ag, inclina: tf < 24.3 ? 0.1 : 0.05 });
       MOT2.cab.rotation.y = tf < 21.8 ? -0.4 : 0;
       // trava-rodas: no pneu → nas mãos → no chão ao lado
@@ -1358,7 +1402,8 @@
       const dx = deslocCaminhao(tf);
       car1.position.x = -dx; cavalo.position.x = -dx;
       car1.userData.rodas.forEach(r => r.rotation.z = dx / 0.53); cavalo.userData.rodas.forEach(r => r.rotation.z = dx / 0.52);
-      fumaca.forEach((f, i) => { const u = lin(54.6 + i * 0.3, 56.4 + i * 0.3, tf); f.visible = u > 0 && u < 1; if (f.visible) { f.position.set(-16.25 + 0.2 * u, CHAO + 4.25 + 1.1 * u, 1.05 + 0.15 * Math.sin(i)); f.scale.setScalar(0.5 + 2.2 * u); f.material.opacity = 0.45 * (1 - u); } });
+      const tFum = tf >= 77.0 ? 77.4 : 54.6;
+      fumaca.forEach((f, i) => { const u = lin(tFum + i * 0.3, tFum + 1.8 + i * 0.3, tf); f.visible = u > 0 && u < 1; if (f.visible) { f.position.set(-16.25 + 0.2 * u, CHAO + 4.25 + 1.1 * u, 1.05 + 0.15 * Math.sin(i)); f.scale.setScalar(0.5 + 2.2 * u); f.material.opacity = 0.45 * (1 - u); } });
       // selo da etapa
       let e = ETAPAS[0]; for (const x of ETAPAS) if (tf >= x[0]) e = x;
       const txt = e[1] + '|' + e[2];
@@ -1370,6 +1415,7 @@
       cargaFundo.visible = true; cargaCheia.visible = false; bigbag.visible = valvula.visible = false;
       AUX.g.visible = false; MOT2.g.visible = false; docs.visible = false; fumaca.forEach(f => f.visible = false);
       car1.position.x = 0; cavalo.position.x = 0; car1.userData.rodas.forEach(r => r.rotation.z = 0); cavalo.userData.rodas.forEach(r => r.rotation.z = 0);
+      car1.userData.portas.forEach(o => portaBau(o, 0, 0)); lacre.visible = false;
       calcoG.position.copy(CALCO_POS); calcoG.rotation.y = 0; porta(0); refazMangueira(BICO_DESCANSO);
       escada.visible = false;
       CONF.g.position.set(5.0, PISO, -5.1); CONF.g.rotation.y = -PI / 2; CONF.pose({});
