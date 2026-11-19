@@ -23,7 +23,9 @@
   'use strict';
   if (window.Cena3D) return;
   const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js';
-  const CICLO = 16;          // segundos por ciclo
+  const CICLO = 16;
+  // logo Ball da lateral da carreta (máscara em tons de cinza; a cor azul vem do material)
+  const LOGO_BALL = 'data:image/png;base64,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';          // segundos por ciclo
   const FPS = 30;
 
   let host = null, fallbackUrl = '', estado = 'novo', api = null;
@@ -60,7 +62,7 @@
   // t = instante do ciclo em que a cena para · obj = em quem a câmera foca (fk = empilhadeira,
   // pj = motorista, mundo = cenário) · pos/alvo = câmera no sistema desse objeto
   const MOMENTOS = [
-    { t: 1.0, obj: 'mundo', pos: [-2.7, 0.15, 4.1], alvo: [-5.0, -1.65, 1.15], ico: '🛑', tit: 'Rodas bloqueadas antes de carregar', txt: 'Antes do carregamento, as rodas do caminhão devem estar <b>bloqueadas com trava-rodas (calços)</b>.' },
+    { t: 1.0, obj: 'mundo', pos: [-1.4, 0.15, 4.1], alvo: [-3.7, -1.65, 1.15], ico: '🛑', tit: 'Rodas bloqueadas antes de carregar', txt: 'Antes do carregamento, as rodas do caminhão devem estar <b>bloqueadas com trava-rodas (calços)</b>.' },
     { t: 4.9, obj: 'fk', pos: [0.8, 2.0, -3.2], alvo: [-0.6, 0.6, 0], ico: '📋', tit: 'Checklist antes de operar', txt: 'Faça a <b>inspeção pré-uso</b> e verifique a familiaridade com os <b>controles do equipamento</b>.' },
     { t: 3.4, obj: 'fk', pos: [-0.1, 2.2, -2.3], alvo: [-1.0, 1.5, 0], ico: '🦺', tit: 'Cinto afivelado, sempre', txt: 'A operação segura começa no assento: <b>cinto de segurança</b> e <b>EPIs completos</b>.' },
     { t: 2.2, obj: 'fk', pos: [3.3, 1.1, -2.9], alvo: [1.4, -0.15, 0], ico: '📦', tit: 'Carga baixa e inclinada para trás', txt: 'Transporte a carga <b>a cerca de 20 cm do chão</b> e <b>inclinada para trás</b>.' },
@@ -188,7 +190,7 @@
       }, [6, 1]),
       bau: tex(1024, 256, (g, w, h) => {        // lateral da carreta: painel de alumínio com montantes
         const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#f4f6f8'); gr.addColorStop(1, '#d9dde2'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
-        for (let x = 8; x < w; x += 42) { g.fillStyle = 'rgba(0,0,0,.10)'; g.fillRect(x, 0, 3, h); g.fillStyle = 'rgba(255,255,255,.7)'; g.fillRect(x + 3, 0, 2, h); }
+        for (let x = 8; x < w; x += 84) { g.fillStyle = 'rgba(0,0,0,.05)'; g.fillRect(x, 0, 2, h); g.fillStyle = 'rgba(255,255,255,.6)'; g.fillRect(x + 2, 0, 2, h); }
         for (let i = 0; i < 40; i++) { g.fillStyle = `rgba(90,80,60,${rnd() * 0.04})`; g.fillRect(rnd() * w, h * (0.6 + rnd() * 0.4), 30 + rnd() * 80, 4 + rnd() * 18); }
       }, [1, 1]),
       faixa: tex(128, 16, (g, w, h) => { for (let x = 0; x < w; x += 32) { g.fillStyle = (x / 32) % 2 ? '#f1f1f1' : '#d0161f'; g.fillRect(x, 0, 32, h); } }, [1, 1]),
@@ -208,6 +210,7 @@
       }, [1, 1]),
     };
     T.concreto.repeat.set(4, 4);
+    new THREE.TextureLoader().load(LOGO_BALL, (t) => { t.anisotropy = 8; MT.ball.alphaMap = t; MT.ball.needsUpdate = true; });
     T.asfalto.repeat.set(10, 10);
 
     // ── materiais ──
@@ -252,11 +255,19 @@
       cinta: std({ color: 0x2f9a3c, roughness: 0.45 }),
       filme: fis({ color: 0xdfe9f2, metalness: 0, roughness: 0.12, transparent: true, opacity: 0.2, clearcoat: 1, clearcoatRoughness: 0.05, depthWrite: false, side: THREE.DoubleSide }),
       etiqueta: std({ map: T.etiqueta, roughness: 0.6 }),
-      ball: std({ map: T.ball, transparent: true, roughness: 0.4, depthWrite: false }),
+      ball: std({ color: 0x14226e, transparent: true, roughness: 0.38, depthWrite: false }),
       uniforme: std({ color: 0x1c2a4a, roughness: 0.85 }),
       calca: std({ color: 0x182238, roughness: 0.9 }),
       refletivo: std({ color: 0xd8dde3, roughness: 0.25, metalness: 0.4, emissive: 0x555a60, emissiveIntensity: 0.6 }),
       pele: std({ color: 0xb07a55, roughness: 0.6 }),
+      pele2: std({ color: 0x86573a, roughness: 0.6 }),
+      pele3: std({ color: 0xd3a17c, roughness: 0.6 }),
+      olho: std({ color: 0xf3f1ec, roughness: 0.3 }),
+      pupila: std({ color: 0x2a1d14, roughness: 0.2 }),
+      boca: std({ color: 0x5a2e28, roughness: 0.7 }),
+      cabelo: std({ color: 0x2a1c14, roughness: 0.9 }),
+      cabelo2: std({ color: 0x121212, roughness: 0.9 }),
+      lente: fis({ color: 0xd8e8ff, roughness: 0.05, transparent: true, opacity: 0.32, depthWrite: false }),
       capacete: fis({ color: 0xf4f4f0, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.1 }),
       luva: std({ color: 0x5b5f66, roughness: 0.8 }),
       bota: std({ color: 0x141414, roughness: 0.6 }),
@@ -435,7 +446,7 @@
       for (const s of [-1, 1]) { add(caixa(0.12, 0.62, 0.08), MT.aco, g, -0.4, -0.45, s * 0.75); add(caixa(0.05, 0.08, 0.22), MT.lanterna, g, -0.16, -0.62, s * 0.95, false); add(caixa(0.05, 0.06, 0.1), MT.ambar, g, -0.16, -0.62, s * 0.75, false); }
       // eixos traseiros com rodado duplo
       const rodas = [];
-      for (const ex of [-2.0, -3.32, -4.64]) {
+      for (const ex of [-2.0, -3.32]) {
         add(cil(0.07, 0.07, LARG - 0.35, 10, 'z'), MT.grafite, g, ex, -0.73, 0);
         for (const s of [-1, 1]) for (const k of [0, 1]) {
           const r = pneu(0.53, 0.28, 0.29, MT.borracha, MT.aluminio, { lado: s, furos: true, parafusos: 10, matDisco: MT.aluminio });
@@ -446,15 +457,15 @@
       }
       // para-lamas e protetor lateral
       for (const s of [-1, 1]) {
-        add(caixa(4.0, 0.04, 0.68), MT.preto, g, -3.32, -0.12, s * 1.0);
-        add(caixa(0.02, 0.5, 0.62), MT.preto, g, -5.25, -0.48, s * 1.0);
-        for (const y of [-0.45, -0.75]) add(caixa(5.4, 0.08, 0.04), MT.aluminio, g, -8.2, y, s * 1.12);
+        add(caixa(2.9, 0.04, 0.68), MT.preto, g, -2.66, -0.12, s * 1.0);
+        add(caixa(0.02, 0.5, 0.62), MT.preto, g, -3.98, -0.48, s * 1.0);
+        add(caixa(7.0, 0.11, 0.05), std({ color: 0xc8161e, roughness: 0.45, metalness: 0.3 }), g, -7.75, -0.58, s * 1.12); for (const x of [-4.6, -7.75, -10.9]) add(caixa(0.06, 0.42, 0.05), MT.preto, g, x, -0.36, s * 1.1);
       }
       // caixa de ferramentas e estepe
       add(cxR(0.8, 0.5, 0.5, 0.02), MT.preto, g, -7.2, -0.42, 0.95);
       const est = pneu(0.53, 0.28, 0.29, MT.pneuLiso, MT.aluminio, { lado: -1 }); est.rotation.x = Math.PI / 2; est.position.set(-9.6, -0.75, 0); g.add(est);
       // marca discreta na lateral visível
-      const logo = add(new THREE.PlaneGeometry(1.5, 0.75), MT.ball, g, -10.6, 1.95, LARG / 2 + 0.006, false);
+      const logo = add(new THREE.PlaneGeometry(5.6, 2.45), MT.ball, g, -7.2, 1.48, LARG / 2 + 0.006, false);
       logo.renderOrder = 2;
       g.userData.rodas = rodas;
       return g;
@@ -473,11 +484,13 @@
       // quinta roda
       add(cxR(1.1, 0.12, 1.4, 0.03), MT.preto, cv, -13.4, y0 + 1.1, 0);
       // cabine
-      add(cxR(2.3, 2.45, 2.5, 0.12, 0.05), MT.branco, cv, xc, y0 + 2.5, 0);
-      add(cxR(1.8, 0.55, 2.42, 0.12, 0.15), MT.branco, cv, xc + 0.2, y0 + 3.95, 0);    // teto alto
-      add(cxR(0.06, 0.45, 2.1, 0.02), MT.branco, cv, xc + 1.12, y0 + 4.1, 0);          // defletor
-      // para-brisa, janelas e portas
-      add(cxR(0.06, 1.0, 2.3, 0.02), MT.vidro, cv, xc - 1.16, y0 + 3.05, 0, false);
+      // perfil lateral: frente quase reta, para-brisa inclinado e teto alto aerodinâmico
+      const PC = [[-1.17, 1.28], [-1.2, 2.42], [-1.12, 2.62], [-0.98, 3.55], [-0.85, 3.72, -0.55, 3.98], [0.2, 4.12], [1.0, 4.12], [1.13, 4.05], [1.15, 3.6], [1.15, 1.28], [-1.17, 1.28]];
+      add(perfil(PC.map(q => q.length === 4 ? [xc + q[0], y0 + q[1], xc + q[2], y0 + q[3]] : [xc + q[0], y0 + q[1]]), 2.48, 0.1), MT.branco, cv);
+      // para-brisa inclinado, quebra-sol e painéis pretos dos cantos
+      { const pb = add(caixa(0.04, 0.95, 2.18), MT.vidro, cv, xc - 1.075, y0 + 3.085, 0, false); pb.rotation.z = -0.15; }
+      { const qs = add(caixa(0.32, 0.05, 2.3), MT.preto, cv, xc - 1.0, y0 + 3.66, 0); qs.rotation.z = 0.12; }
+      for (const s of [-1, 1]) add(caixa(0.42, 1.25, 0.03), MT.preto, cv, xc - 0.98, y0 + 2.05, s * 1.245, false);
       for (const s of [-1, 1]) {
         if (s < 0) {
           const jan = add(new THREE.PlaneGeometry(0.9, 0.75), MT.vidro, cv, xc - 0.55, y0 + 3.1, s * 1.252, false); jan.rotation.y = Math.PI;
@@ -500,20 +513,23 @@
           add(caixa(0.2, 0.04, 0.03), MT.cromo, pc, 1.08, y0 + 1.78, 0.04, false);
           add(caixa(1.18, 0.012, 0.012), MT.preto, pc, 0.62, y0 + 2.62, 0.027, false);
         }
-        // espelhos
-        haste([xc - 1.1, y0 + 3.3, s * 1.25], [xc - 1.25, y0 + 3.3, s * 1.45], 0.015, MT.preto, cv, 6);
-        add(cxR(0.1, 0.45, 0.24, 0.02), MT.preto, cv, xc - 1.28, y0 + 3.15, s * 1.52);
+        // espelhos grandes
+        haste([xc - 0.98, y0 + 3.35, s * 1.24], [xc - 1.22, y0 + 3.35, s * 1.5], 0.018, MT.preto, cv, 6);
+        haste([xc - 0.98, y0 + 2.75, s * 1.24], [xc - 1.22, y0 + 2.8, s * 1.5], 0.014, MT.preto, cv, 6);
+        add(cxR(0.12, 0.58, 0.22, 0.03), MT.preto, cv, xc - 1.24, y0 + 3.05, s * 1.55);
+        add(new THREE.PlaneGeometry(0.16, 0.5), MT.vidro, cv, xc - 1.305, y0 + 3.06, s * 1.55, false).rotation.y = -Math.PI / 2;
         // degraus
         for (const y of [0.55, 0.95]) add(caixa(0.4, 0.04, 0.22), MT.aluminio, cv, xc - 0.65, y0 + y, s * 1.12, false);
         // para-lamas dianteiros
         add(cxR(1.25, 0.06, 0.4, 0.02), MT.preto, cv, -17.9, y0 + 1.15, s * 1.05);
       }
       // grade, faróis e para-choque
-      add(caixa(0.05, 0.75, 1.6), MT.preto, cv, xc - 1.17, y0 + 1.95, 0);
-      for (let y = 1.7; y < 2.3; y += 0.12) add(caixa(0.06, 0.03, 1.55), MT.grafite, cv, xc - 1.18, y0 + y, 0, false);
-      add(cxR(0.3, 0.4, 2.5, 0.05), MT.grafite, cv, xc - 1.1, y0 + 1.15, 0);
-      for (const s of [-1, 1]) add(caixa(0.05, 0.12, 0.38), MT.farol, cv, xc - 1.26, y0 + 1.2, s * 0.9, false);
-      for (const z of [-0.6, -0.3, 0, 0.3, 0.6]) add(caixa(0.06, 0.05, 0.08), MT.ambar, cv, xc + 0.1, y0 + 4.25, z, false);
+      add(cxR(0.06, 0.95, 1.7, 0.02), MT.preto, cv, xc - 1.205, y0 + 1.98, 0);
+      for (let y = 1.62; y < 2.4; y += 0.11) add(caixa(0.05, 0.035, 1.55), MT.cromo, cv, xc - 1.24, y0 + y, 0, false);
+      add(caixa(0.03, 0.1, 0.24), MT.cromo, cv, xc - 1.25, y0 + 2.48, 0, false);
+      add(cxR(0.36, 0.44, 2.5, 0.06), MT.preto, cv, xc - 1.1, y0 + 1.16, 0);
+      for (const s of [-1, 1]) { add(cxR(0.06, 0.16, 0.42, 0.02), MT.farol, cv, xc - 1.24, y0 + 1.5, s * 0.93, false); add(caixa(0.04, 0.03, 0.32), MT.ambar, cv, xc - 1.25, y0 + 1.6, s * 0.95, false); add(cil(0.04, 0.04, 0.03, 10, 'x'), MT.farol, cv, xc - 1.28, y0 + 1.08, s * 0.95, false); }
+      for (const z of [-0.6, -0.3, 0, 0.3, 0.6]) add(caixa(0.06, 0.05, 0.08), MT.ambar, cv, xc - 0.5, y0 + 4.13, z, false);
       // tanque de combustível, tanques de ar, caixa de bateria
       add(cil(0.3, 0.3, 1.2, 20, 'x'), MT.aluminio, cv, -16.0, y0 + 0.75, 0.88);
       add(cil(0.12, 0.12, 0.9, 12, 'x'), MT.aco, cv, -16.0, y0 + 0.75, -0.75);
@@ -718,6 +734,51 @@
       for (const s of [-1, 1]) { add(garfo, MT.aco, carro, 0, 0, s * 0.3); add(caixa(0.06, 0.08, 0.13), MT.grafite, carro, 0.24, 0.45, s * 0.3); }
     }
 
+    // ═════════════ CABEÇA E TRONCO HUMANIZADOS (usados por todos os personagens) ═════════════
+    function montarCabeca(cab, R) {
+      const pele = R.pele || MT.pele, cabelo = R.cabelo || MT.cabelo;
+      { const c = add(new THREE.SphereGeometry(0.1, 20, 16), pele, cab, 0, 0.012, 0); c.scale.set(1.0, 1.12, 0.9); }            // crânio
+      { const c = add(new THREE.SphereGeometry(0.068, 16, 12), pele, cab, 0.02, -0.05, 0); c.scale.set(1.0, 0.85, 1.0); }      // queixo e bochechas
+      { const n = add(new THREE.SphereGeometry(0.016, 12, 10), pele, cab, 0.094, -0.012, 0); n.scale.set(0.9, 1.4, 0.8); const pn = add(new THREE.SphereGeometry(0.011, 10, 8), pele, cab, 0.101, -0.024, 0); pn.scale.set(1, 0.8, 1.2); }   // nariz
+      for (const s of [-1, 1]) {
+        const o = add(new THREE.SphereGeometry(0.026, 10, 8), pele, cab, -0.006, -0.006, s * 0.09); o.scale.set(0.55, 1, 0.4);     // orelhas
+        add(new THREE.SphereGeometry(0.0085, 10, 8), MT.olho, cab, 0.0855, 0.019, s * 0.033, false);                                  // olhos
+        add(new THREE.SphereGeometry(0.0048, 8, 6), MT.pupila, cab, 0.093, 0.019, s * 0.033, false);
+        { const pa = add(new THREE.SphereGeometry(0.0105, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), pele, cab, 0.086, 0.021, s * 0.033, false); pa.scale.set(1, 0.7, 1); }   // pálpebra
+        const sb = add(caixa(0.009, 0.008, 0.036), cabelo, cab, 0.091, 0.044, s * 0.035, false); sb.rotation.x = s * 0.18;          // sobrancelhas
+      }
+      add(caixa(0.005, 0.0045, 0.03), MT.boca, cab, 0.0865, -0.047, 0, false);                                                          // boca
+      { const c = add(new THREE.SphereGeometry(0.105, 18, 12, -Math.PI / 2, Math.PI, 0, Math.PI * 0.64), cabelo, cab, -0.008, 0.014, 0); c.scale.set(1.0, 1.1, 0.94); }   // cabelo
+      if (R.capacete) {
+        const c = add(new THREE.SphereGeometry(0.128, 22, 12, 0, Math.PI * 2, 0, Math.PI / 2), R.capacete, cab, -0.005, 0.04, 0); c.scale.set(1.08, 0.95, 1);
+        add(new THREE.CylinderGeometry(0.135, 0.14, 0.012, 22), R.capacete, cab, 0, 0.04, 0);
+        const aba = add(new THREE.CylinderGeometry(0.13, 0.13, 0.01, 16, 1, false, -Math.PI / 2, Math.PI), R.capacete, cab, 0.03, 0.045, 0); aba.rotation.y = Math.PI / 2; aba.scale.set(1, 1, 0.9);
+        add(new THREE.BoxGeometry(0.02, 0.012, 0.03), R.capacete, cab, 0, 0.165, 0, false);
+      } else if (R.bone) {
+        const c = add(new THREE.SphereGeometry(0.112, 22, 12, 0, Math.PI * 2, 0, Math.PI / 2), R.bone, cab, -0.005, 0.045, 0); c.scale.set(1.08, 0.9, 1);
+        const a = add(new THREE.CylinderGeometry(0.11, 0.11, 0.012, 16, 1, false, -Math.PI / 2, Math.PI), R.bone, cab, 0.07, 0.05, 0); a.rotation.y = Math.PI / 2; a.rotation.z = -0.12; a.scale.set(1, 1, 0.75);
+      }
+      if (R.oculos) {                                   // óculos de segurança transparentes (dá para ver os olhos)
+        const o = add(new THREE.CylinderGeometry(0.106, 0.106, 0.042, 18, 1, true, -0.9, 1.8), MT.lente, cab, 0, 0.02, 0, false); o.rotation.y = Math.PI / 2; o.scale.set(1.0, 1, 0.92);
+        for (const s of [-1, 1]) haste([0.04, 0.03, s * 0.092], [-0.06, 0.02, s * 0.094], 0.004, MT.preto, cab, 4);
+      }
+      if (R.abafador) for (const s of [-1, 1]) add(cil(0.038, 0.038, 0.03, 12, 'z'), std({ color: 0xffb000, roughness: 0.5 }), cab, -0.008, -0.004, s * 0.103);
+    }
+    function montarTronco(t, R) {
+      const P = [[0.001, -0.05], [0.135, -0.045], [0.15, 0.02], [0.14, 0.14], [0.152, 0.26], [0.168, 0.38], [0.172, 0.46], [0.15, 0.53], [0.09, 0.585], [0.045, 0.6], [0.001, 0.605]];
+      const tg = new THREE.LatheGeometry(P.map(q => new THREE.Vector2(q[0], q[1])), 22); tg.scale(0.78, 1, 1.2);
+      add(tg, R.camisa, t);
+      const gola = add(new THREE.TorusGeometry(0.058, 0.016, 8, 18), R.camisa, t, 0.005, 0.565, 0); gola.rotation.x = Math.PI / 2; gola.scale.set(1.05, 1.15, 1);
+      { const c = add(new THREE.CylinderGeometry(0.152, 0.15, 0.045, 22, 1, true), MT.preto, t, 0, -0.005, 0); c.scale.set(0.8, 1, 1.22); }      // cinto
+      add(caixa(0.012, 0.035, 0.05), MT.cromo, t, 0.121, -0.005, 0, false);
+      if (R.colete) {
+        const V = [[0.158, 0.08], [0.149, 0.14], [0.16, 0.26], [0.176, 0.38], [0.18, 0.46], [0.16, 0.52]];
+        const vg = new THREE.LatheGeometry(V.map(q => new THREE.Vector2(q[0] * 1.045, q[1])), 22); vg.scale(0.8, 1, 1.22); add(vg, R.colete, t);
+        for (const [y, r] of [[0.2, 0.163], [0.32, 0.18]]) { const b = new THREE.CylinderGeometry(r, r, 0.034, 22, 1, true); b.scale(0.82, 1, 1.24); add(b, MT.refletivo, t, 0, y, 0, false); }
+      }
+      if (R.faixas) for (const [y, r] of [[0.3, 0.16], [0.42, 0.175]]) { const b = new THREE.CylinderGeometry(r, r, 0.034, 22, 1, true); b.scale(0.8, 1, 1.22); add(b, MT.refletivo, t, 0, y, 0, false); }
+    }
+
     // ═════════════ OPERADOR ═════════════
     {
       const op = new THREE.Group(); fk.add(op);
@@ -732,10 +793,7 @@
       add(cxR(0.3, 0.16, 0.34, 0.07), MT.calca, op, -1.0, 1.32, 0);          // quadril
       // tronco (gira ao olhar para trás)
       tronco = new THREE.Group(); tronco.position.set(QUADRIL[0], QUADRIL[1], 0); op.add(tronco);
-      const tg = new THREE.CapsuleGeometry(0.16, 0.3, 6, 14); tg.scale(0.85, 1, 1.15);
-      const tm = add(tg, MT.uniforme, tronco, -0.02, 0.27, 0); tm.rotation.z = 0.08;
-      // faixas refletivas no peito e nos ombros
-      for (const y of [0.3, 0.42]) { const f = add(new THREE.CylinderGeometry(0.147, 0.147, 0.035, 18, 1, true), MT.refletivo, tronco, -0.015, y, 0, false); f.scale.set(0.86, 1, 1.17); }
+      { const tq = new THREE.Group(); tq.rotation.z = 0.08; tronco.add(tq); montarTronco(tq, { camisa: MT.uniforme, faixas: true }); }
       for (const s of [-1, 1]) haste([-0.1, 0.5, s * 0.12], [0.08, 0.5, s * 0.12], 0.02, MT.refletivo, tronco, 6);
       // braços com luvas nas mãos no volante
       for (const s of [-1, 1]) {
@@ -746,17 +804,7 @@
       // pescoço, cabeça, capacete e óculos
       add(cil(0.05, 0.055, 0.1, 10), MT.pele, tronco, -0.03, 0.56, 0);
       cabeca = new THREE.Group(); cabeca.position.set(-0.03, 0.66, 0); tronco.add(cabeca);
-      const cab = add(new THREE.SphereGeometry(0.1, 18, 14), MT.pele, cabeca, 0, 0, 0); cab.scale.set(1.05, 1.12, 0.95);
-      add(new THREE.SphereGeometry(0.03, 8, 6), MT.pele, cabeca, 0.095, -0.01, 0);                  // nariz
-      const cap = add(new THREE.SphereGeometry(0.128, 22, 12, 0, Math.PI * 2, 0, Math.PI / 2), MT.capacete, cabeca, -0.005, 0.03, 0); cap.scale.set(1.08, 0.95, 1);
-      add(new THREE.CylinderGeometry(0.135, 0.14, 0.012, 22), MT.capacete, cabeca, 0.0, 0.03, 0);
-      const aba = add(new THREE.CylinderGeometry(0.13, 0.13, 0.01, 16, 1, false, -Math.PI / 2, Math.PI), MT.capacete, cabeca, 0.03, 0.035, 0); aba.rotation.y = Math.PI / 2; aba.scale.set(1, 1, 0.9);
-      add(new THREE.BoxGeometry(0.02, 0.012, 0.03), MT.capacete, cabeca, 0, 0.155, 0, false);       // nervura
-      const ocl = add(new THREE.CylinderGeometry(0.104, 0.104, 0.04, 16, 1, true, -1.0, 2.0), MT.oculos, cabeca, 0, 0.0, 0); ocl.rotation.y = Math.PI / 2; ocl.scale.set(1.04, 1, 0.95);
-      haste([0.02, 0.0, 0.1], [-0.08, 0.0, 0.1], 0.006, MT.oculos, cabeca, 4);
-      haste([0.02, 0.0, -0.1], [-0.08, 0.0, -0.1], 0.006, MT.oculos, cabeca, 4);
-      // protetor auricular (concha) na lateral do capacete
-      for (const s of [-1, 1]) add(cil(0.04, 0.04, 0.03, 12, 'z'), std({ color: 0xffb000, roughness: 0.5 }), cabeca, -0.01, -0.01, s * 0.105);
+      montarCabeca(cabeca, { pele: MT.pele, cabelo: MT.cabelo2, capacete: MT.capacete, oculos: true, abafador: true });
     }
 
     // ═════════════ PALLETS: o que a empilhadeira carrega ═════════════
@@ -774,7 +822,7 @@
     const CALCO_POS = new THREE.Vector3();
     {
       const amarelo = std({ color: 0xf2c200, roughness: 0.55 });
-      const ex = -4.64, R = 0.53;                     // eixo dianteiro da carreta
+      const ex = -3.32, R = 0.53;                     // eixo dianteiro da carreta (tandem)
       const xs = ex - Math.sqrt(R * R - (R - 0.24) * (R - 0.24));   // onde o pneu passa a 24 cm do chão
       const xb = ex - Math.sqrt(R * R - (R - 0.02) * (R - 0.02));
       const xc = xs - 0.2;                            // centro da peça
@@ -805,8 +853,6 @@
     const mot = new THREE.Group(); pj.add(mot);
     const MM = { jeans: std({ color: 0xa3a39c, roughness: 0.9 }), camisa: std({ color: 0xe8732c, roughness: 0.8 }),
       colete: std({ color: 0xc6e02a, roughness: 0.6, emissive: 0x2a3300, emissiveIntensity: 0.5 }), bone: std({ color: 0x1d2a4d, roughness: 0.75 }) };
-    function membro(r, mat) { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 0.88, 1, 10), mat); m.castShadow = true; mot.add(m); return m; }
-    const junta = (r, mat) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 10, 8), mat); m.castShadow = true; mot.add(m); return m; };
     const _d = new THREE.Vector3(), _pp = new THREE.Vector3();
     function liga(m, a, b) { _d.copy(b).sub(a); const L = Math.max(0.001, _d.length()); m.position.copy(a).addScaledVector(_d, 0.5); m.scale.set(1, L, 1); m.quaternion.setFromUnitVectors(_up, _d.multiplyScalar(1 / L)); }
     function ik(a, b, L1, L2, polo, out) {        // articulação (joelho/cotovelo) de 2 segmentos
@@ -816,44 +862,15 @@
       _pp.copy(polo).addScaledVector(_d, -polo.dot(_d)).normalize();
       return out.copy(a).addScaledVector(_d, x).addScaledVector(_pp, h);
     }
-    const perna = [-1, 1].map(s => ({ s, coxa: membro(0.075, MM.jeans), canela: membro(0.06, MM.jeans), joelho: junta(0.068, MM.jeans), bota: add(cxR(0.27, 0.1, 0.12, 0.035), MT.bota, mot) }));
-    const braco = [-1, 1].map(s => ({ s, sup: membro(0.05, MM.camisa), ant: membro(0.042, MM.camisa), cot: junta(0.048, MM.camisa), mao: junta(0.046, MT.luva) }));
-    add(cxR(0.26, 0.16, 0.36, 0.06), MM.jeans, mot, 0, 0.94, 0);
-    const torso = new THREE.Group(); torso.position.set(0, 0.94, 0); mot.add(torso);
-    { const g = new THREE.CapsuleGeometry(0.16, 0.32, 6, 14); g.scale(0.82, 1, 1.12); add(g, MM.camisa, torso, 0, 0.28, 0); }
-    { const g = new THREE.CylinderGeometry(0.182, 0.18, 0.36, 18, 1, true); g.scale(0.86, 1, 1.13); add(g, MM.colete, torso, 0, 0.3, 0); }
-    for (const y of [0.18, 0.3]) { const g = new THREE.CylinderGeometry(0.186, 0.185, 0.035, 18, 1, true); g.scale(0.87, 1, 1.14); add(g, MT.refletivo, torso, 0, y, 0, false); }
-    add(cil(0.05, 0.055, 0.1, 10), MT.pele, torso, 0.01, 0.6, 0);
-    const cabM = new THREE.Group(); cabM.position.set(0.01, 0.71, 0); torso.add(cabM);
-    { const c = add(new THREE.SphereGeometry(0.1, 18, 14), MT.pele, cabM); c.scale.set(1.05, 1.12, 0.95); }
-    add(new THREE.SphereGeometry(0.03, 8, 6), MT.pele, cabM, 0.095, -0.01, 0);
-    { const c = add(new THREE.SphereGeometry(0.112, 22, 12, 0, Math.PI * 2, 0, Math.PI / 2), MM.bone, cabM, -0.005, 0.035, 0); c.scale.set(1.08, 0.9, 1); }
-    { const a = add(new THREE.CylinderGeometry(0.11, 0.11, 0.012, 16, 1, false, -Math.PI / 2, Math.PI), MM.bone, cabM, 0.07, 0.04, 0); a.rotation.y = Math.PI / 2; a.rotation.z = -0.12; a.scale.set(1, 1, 0.75); }
-    { const o = add(new THREE.CylinderGeometry(0.104, 0.104, 0.04, 16, 1, true, -1.0, 2.0), MT.oculos, cabM, 0, 0, 0); o.rotation.y = Math.PI / 2; o.scale.set(1.04, 1, 0.95); }
-    const _q1 = new THREE.Vector3(), _q2 = new THREE.Vector3(), _q3 = new THREE.Vector3(), _q4 = new THREE.Vector3();
-    const POLO_JOELHO = new THREE.Vector3(1, 0, 0), POLO_COTOVELO = new THREE.Vector3(-0.4, -1, 0);
+    const MOTN = criarPessoa({ calca: MM.jeans, camisa: MM.camisa, colete: MM.colete, bone: MM.bone, oculos: true, pele: MT.pele2, cabelo: MT.cabelo2 });
+    mot.add(MOTN.g);
+    const cabM = MOTN.cab;
+    const _qa = new THREE.Vector3(), _qb = new THREE.Vector3();
     // pose do motorista: ox = distância atrás da armação, inclinação do tronco, fase do passo, amplitude do passo
     function poseMotorista(ox, inclina, fase, amp) {
       mot.position.set(ox, 0, 0);
-      const bob = 0.015 * amp * Math.abs(Math.cos(fase));
-      torso.position.y = 0.94 + bob; torso.rotation.z = -inclina;
-      for (const L of perna) {
-        const f = fase + (L.s > 0 ? Math.PI : 0);
-        const ax = 0.24 * amp * Math.sin(f), ay = 0.075 + 0.08 * amp * Math.max(0, Math.cos(f));
-        const quad = _q1.set(0, 0.92 + bob, L.s * 0.1), torn = _q2.set(ax, ay, L.s * 0.11);
-        const joe = ik(quad, torn, 0.45, 0.45, POLO_JOELHO, _q3);
-        liga(L.coxa, quad, joe); liga(L.canela, joe, torn); L.joelho.position.copy(joe);
-        L.bota.position.set(ax + 0.06, ay - 0.025, L.s * 0.11);
-      }
-      // mãos nos montantes da armação (convertidas para o sistema do motorista)
-      const gx = -ox - 0.03, gy = 1.22;
-      for (const B of braco) {
-        const c = Math.cos(-inclina), sn = Math.sin(-inclina);
-        const ombro = _q1.set(0.02 * c - 0.48 * sn, 0.94 + bob + 0.02 * sn + 0.48 * c, B.s * 0.2);
-        const mao = _q2.set(gx, gy, B.s * 0.24);
-        const cot = ik(ombro, mao, 0.31, 0.3, _q4.copy(POLO_COTOVELO).setZ(B.s * 0.6), _q3);
-        liga(B.sup, ombro, cot); liga(B.ant, cot, mao); B.cot.position.copy(cot); B.mao.position.copy(mao);
-      }
+      const gx = -ox - 0.03, gy = 1.22;                     // mãos nos montantes da armação
+      MOTN.pose({ fase, amp, inclina, maos: [_qa.set(gx, gy, -0.24), _qb.set(gx, gy, 0.24)] });
     }
 
     // ═════════════ FAIXA DE DEMARCAÇÃO DO MOTORISTA (onde ele espera, fora do caminho da empilhadeira) ═════════════
@@ -996,26 +1013,17 @@
       const lim = (r, mat) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 0.88, 1, 10), mat); m.castShadow = true; g.add(m); return m; };
       const jn = (r, mat) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 10, 8), mat); m.castShadow = true; g.add(m); return m; };
       const pernas = [-1, 1].map(s => ({ s, coxa: lim(0.075, R.calca), can: lim(0.06, R.calca), joe: jn(0.068, R.calca), bota: add(cxR(0.27, 0.1, 0.12, 0.035), MT.bota, g) }));
-      const bracos = [-1, 1].map(s => ({ s, sup: lim(0.05, R.camisa), ant: lim(0.042, R.camisa), cot: jn(0.048, R.camisa), mao: jn(0.046, R.luva || MT.luva) }));
+      const bracos = [-1, 1].map(s => {
+        const mao = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 10), R.luva || MT.luva); mao.castShadow = true; g.add(mao); mao.scale.set(0.82, 1.25, 0.62);
+        add(new THREE.SphereGeometry(0.019, 8, 6), R.luva || MT.luva, mao, 0.035, 0.012, s * 0.03);          // polegar
+        return { s, sup: lim(0.052, R.camisa), ant: lim(0.043, R.camisa), cot: jn(0.048, R.camisa), omb: jn(0.066, R.camisa), mao };
+      });
       const quad = add(cxR(0.26, 0.16, 0.36, 0.06), R.calca, g, 0, 0.94, 0);
       const torso = new THREE.Group(); g.add(torso);
-      { const tg = new THREE.CapsuleGeometry(0.16, 0.32, 6, 14); tg.scale(0.82, 1, 1.12); add(tg, R.camisa, torso, 0, 0.28, 0); }
-      if (R.colete) {
-        const cg = new THREE.CylinderGeometry(0.182, 0.18, 0.36, 18, 1, true); cg.scale(0.86, 1, 1.13); add(cg, R.colete, torso, 0, 0.3, 0);
-        for (const y of [0.18, 0.3]) { const b = new THREE.CylinderGeometry(0.186, 0.185, 0.035, 18, 1, true); b.scale(0.87, 1, 1.14); add(b, MT.refletivo, torso, 0, y, 0, false); }
-      }
-      add(cil(0.05, 0.055, 0.1, 10), MT.pele, torso, 0.01, 0.6, 0);
-      const cab = new THREE.Group(); cab.position.set(0.01, 0.71, 0); torso.add(cab);
-      { const c = add(new THREE.SphereGeometry(0.1, 18, 14), MT.pele, cab); c.scale.set(1.05, 1.12, 0.95); }
-      add(new THREE.SphereGeometry(0.03, 8, 6), MT.pele, cab, 0.095, -0.01, 0);
-      if (R.capacete) {
-        const c = add(new THREE.SphereGeometry(0.128, 22, 12, 0, Math.PI * 2, 0, Math.PI / 2), R.capacete, cab, -0.005, 0.03, 0); c.scale.set(1.08, 0.95, 1);
-        add(new THREE.CylinderGeometry(0.135, 0.14, 0.012, 22), R.capacete, cab, 0, 0.03, 0);
-      } else {
-        const c = add(new THREE.SphereGeometry(0.112, 22, 12, 0, Math.PI * 2, 0, Math.PI / 2), R.bone, cab, -0.005, 0.035, 0); c.scale.set(1.08, 0.9, 1);
-        const a = add(new THREE.CylinderGeometry(0.11, 0.11, 0.012, 16, 1, false, -Math.PI / 2, Math.PI), R.bone, cab, 0.07, 0.04, 0); a.rotation.y = Math.PI / 2; a.rotation.z = -0.12; a.scale.set(1, 1, 0.75);
-      }
-      if (R.oculos) { const o = add(new THREE.CylinderGeometry(0.104, 0.104, 0.04, 16, 1, true, -1.0, 2.0), MT.oculos, cab, 0, 0, 0); o.rotation.y = Math.PI / 2; o.scale.set(1.04, 1, 0.95); }
+      montarTronco(torso, R);
+      add(cil(0.048, 0.055, 0.1, 12), R.pele || MT.pele, torso, 0.01, 0.62, 0);
+      const cab = new THREE.Group(); cab.position.set(0.012, 0.73, 0); torso.add(cab);
+      montarCabeca(cab, R);
       const v1 = new THREE.Vector3(), v2 = new THREE.Vector3(), v3 = new THREE.Vector3(), v4 = new THREE.Vector3(), v5 = new THREE.Vector3();
       function pose(o) {
         const fs = o.fase || 0, amp = o.amp || 0, ag = o.agacha || 0;
@@ -1039,16 +1047,19 @@
           if (alvo) mao = v2.copy(alvo);
           else { const bal = -0.16 * amp * Math.sin(fs + (B.s > 0 ? 0 : Math.PI)); mao = v2.set(ombro.x + 0.04 + bal, ombro.y - 0.57, B.s * 0.25); }
           const cot = ik(ombro, mao, 0.31, 0.3, v4.set(alvo ? -0.4 : -0.8, alvo ? -1 : -0.3, B.s * 0.6), v3);
-          liga(B.sup, ombro, cot); liga(B.ant, cot, mao); B.cot.position.copy(cot); B.mao.position.copy(mao);
+          liga(B.sup, ombro, cot); liga(B.ant, cot, mao); B.cot.position.copy(cot); B.omb.position.copy(ombro).add(v5.set(0, -0.015, -B.s * 0.01));
+          B.mao.quaternion.copy(B.ant.quaternion); B.mao.position.copy(mao);
+          // respiração leve (parece vivo mesmo parado)
         }
+        torso.scale.set(1, 1 + 0.008 * Math.sin(performance.now() / 700 + (R.fase0 || 0)), 1);
       }
       const maoMundo = (i, out) => g.localToWorld(out.copy(bracos[i].mao.position));
       const paraLocal = (w) => { g.updateMatrixWorld(true); return g.worldToLocal(w.clone()); };
       return { g, cab, torso, pose, maoMundo, paraLocal };
     }
-    const AUX = criarPessoa({ calca: std({ color: 0x2b3245, roughness: 0.9 }), camisa: std({ color: 0x1f3f7a, roughness: 0.85 }), colete: std({ color: 0xc6e02a, roughness: 0.6, emissive: 0x2a3300, emissiveIntensity: 0.5 }), capacete: MT.capacete, oculos: true });
-    const MOT2 = criarPessoa({ calca: MM.jeans, camisa: MM.camisa, colete: MM.colete, bone: MM.bone, oculos: true });
-    const CONF = criarPessoa({ calca: std({ color: 0x2b3245, roughness: 0.9 }), camisa: std({ color: 0x2a5aa8, roughness: 0.8 }), colete: std({ color: 0xff7a1a, roughness: 0.6, emissive: 0x3a1500, emissiveIntensity: 0.4 }), bone: std({ color: 0x1d2a4d, roughness: 0.75 }) });
+    const AUX = criarPessoa({ calca: std({ color: 0x2b3245, roughness: 0.9 }), camisa: std({ color: 0x1f3f7a, roughness: 0.85 }), colete: std({ color: 0xc6e02a, roughness: 0.6, emissive: 0x2a3300, emissiveIntensity: 0.5 }), capacete: MT.capacete, oculos: true, pele: MT.pele3, cabelo: MT.cabelo, fase0: 1 });
+    const MOT2 = criarPessoa({ calca: MM.jeans, camisa: MM.camisa, colete: MM.colete, bone: MM.bone, oculos: true, pele: MT.pele2, cabelo: MT.cabelo2, fase0: 2 });
+    const CONF = criarPessoa({ calca: std({ color: 0x2b3245, roughness: 0.9 }), camisa: std({ color: 0x2a5aa8, roughness: 0.8 }), colete: std({ color: 0xff7a1a, roughness: 0.6, emissive: 0x3a1500, emissiveIntensity: 0.4 }), bone: std({ color: 0x1d2a4d, roughness: 0.75 }), pele: MT.pele, cabelo: MT.cabelo, fase0: 3 });
     AUX.g.visible = false; MOT2.g.visible = false;
     CONF.g.position.set(11.5, PISO, -5.1); CONF.g.rotation.y = -Math.PI / 2;
 
@@ -1296,7 +1307,7 @@
     const tMot = trilha([[0, 1.71, 0, -2.2, PI], [21.8, 1.71, 0, -2.2, PI], [23.7, 1.16, 0, -2.1, PI], [24.6, 1.16, 0, -2.1, PI],
       [26.2, 3.4, 0, -3.0], [26.2, 9.4, 0, -3.4], [28.0, 11.5, 0, -4.15, PI / 2], [30.9, 11.5, 0, -4.15, PI / 2], [31.4, 11.5, 0, -4.0, -PI / 2], [32.8, 11.5, 0, -4.0, -PI / 2],          // sala do conferente (corte)
       [33.6, 9.9, 0, -3.3], [33.6, 3.4, 0, 0.6], [37.0, 0.2, 0, 2.65, PI],
-      [39.4, -1.75, -1.25, 2.65, PI], [41.6, -5.15, -1.25, 1.8, PI / 2], [43.5, -5.15, -1.25, 1.8, PI / 2], [44.6, -4.6, -1.25, 2.75, PI / 2], [45.8, -4.6, -1.25, 2.75, PI / 2],
+      [39.4, -1.75, -1.25, 2.65, PI], [41.6, -3.83, -1.25, 1.8, PI / 2], [43.5, -3.83, -1.25, 1.8, PI / 2], [44.6, -3.0, -1.25, 3.85, PI / 2], [45.8, -3.0, -1.25, 3.85, PI / 2],
       // abre a porta da cabine e sobe com três pontos de apoio
       [53.0, -17.2, -1.25, 1.75, PI / 2], [53.9, -17.2, -1.25, 1.75, PI / 2], [54.4, -18.05, -1.25, 1.9, PI / 2],
       [54.9, -18.1, -0.7, 1.55, PI / 2], [55.4, -18.1, -0.3, 1.35, PI / 2], [55.9, -18.1, 0.12, 0.95, PI / 2],
@@ -1325,7 +1336,7 @@
       [30.9, () => [12.2, 1.45, -2.6], () => [11.42, 1.15, -3.62]],             // close: NF e chave na mão
       [32.8, () => [14.9, 2.2, -1.3], () => [11.4, 1.3, -5.0]],
       [33.6, () => [3.6, 2.4, 8.4], () => [-0.6, 0.2, 2.2], true],
-      [39.4, () => [-1.4, 0.4, 6.4], () => [-4.9, -0.9, 1.9]],
+      [39.4, () => [-0.4, 0.4, 6.4], () => [-3.6, -0.9, 1.9]],
       [45.8, (d) => [d[0] + 2.6, d[1] + 1.6, d[2] + 5.2], (d) => [d[0] - 1.2, d[1] + 0.8, d[2] - 0.6]],
       [52.4, () => [-15.0, 0.7, 6.4], () => [-18.3, 0.5, 1.5]],               // abrindo a porta e subindo
       [56.2, () => [-27.0, 0.8, 8.5], (d, cx) => [cx, 0.7, 0.5]],
@@ -1439,7 +1450,7 @@
       // trava-rodas: no pneu → nas mãos → no chão ao lado
       if (tf < 42.7) calcoG.position.copy(CALCO_POS);
       else if (tf < 45.1) { MOT2.maoMundo(0, _w1); MOT2.maoMundo(1, _w2); calcoG.position.copy(_w1).add(_w2).multiplyScalar(0.5); calcoG.position.y -= 0.14; calcoG.rotation.y = MOT2.g.rotation.y - PI / 2; }
-      else { calcoG.position.set(-4.6, CHAO, 2.38); calcoG.rotation.y = 0; }
+      else { calcoG.position.set(-3.0, CHAO, 3.48); calcoG.rotation.y = 0; }
       // conferente e documentos
       const c = tConf(tf);
       let maosC = null;

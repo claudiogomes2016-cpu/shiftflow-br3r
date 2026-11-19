@@ -4218,7 +4218,7 @@ const app = {
     const slot = document.querySelector('#tvm-main .tv-3d'); if(!slot) return;
     if(window.Cena3D) { Cena3D.montar(slot, { fallback: 'tv/cena3d.jpg' }); return; }
     if(this._c3d) return; this._c3d = true;
-    const sc = document.createElement('script'); sc.src = 'tv/cena3d.js?v=9';
+    const sc = document.createElement('script'); sc.src = 'tv/cena3d.js?v=10';
     sc.onload = () => this.tv3d();
     sc.onerror = () => { const sl = document.querySelector('#tvm-main .tv-3d'); if(sl) sl.innerHTML = '<div class="c3d"><img src="tv/cena3d.jpg" alt=""></div>'; };
     document.head.appendChild(sc);
