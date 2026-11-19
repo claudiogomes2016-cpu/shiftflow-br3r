@@ -3,6 +3,8 @@
    Empilhadeira de contrapeso (5 t) com operador leva um pallet de latas até a
    porta da carreta baú (ela nunca entra no baú) e sai de ré; o motorista encosta
    a armação de alumínio na carga e empurra o pallet para dentro. Ciclo de 16 s.
+   A cada 2 carregamentos, um "Momento Segurança": a cena desacelera até parar, a
+   câmera faz um close no assunto e aparece uma regra de segurança; depois segue.
 
    · Three.js (WebGL), carregado só quando o painel abre; nada de vídeo.
    · Tudo modelado em código, em metros, com dimensões reais.
@@ -50,6 +52,41 @@
   }
   window.Cena3D = { montar, imagem: mostrarImagem };
 
+  // ── "Momento Segurança": regras mostradas em rodízio (fácil de trocar os textos) ──
+  // t = instante do ciclo em que a cena para · obj = em quem a câmera foca (fk = empilhadeira,
+  // pj = motorista, mundo = cenário) · pos/alvo = câmera no sistema desse objeto
+  const MOMENTOS = [
+    { t: 1.0, obj: 'mundo', pos: [-2.7, 0.15, 4.1], alvo: [-5.0, -1.65, 1.15], ico: '🛑', tit: 'Rodas bloqueadas antes de carregar', txt: 'Antes do carregamento, as rodas do caminhão devem estar <b>bloqueadas com trava-rodas (calços)</b>.' },
+    { t: 4.9, obj: 'fk', pos: [0.8, 2.0, -3.2], alvo: [-0.6, 0.6, 0], ico: '📋', tit: 'Checklist antes de operar', txt: 'Faça a <b>inspeção pré-uso</b> e verifique a familiaridade com os <b>controles do equipamento</b>.' },
+    { t: 3.4, obj: 'fk', pos: [-0.1, 2.2, -2.3], alvo: [-1.0, 1.5, 0], ico: '🦺', tit: 'Cinto afivelado, sempre', txt: 'A operação segura começa no assento: <b>cinto de segurança</b> e <b>EPIs completos</b>.' },
+    { t: 2.2, obj: 'fk', pos: [3.3, 1.1, -2.9], alvo: [1.4, -0.15, 0], ico: '📦', tit: 'Carga baixa e inclinada para trás', txt: 'Transporte a carga <b>a cerca de 20 cm do chão</b> e <b>inclinada para trás</b>.' },
+    { t: 4.5, obj: 'mundo', pos: [5.4, 2.4, -5.6], alvo: [1.4, -0.35, -1.2], ico: '🚧', tit: 'Motorista na faixa de demarcação', txt: 'Enquanto a empilhadeira carrega, o motorista fica <b>do lado de fora</b>, na faixa, em local <b>seguro e visível</b>.' },
+    { t: 6.3, obj: 'fk', pos: [-3.6, 3.4, -7.0], alvo: [-2.3, 0.15, 0], ico: '👀', tit: 'Na ré, olhe para trás', txt: 'Confira o caminho livre antes de manobrar. <b>Blue spot</b> e alarme de ré funcionando.' },
+    { t: 1.4, obj: 'fk', pos: [-3.5, 2.4, -4.0], alvo: [-0.5, 0.6, 0], ico: '📣', tit: 'Cruzamento: reduza e buzine', txt: 'Ao se aproximar de um cruzamento no armazém, <b>reduza a velocidade</b> e <b>buzine</b>.' },
+    { t: 6.6, obj: 'mundo', pos: [6.5, 2.6, -5.6], alvo: [2.4, 0.3, -1.0], ico: '⚠️', tit: 'Fora da linha de fogo', txt: 'Auxiliares e pedestres sempre <b>fora da linha de fogo</b> da empilhadeira.' },
+    { t: 3.2, obj: 'mundo', pos: [6.0, 2.4, -4.6], alvo: [2.0, 0.4, -0.6], ico: '✋', tit: 'Pedestre precisa se aproximar?', txt: '<b>Pare</b>, <b>abaixe os garfos</b>, desligue, desça e <b>afaste-se 1 metro</b> antes de permitir a aproximação.' },
+    { t: 8.5, obj: 'mundo', pos: [-21.8, 1.5, 5.2], alvo: [-17.6, 0.7, 0.4], ico: '🔑', tit: 'Chave do caminhão com o conferente', txt: 'Entregue <b>antes do início</b> e devolvida somente após a <b>confirmação do término</b> do carregamento.' },
+    { t: 4.95, obj: 'mundo', pos: [3.0, 1.5, 2.8], alvo: [0.1, -0.55, 0], ico: '🅿️', tit: 'Ao estacionar a empilhadeira', txt: '<b>Garfos no chão</b>, comandos em ponto morto, <b>freio acionado</b>, equipamento desligado e <b>chave retirada</b>.' },
+    { t: 10.2, obj: 'mundo', pos: [2.7, 1.6, 1.25], alvo: [-1.2, 1.1, 0], ico: '🧤', tit: 'EPIs completos na doca', txt: 'Colete, óculos, luvas e calçado de segurança. Empurre a carga <b>sempre com a armação</b>.' },
+    { t: 0.5, obj: 'mundo', pos: [5.4, 2.3, -6.6], alvo: [1.6, 0.3, -2.2], ico: '🎈', tit: 'Fixação com big bag inflável', txt: 'O motorista aguarda <b>fora do caminhão</b>, na faixa de demarcação, no <b>campo visual</b> do auxiliar, até a liberação.' },
+  ];
+  window.Cena3D.momentos = MOMENTOS;
+  if (!document.getElementById('c3d-css')) {
+    const st = document.createElement('style'); st.id = 'c3d-css';
+    st.textContent = `
+.c3d-msg { position:absolute; left:0; right:0; bottom:0; padding:calc(var(--c3du, 5px) * 5) calc(var(--c3du, 5px) * 3.2) calc(var(--c3du, 5px) * 2.6); display:flex; gap:calc(var(--c3du, 5px) * 2); align-items:center;
+  background:linear-gradient(to top, rgba(5,11,26,.94) 0%, rgba(5,11,26,.78) 62%, rgba(5,11,26,0) 100%); color:#fff; font-family:'Barlow', system-ui, sans-serif;
+  opacity:0; transform:translateY(12%); transition:opacity .6s ease, transform .6s ease; pointer-events:none; z-index:2; }
+.c3d-msg.on { opacity:1; transform:none; }
+.c3d-msg .ico { flex:none; width:calc(var(--c3du, 5px) * 8.6); height:calc(var(--c3du, 5px) * 8.6); border-radius:50%; display:grid; place-items:center; font-size:calc(var(--c3du, 5px) * 4.6);
+  background:radial-gradient(circle at 35% 30%, #FFD54A, #E0A800); box-shadow:0 0 0 calc(var(--c3du, 5px) * .5) rgba(255,194,26,.25); }
+.c3d-msg small { display:block; font-family:'Barlow Semi Condensed', 'Barlow', sans-serif; font-weight:800; letter-spacing:.14em; font-size:calc(var(--c3du, 5px) * 2.2); color:#FFC21A; }
+.c3d-msg strong { display:block; font-family:'Barlow Semi Condensed', 'Barlow', sans-serif; font-weight:800; font-size:calc(var(--c3du, 5px) * 4.3); line-height:1.05; margin:calc(var(--c3du, 5px) * .3) 0 calc(var(--c3du, 5px) * .5); }
+.c3d-msg p { margin:0; font-size:calc(var(--c3du, 5px) * 2.75); line-height:1.25; color:#DDE6F7; }
+.c3d-msg p b { color:#FFC21A; font-weight:700; }`;
+    document.head.appendChild(st);
+  }
+
   // ═════════════════════════════════════════════════════════════════════════
   function construir(THREE, host, cfg) {
     const nucleos = navigator.hardwareConcurrency || 4;
@@ -58,6 +95,10 @@
 
     const canvas = document.createElement('canvas');
     host.appendChild(canvas);
+    const msg = document.createElement('div'); msg.className = 'c3d-msg';
+    msg.innerHTML = '<span class="ico"></span><div><small>MOMENTO SEGURANÇA</small><strong></strong><p></p></div>';
+    host.appendChild(msg);
+    function mostrarMsg(m) { msg.querySelector('.ico').textContent = m.ico; msg.querySelector('strong').textContent = m.tit; msg.querySelector('p').innerHTML = m.txt; }
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -779,6 +820,16 @@
       }
     }
 
+    // ═════════════ FAIXA DE DEMARCAÇÃO DO MOTORISTA (onde ele espera, fora do caminho da empilhadeira) ═════════════
+    {
+      const am = std({ color: 0xf2c200, roughness: 0.7 });
+      const x0 = 0.75, x1 = 2.45, z0 = -2.9, z1 = -1.5, e = 0.08, y = PISO + 0.006;
+      for (const [w, d, x, z] of [[x1 - x0, e, (x0 + x1) / 2, z0], [x1 - x0, e, (x0 + x1) / 2, z1], [e, z1 - z0, x0, (z0 + z1) / 2], [e, z1 - z0, x1, (z0 + z1) / 2]]) { const f = add(new THREE.PlaneGeometry(w, d), am, cena, x, y, z, false); f.rotation.x = -Math.PI / 2; f.castShadow = false; }
+      const tl = tex(512, 96, (g, w, h) => { g.clearRect(0, 0, w, h); g.fillStyle = '#f2c200'; g.font = '800 58px Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('MOTORISTA', w / 2, h / 2 + 3); }, null);
+      const ml = new THREE.MeshStandardMaterial({ map: tl, transparent: true, roughness: 0.7, depthWrite: false });
+      const r = add(new THREE.PlaneGeometry(1.25, 0.24), ml, cena, 2.22, y + 0.001, (z0 + z1) / 2, false); r.rotation.x = -Math.PI / 2; r.rotation.z = Math.PI / 2; r.castShadow = false;
+    }
+
     // ═════════════ SOMBRA DE CONTATO ═════════════
     const tSombra = tex(128, 128, (g, w, h) => { const gr = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); gr.addColorStop(0, 'rgba(0,0,0,.75)'); gr.addColorStop(.55, 'rgba(0,0,0,.4)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); }, null, false);
     const mSombra = new THREE.MeshBasicMaterial({ map: tSombra, transparent: true, depthWrite: false });
@@ -910,7 +961,7 @@
     // carga, empurra o pallet até o fundo do baú e volta de costas para o lugar de espera
     const FACE = 0.75;                                       // do centro do pallet até a armação
     const PJ = { W: [1.15, -2.2], A: [PALLET_PORTA + FACE, 0], F: [PALLET_FUNDO + FACE, 0] };
-    const PJ_TL = [[0, 6.2, 'W', 'W'], [6.2, 8.0, 'W', 'A'], [8.0, 8.3, 'A', 'A'], [8.3, 11.2, 'A', 'F'], [11.2, 11.6, 'F', 'F'], [11.6, 15.4, 'F', 'W'], [15.4, 16.01, 'W', 'W']];
+    const PJ_TL = [[0, 7.6, 'W', 'W'], [7.6, 9.2, 'W', 'A'], [9.2, 9.5, 'A', 'A'], [9.5, 12.2, 'A', 'F'], [12.2, 12.4, 'F', 'F'], [12.4, 15.8, 'F', 'W'], [15.8, 16.01, 'W', 'W']];
     function posPJ(t) {
       for (const [a, b, de, para] of PJ_TL) if (t >= a && t < b) { const u = suave(lin(a, b, t)); return [PJ[de][0] + (PJ[para][0] - PJ[de][0]) * u, PJ[de][1] + (PJ[para][1] - PJ[de][1]) * u]; }
       return PJ.W.slice();
@@ -918,9 +969,9 @@
     function quadroPJ(t) {
       const [x, z] = posPJ(t);
       let inclina = 0.05;
-      if (t >= 8.0 && t < 11.2) inclina = 0.05 + 0.22 * suave(lin(8.0, 8.4, t));   // empurrando
-      else if (t >= 11.6 && t < 15.4) inclina = -0.03;                               // volta de costas
-      return { x, z, ox: -0.56, inclina, ergue: (t >= 8.0 && t < 11.2) ? 0 : 0.04 };
+      if (t >= 9.2 && t < 12.2) inclina = 0.05 + 0.22 * suave(lin(9.2, 9.6, t));   // empurrando
+      else if (t >= 12.4 && t < 15.8) inclina = -0.03;                               // volta de costas
+      return { x, z, ox: -0.56, inclina, ergue: (t >= 9.2 && t < 12.2) ? 0 : 0.04 };
     }
     // passo do motorista: distância andada (com sinal: para frente / de costas), tabelada para o ciclo fechar igual
     const PASSO = []; {
@@ -965,7 +1016,7 @@
       pj.position.set(q.x, PISO, q.z); pj.rotation.y = Math.PI;
       arm.position.y = q.ergue;
       poseMotorista(q.ox, q.inclina + 0.015 * Math.sin(t * 2.1), dist / 0.62 * Math.PI, Math.min(1, vel / 0.7));
-      cabM.rotation.y = (t < 6.0 || t > 15.4) ? -0.5 + 0.15 * Math.sin(t * 0.7) : 0;   // na espera, acompanha a empilhadeira
+      cabM.rotation.y = (t < 7.6 || t > 15.8) ? -0.5 + 0.15 * Math.sin(t * 0.7) : 0;   // na espera, acompanha a empilhadeira
       // pallet: nos garfos da empilhadeira → na porta → na paleteira → no fundo do baú
       if (!f.solto) {
         if (pallet.parent !== carro) carro.add(pallet);
@@ -973,8 +1024,8 @@
       } else {
         if (pallet.parent !== palletSolto) palletSolto.add(pallet);
         let px = PALLET_PORTA; const py = 0;
-        if (t >= 8.3 && t < 11.6) px = Math.min(PALLET_PORTA, q.x - FACE);
-        else if (t >= 11.6) px = PALLET_FUNDO;
+        if (t >= 9.5 && t < 12.4) px = Math.min(PALLET_PORTA, q.x - FACE);
+        else if (t >= 12.4) px = PALLET_FUNDO;
         pallet.position.set(px, PISO + py, 0); pallet.rotation.set(0, Math.PI, 0);
       }
       // operador: olha para trás na ré
@@ -1000,6 +1051,7 @@
       if (host.parentNode && host.parentNode.classList) host.parentNode.classList.toggle('c3d-vazio', pequeno);
       if (pequeno || (w === larg && h === alt)) return;
       larg = w; alt = h;
+      host.style.setProperty('--c3du', (w / 100).toFixed(2) + 'px');
       renderer.setSize(w, h, false);
       enquadrar(w, h);
     }
@@ -1018,15 +1070,55 @@
       if (agora - ultimoQuadro < 1000 / FPS - 2) return;
       const dt = agora - ultimoQuadro; ultimoQuadro = agora;
       if (dt < 1000 && agora - inicio > 4000) { hist.push(dt); if (hist.length > 90) { const m = hist.reduce((a, b) => a + b, 0) / hist.length; hist.length = 0; if (m > 55) rebaixar(); } }
-      const t = cfg.parado ? 2.6 : ((agora - inicio) / 1000) % CICLO;
-      posicionar(t);
+      if (cfg.parado) { posicionar(2.6); renderer.render(scene, cam); return; }
+      avancar(Math.min(dt, 100) / 1000);
       renderer.render(scene, cam);
     }
+    // ── Momento Segurança: a cena desacelera até parar, a câmera vai ao close e a regra aparece ──
+    const ENTRA = 1.4, FICA = 6.5, SAI = 1.4;                 // s
+    const FOLGA = ENTRA / 2;                                  // tempo de cena andado enquanto desacelera
+    let tAnim = 0, fase = 'normal', tFase = 0, iMom = 0, ciclosAte = 1;   // o 1º momento vem depois de 1 carregamento
+    const _cp = new THREE.Vector3(), _ca = new THREE.Vector3(), _sp = new THREE.Vector3(), _sa = new THREE.Vector3();
+    function tomada(m, pos, alvo) {
+      const o = m.obj === 'fk' ? fk : m.obj === 'pj' ? pj : null;
+      pos.set(...m.pos); alvo.set(...m.alvo);
+      if (o) { o.updateMatrixWorld(true); o.localToWorld(pos); o.localToWorld(alvo); }
+    }
+    function camera(k, m) {
+      if (k <= 0 || !m) { cam.position.copy(POS_CAM); cam.lookAt(ALVO); return; }
+      tomada(m, _sp, _sa);
+      const e = suave(k);
+      _cp.copy(POS_CAM).lerp(_sp, e); _ca.copy(ALVO).lerp(_sa, e);
+      cam.position.copy(_cp); cam.lookAt(_ca);
+    }
+    function avancar(dt) {
+      const m = MOMENTOS[iMom % MOMENTOS.length];
+      let vel = 1, k = 0;
+      if (fase === 'normal') {
+        const antes = tAnim % CICLO, ciclo = Math.floor(tAnim / CICLO);
+        tAnim += dt;
+        const depois = tAnim % CICLO, gat = (m.t - FOLGA + CICLO) % CICLO;
+        const passou = depois >= antes ? (antes < gat && depois >= gat) : (antes < gat || depois >= gat);
+        if (ciclo >= ciclosAte && passou) { fase = 'entra'; tFase = 0; mostrarMsg(m); }
+      } else {
+        tFase += dt;
+        if (fase === 'entra') { const u = Math.min(1, tFase / ENTRA); vel = 1 - suave(u); k = u; if (u >= 1) { fase = 'fica'; tFase = 0; msg.classList.add('on'); } }
+        else if (fase === 'fica') { vel = 0; k = 1; if (tFase >= FICA) { fase = 'sai'; tFase = 0; msg.classList.remove('on'); } }
+        else { const u = Math.min(1, tFase / SAI); vel = suave(u); k = 1 - u; if (u >= 1) { fase = 'normal'; iMom++; ciclosAte = Math.floor(tAnim / CICLO) + 2; } }
+        tAnim += dt * vel;
+      }
+      posicionar(tAnim % CICLO);
+      camera(fase === 'normal' ? 0 : k, m);
+    }
+
     posicionar(0);
     renderer.compile(scene, cam);
     renderer.setAnimationLoop(laco);
     // ganchos para testes: quadro exato de um instante
-    window.__cena3d = { quadro: (t) => { posicionar(t); renderer.render(scene, cam); }, parar: () => { vivo = false; renderer.setAnimationLoop(null); }, renderer, scene, cam, fk };
+    window.__cena3d = { quadro: (t) => { posicionar(t); camera(0); renderer.render(scene, cam); }, parar: () => { vivo = false; renderer.setAnimationLoop(null); }, renderer, scene, cam, fk,
+      momento: (i) => { const m = MOMENTOS[i]; for (let x = Math.max(0, m.t - 1.5); x < m.t; x += 0.1) posicionar(x); posicionar(m.t); camera(1, m); mostrarMsg(m); msg.classList.add('on'); renderer.render(scene, cam); },
+      semMomento: () => { msg.classList.remove('on'); camera(0); },
+      avancar: (dt) => { avancar(dt); renderer.render(scene, cam); }, passo: (dt) => avancar(dt), estado: () => ({ fase, iMom, tAnim, msg: msg.classList.contains('on') }) };
     return { resize };
   }
 })();
