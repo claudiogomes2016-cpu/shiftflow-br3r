@@ -996,6 +996,15 @@ body.tv-on #sc-login, body.tv-on #app { display:none !important; }
 .tv-meta-n > b { font-family:var(--f-display); font-size:calc(var(--u) * 5) !important; line-height:1; }
 .tv-meta-n span { text-align:left; font-size:calc(var(--u) * 1.05); line-height:1.3; }
 
+
+/* cena 3D da doca no espaço livre do ranking (só enfeite: some se faltar espaço para os números) */
+.tv-3d { flex:1 1 0; min-height:0; position:relative; border-radius:calc(var(--u) * .9); overflow:hidden; background:#0b1630; }
+.tv-3d.c3d-vazio { visibility:hidden; }
+.tv-3d .c3d { position:absolute; inset:0; background:center / cover no-repeat; }
+.tv-3d canvas, .tv-3d img { position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover; }
+.tv-3d::after { content:''; position:absolute; inset:0; pointer-events:none; border-radius:inherit; box-shadow:inset 0 0 calc(var(--u) * 1.4) calc(var(--u) * .35) #0A1430, inset 0 0 0 1px rgba(86,130,255,.2); }
+@media(max-aspect-ratio:1/1){ .tv-3d { flex:none; aspect-ratio:2.4 / 1; } }
+
 /* ── PAINEL ONE-ON-ONE ── */
 body.oo-open { overflow:hidden; }
 .oo { position:fixed; inset:0; z-index:2500; background:var(--bg); overflow-y:auto; display:flex; flex-direction:column; }
@@ -4104,10 +4113,12 @@ const app = {
           <span class="me${top(o, 'me')}">${fmt(o.me)}</span><span class="${top(o, 'pc')}">${fmt(o.pc)}</span><span class="${top(o, 'nsa')}">${fmt(o.nsa)}</span><span class="${top(o, 'turnos')}">${fmt(o.turnos)}</span>
         </div>`).join('') || '<div class="tvm-load">Sem registros no mês.</div>'}
         <div class="tv-rt tv-rtot"><span></span><span>Total</span><span class="me">${fmt(totM.me)}</span><span>${fmt(totM.pc)}</span><span>${fmt(totM.nsa)}</span><span>${fmt(doMes.length)}</span></div>
+        <div class="tv-3d"></div>
         <div class="tv-leg"><i></i> maior do mês em cada coluna · ME = folha · quadro de topo · palete</div>
       </section>`;
 
     main.innerHTML = (atual || turno) + rodada + ranking;
+    this.tv3d();
 
     // rodapé: últimos turnos
     document.getElementById('tvm-foot').innerHTML = '<span class="tvf-l">Últimos turnos</span>' + regs.slice(0, 8).map(x => {
@@ -4199,6 +4210,18 @@ const app = {
       })()}
       <div class="tv-last">🕘 Último registro: <b>${d.ultimo.nome}</b> · Turma ${d.ultimo.turma} · ${fd(d.ultimo.quando)} ${fh(d.ultimo.quando)} · ME ${fmt(d.ultimo.me)} · Planta ${fmt(d.ultimo.pc)} · NSA ${fmt(d.ultimo.nsa)}</div>
     </section>`;
+  },
+
+  // Cena 3D da doca (empilhadeira levando um pallet de latas para a carreta) no espaço livre do
+  // ranking. Só enfeite: roda à parte, não lê nem altera nenhum número. Carrega só no Modo TV.
+  tv3d() {
+    const slot = document.querySelector('#tvm-main .tv-3d'); if(!slot) return;
+    if(window.Cena3D) { Cena3D.montar(slot, { fallback: 'tv/cena3d.jpg' }); return; }
+    if(this._c3d) return; this._c3d = true;
+    const sc = document.createElement('script'); sc.src = 'tv/cena3d.js?v=1';
+    sc.onload = () => this.tv3d();
+    sc.onerror = () => { const sl = document.querySelector('#tvm-main .tv-3d'); if(sl) sl.innerHTML = '<div class="c3d"><img src="tv/cena3d.jpg" alt=""></div>'; };
+    document.head.appendChild(sc);
   },
 
   // Diminui a escala até tudo caber em 100% da tela, sem rolar
