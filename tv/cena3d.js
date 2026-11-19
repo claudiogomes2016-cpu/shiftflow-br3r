@@ -404,7 +404,7 @@
       return g;
     }
     const car1 = carreta(true); cena.add(car1);
-    const car2 = carreta(false, true); car2.position.z = -4.2; cena.add(car2);
+    const car2 = carreta(true, true); car2.position.z = -4.2; cena.add(car2);
 
     // ═════════════ CAVALO MECÂNICO (6x2, cabine avançada) ═════════════
     let cavalo;
