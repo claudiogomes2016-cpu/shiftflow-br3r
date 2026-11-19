@@ -1,7 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    CENA 3D DA DOCA · Shift Flow · Painel da Expedição (Ball Três Rios)
-   Empilhadeira de contrapeso (5 t) com operador leva um pallet de latas
-   para dentro de uma carreta baú encostada na doca. Ciclo de 10 s sem cortes.
+   Empilhadeira de contrapeso (5 t) com operador leva um pallet de latas até a
+   porta da carreta baú (ela nunca entra no baú) e sai de ré; o motorista encosta
+   a armação de alumínio na carga e empurra o pallet para dentro. Ciclo de 16 s.
 
    · Three.js (WebGL), carregado só quando o painel abre; nada de vídeo.
    · Tudo modelado em código, em metros, com dimensões reais.
@@ -16,7 +17,7 @@
   'use strict';
   if (window.Cena3D) return;
   const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js';
-  const CICLO = 10;          // segundos por ciclo
+  const CICLO = 16;          // segundos por ciclo
   const FPS = 30;
 
   let host = null, fallbackUrl = '', estado = 'novo', api = null;
@@ -187,13 +188,13 @@
       zebra: std({ map: T.zebra, roughness: 0.6 }),
       parede: std({ map: T.parede, metalness: 0.5, roughness: 0.5 }),
       amareloPiso: std({ color: 0xe0a400, roughness: 0.7 }),
-      madeira: std({ color: 0x9a7650, roughness: 0.85 }),
-      madeiraEsc: std({ color: 0x6f5235, roughness: 0.9 }),
+      madeira: std({ color: 0x1c1d20, roughness: 0.55, metalness: 0.05 }),
+      madeiraEsc: std({ color: 0x141517, roughness: 0.6 }),
       lata: std({ color: 0xd9dee4, metalness: 1, roughness: 0.22 }),
       lataTopo: std({ color: 0xb8bec6, metalness: 1, roughness: 0.3 }),
       papelao: std({ color: 0xb59266, roughness: 0.95 }),
       quadro: std({ color: 0x2e5aa8, roughness: 0.55, metalness: 0.05 }),
-      cinta: std({ color: 0x1b1d22, roughness: 0.5 }),
+      cinta: std({ color: 0x2f9a3c, roughness: 0.45 }),
       filme: fis({ color: 0xdfe9f2, metalness: 0, roughness: 0.12, transparent: true, opacity: 0.2, clearcoat: 1, clearcoatRoughness: 0.05, depthWrite: false, side: THREE.DoubleSide }),
       etiqueta: std({ map: T.etiqueta, roughness: 0.6 }),
       ball: std({ map: T.ball, transparent: true, roughness: 0.4, depthWrite: false }),
@@ -296,7 +297,7 @@
       // niveladores de doca (chapa xadrez) com lábio sobre o piso da carreta
       for (const z of [0, -4.2]) {
         add(caixa(1.9, 0.04, 2.1), MT.chapa, amb, 1.1, PISO - 0.015, z, false);
-        const labio = add(caixa(0.42, 0.025, 2.1), MT.chapa, amb, -0.02, PISO + 0.012, z, false); labio.rotation.z = -0.03;
+        const labio = add(caixa(0.27, 0.025, 2.1), MT.chapa, amb, 0.015, PISO + 0.012, z, false); labio.rotation.z = -0.03;
         // batentes de borracha
         for (const s of [-1, 1]) { add(cxR(0.14, 0.42, 0.26, 0.02), MT.preto, amb, 0.08, -0.33, z + s * 1.18); add(caixa(0.02, 0.5, 0.36), MT.aco, amb, 0.155, -0.33, z + s * 1.18); }
       }
@@ -694,11 +695,96 @@
     // pallets já carregados no fundo da carreta (só se vê a silhueta, sem repetir o mesmo)
     for (const [x, z] of [[-13.9, 0.6], [-13.9, -0.6], [-12.4, 0.6], [-12.4, -0.6], [-10.9, 0.6], [-10.9, -0.6], [-9.4, -0.6]]) { const p = palletDeLatas(true); p.position.set(x, PISO, z); car1.add(p); }
 
+    // ═════════════ TRAVA-RODAS (calço amarelo na roda dianteira da carreta) ═════════════
+    {
+      const amarelo = std({ color: 0xf2c200, roughness: 0.55 });
+      const ex = -4.64, R = 0.53;                     // eixo dianteiro da carreta
+      const xs = ex - Math.sqrt(R * R - (R - 0.24) * (R - 0.24));   // onde o pneu passa a 24 cm do chão
+      const xb = ex - Math.sqrt(R * R - (R - 0.02) * (R - 0.02));
+      const calco = perfil([[xs - 0.42, 0], [xb + 0.02, 0], [(xb + xs) / 2 + 0.03, 0.12, xs, 0.24], [xs - 0.08, 0.25], [xs - 0.42, 0.03], [xs - 0.42, 0]], 0.22, 0.012);
+      for (const s of [-1, 1]) {
+        add(calco, amarelo, car1, 0, CHAO, s * 1.14);
+        for (let i = 0; i < 3; i++) add(caixa(0.02, 0.01, 0.2), std({ color: 0x8a6d00, roughness: 0.8 }), car1, xs - 0.34 + i * 0.1, CHAO + 0.06 + i * 0.04, s * 1.14, false);
+        haste([xs - 0.42, CHAO + 0.02, s * 1.14], [xs - 0.62, CHAO + 0.012, s * 1.3], 0.008, MT.preto, car1, 4);
+      }
+    }
+
+    // ═════════════ ARMAÇÃO DE ALUMÍNIO + MOTORISTA ═════════════
+    // O motorista encosta a armação em pé na face da carga e empurra o pallet, que desliza no
+    // assoalho do baú. Sistema local: a armação fica no plano x = 0 e empurra para +X.
+    const pj = new THREE.Group(); cena.add(pj);
+    const arm = new THREE.Group(); pj.add(arm);
+    {
+      const al = std({ color: 0xc4cad1, metalness: 1, roughness: 0.32 });
+      const r = 0.018;
+      const P = [[-0.16, 0.06], [0.16, 0.06], [0.34, 0.95], [0.34, 1.3], [0.16, 2.12], [-0.16, 2.12], [-0.34, 1.3], [-0.34, 0.95]];
+      for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length]; haste([0, a[1], a[0]], [0, b[1], b[0]], r, al, arm, 6); }
+      for (const z of [-0.11, 0.11]) haste([0, 0.06, z], [0, 2.12, z], r * 0.9, al, arm, 6);
+      for (const [y, w] of [[0.45, 0.24], [0.95, 0.34], [1.3, 0.34], [1.72, 0.25]]) haste([0, y, -w], [0, y, w], r * 0.9, al, arm, 6);
+      haste([0, 0.95, -0.34], [0, 0.45, 0.11], r * 0.8, al, arm, 6); haste([0, 1.3, 0.34], [0, 1.72, -0.11], r * 0.8, al, arm, 6);
+      for (const z of [-0.16, 0.16]) add(caixa(0.05, 0.03, 0.05), MT.preto, arm, 0.01, 0.045, z, false);   // sapatas
+    }
+    // motorista: boné, colete verde-limão refletivo, camisa laranja, calça cinza (pernas e braços articulados)
+    const mot = new THREE.Group(); pj.add(mot);
+    const MM = { jeans: std({ color: 0xa3a39c, roughness: 0.9 }), camisa: std({ color: 0xe8732c, roughness: 0.8 }),
+      colete: std({ color: 0xc6e02a, roughness: 0.6, emissive: 0x2a3300, emissiveIntensity: 0.5 }), bone: std({ color: 0x1d2a4d, roughness: 0.75 }) };
+    function membro(r, mat) { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 0.88, 1, 10), mat); m.castShadow = true; mot.add(m); return m; }
+    const junta = (r, mat) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 10, 8), mat); m.castShadow = true; mot.add(m); return m; };
+    const _d = new THREE.Vector3(), _pp = new THREE.Vector3();
+    function liga(m, a, b) { _d.copy(b).sub(a); const L = Math.max(0.001, _d.length()); m.position.copy(a).addScaledVector(_d, 0.5); m.scale.set(1, L, 1); m.quaternion.setFromUnitVectors(_up, _d.multiplyScalar(1 / L)); }
+    function ik(a, b, L1, L2, polo, out) {        // articulação (joelho/cotovelo) de 2 segmentos
+      const d = Math.max(0.05, Math.min(L1 + L2 - 1e-3, a.distanceTo(b)));
+      _d.copy(b).sub(a).normalize();
+      const x = (L1 * L1 - L2 * L2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, L1 * L1 - x * x));
+      _pp.copy(polo).addScaledVector(_d, -polo.dot(_d)).normalize();
+      return out.copy(a).addScaledVector(_d, x).addScaledVector(_pp, h);
+    }
+    const perna = [-1, 1].map(s => ({ s, coxa: membro(0.075, MM.jeans), canela: membro(0.06, MM.jeans), joelho: junta(0.068, MM.jeans), bota: add(cxR(0.27, 0.1, 0.12, 0.035), MT.bota, mot) }));
+    const braco = [-1, 1].map(s => ({ s, sup: membro(0.05, MM.camisa), ant: membro(0.042, MM.camisa), cot: junta(0.048, MM.camisa), mao: junta(0.046, MT.luva) }));
+    add(cxR(0.26, 0.16, 0.36, 0.06), MM.jeans, mot, 0, 0.94, 0);
+    const torso = new THREE.Group(); torso.position.set(0, 0.94, 0); mot.add(torso);
+    { const g = new THREE.CapsuleGeometry(0.16, 0.32, 6, 14); g.scale(0.82, 1, 1.12); add(g, MM.camisa, torso, 0, 0.28, 0); }
+    { const g = new THREE.CylinderGeometry(0.182, 0.18, 0.36, 18, 1, true); g.scale(0.86, 1, 1.13); add(g, MM.colete, torso, 0, 0.3, 0); }
+    for (const y of [0.18, 0.3]) { const g = new THREE.CylinderGeometry(0.186, 0.185, 0.035, 18, 1, true); g.scale(0.87, 1, 1.14); add(g, MT.refletivo, torso, 0, y, 0, false); }
+    add(cil(0.05, 0.055, 0.1, 10), MT.pele, torso, 0.01, 0.6, 0);
+    const cabM = new THREE.Group(); cabM.position.set(0.01, 0.71, 0); torso.add(cabM);
+    { const c = add(new THREE.SphereGeometry(0.1, 18, 14), MT.pele, cabM); c.scale.set(1.05, 1.12, 0.95); }
+    add(new THREE.SphereGeometry(0.03, 8, 6), MT.pele, cabM, 0.095, -0.01, 0);
+    { const c = add(new THREE.SphereGeometry(0.112, 22, 12, 0, Math.PI * 2, 0, Math.PI / 2), MM.bone, cabM, -0.005, 0.035, 0); c.scale.set(1.08, 0.9, 1); }
+    { const a = add(new THREE.CylinderGeometry(0.11, 0.11, 0.012, 16, 1, false, -Math.PI / 2, Math.PI), MM.bone, cabM, 0.07, 0.04, 0); a.rotation.y = Math.PI / 2; a.rotation.z = -0.12; a.scale.set(1, 1, 0.75); }
+    { const o = add(new THREE.CylinderGeometry(0.104, 0.104, 0.04, 16, 1, true, -1.0, 2.0), MT.oculos, cabM, 0, 0, 0); o.rotation.y = Math.PI / 2; o.scale.set(1.04, 1, 0.95); }
+    const _q1 = new THREE.Vector3(), _q2 = new THREE.Vector3(), _q3 = new THREE.Vector3(), _q4 = new THREE.Vector3();
+    const POLO_JOELHO = new THREE.Vector3(1, 0, 0), POLO_COTOVELO = new THREE.Vector3(-0.4, -1, 0);
+    // pose do motorista: ox = distância atrás da armação, inclinação do tronco, fase do passo, amplitude do passo
+    function poseMotorista(ox, inclina, fase, amp) {
+      mot.position.set(ox, 0, 0);
+      const bob = 0.015 * amp * Math.abs(Math.cos(fase));
+      torso.position.y = 0.94 + bob; torso.rotation.z = -inclina;
+      for (const L of perna) {
+        const f = fase + (L.s > 0 ? Math.PI : 0);
+        const ax = 0.24 * amp * Math.sin(f), ay = 0.075 + 0.08 * amp * Math.max(0, Math.cos(f));
+        const quad = _q1.set(0, 0.92 + bob, L.s * 0.1), torn = _q2.set(ax, ay, L.s * 0.11);
+        const joe = ik(quad, torn, 0.45, 0.45, POLO_JOELHO, _q3);
+        liga(L.coxa, quad, joe); liga(L.canela, joe, torn); L.joelho.position.copy(joe);
+        L.bota.position.set(ax + 0.06, ay - 0.025, L.s * 0.11);
+      }
+      // mãos nos montantes da armação (convertidas para o sistema do motorista)
+      const gx = -ox - 0.03, gy = 1.22;
+      for (const B of braco) {
+        const c = Math.cos(-inclina), sn = Math.sin(-inclina);
+        const ombro = _q1.set(0.02 * c - 0.48 * sn, 0.94 + bob + 0.02 * sn + 0.48 * c, B.s * 0.2);
+        const mao = _q2.set(gx, gy, B.s * 0.24);
+        const cot = ik(ombro, mao, 0.31, 0.3, _q4.copy(POLO_COTOVELO).setZ(B.s * 0.6), _q3);
+        liga(B.sup, ombro, cot); liga(B.ant, cot, mao); B.cot.position.copy(cot); B.mao.position.copy(mao);
+      }
+    }
+
     // ═════════════ SOMBRA DE CONTATO ═════════════
     const tSombra = tex(128, 128, (g, w, h) => { const gr = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); gr.addColorStop(0, 'rgba(0,0,0,.75)'); gr.addColorStop(.55, 'rgba(0,0,0,.4)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); }, null, false);
     const mSombra = new THREE.MeshBasicMaterial({ map: tSombra, transparent: true, depthWrite: false });
     function penumbra(pai, w, d, x, y, z) { const m = add(new THREE.PlaneGeometry(w, d), mSombra, pai, x, y, z, false); m.rotation.x = -Math.PI / 2; m.castShadow = false; m.receiveShadow = false; m.renderOrder = 1; return m; }
     penumbra(fk, 4.2, 2.0, -1.05, 0.006, 0);
+    penumbra(pj, 1.3, 1.0, -0.35, 0.006, 0);
     for (const c of [car1, car2]) { penumbra(c, 6.0, 3.4, -3.3, CHAO + 0.006, 0); penumbra(c, 3.0, 3.2, -11.6, CHAO + 0.006, 0); }
     penumbra(cavalo, 8.0, 3.4, -15.6, CHAO + 0.006, 0);
 
@@ -784,19 +870,18 @@
     }
 
     // ═════════════ TRAJETO E LINHA DO TEMPO ═════════════
-    // Ponto de referência = centro do eixo dianteiro. Chega em curva, alinha com a carreta,
-    // entra na carreta, apoia o pallet lá dentro e sai de ré pelo mesmo caminho.
-    const P0 = new THREE.Vector2(9.8, 1.6), C1 = new THREE.Vector2(7.2, 1.6), C2 = new THREE.Vector2(5.6, 0), PS = new THREE.Vector2(2.6, 0);
-    const PD = new THREE.Vector2(-2.2, 0);       // pallet solto com centro em x = -3,8 (fundo, fora de vista)
+    // Empilhadeira: chega em curva e para no limite da porta do baú (não entra), apoia o pallet
+    // logo depois da porta e sai de ré. O motorista vem com a paleteira e empurra o pallet para o
+    // fundo do baú (onde a câmera não vê), depois volta para o lugar de espera na doca.
+    const P0 = new THREE.Vector2(11.6, 1.6), C1 = new THREE.Vector2(8.0, 1.6), C2 = new THREE.Vector2(4.4, 0), PD = new THREE.Vector2(0.75, 0);
+    const PALLET_PORTA = -0.85, PALLET_FUNDO = -3.8;    // centro do pallet: na porta · no fundo
     const amostras = [];
     {
-      const N = 240; let acc = 0, ant = null;
-      const bez = (t) => { const u = 1 - t; return new THREE.Vector2(u * u * u * P0.x + 3 * u * u * t * C1.x + 3 * u * t * t * C2.x + t * t * t * PS.x, u * u * u * P0.y + 3 * u * u * t * C1.y + 3 * u * t * t * C2.y + t * t * t * PS.y); };
+      const N = 260; let acc = 0, ant = null;
+      const bez = (t) => { const u = 1 - t; return new THREE.Vector2(u * u * u * P0.x + 3 * u * u * t * C1.x + 3 * u * t * t * C2.x + t * t * t * PD.x, u * u * u * P0.y + 3 * u * u * t * C1.y + 3 * u * t * t * C2.y + t * t * t * PD.y); };
       for (let i = 0; i <= N; i++) { const p = bez(i / N); if (ant) acc += p.distanceTo(ant); amostras.push({ p, s: acc }); ant = p; }
-      const lb = acc, ls = PS.distanceTo(PD);
-      for (let i = 1; i <= 60; i++) { const p = PS.clone().lerp(PD, i / 60); amostras.push({ p, s: lb + ls * i / 60 }); }
     }
-    const S_TOT = amostras[amostras.length - 1].s, S_DOCA = S_TOT - PS.distanceTo(PD);
+    const S_TOT = amostras[amostras.length - 1].s;
     function noTrajeto(s) {
       s = Math.max(0, Math.min(S_TOT, s));
       let lo = 0, hi = amostras.length - 1;
@@ -808,27 +893,49 @@
     }
     const lin = (a, b, t) => Math.max(0, Math.min(1, (t - a) / (b - a)));
     const suave = (u) => u * u * (3 - 2 * u);
-    // linha do tempo (s): entra (0–3,9) · posiciona (3,9–6,0) · apoia (6,0–6,8) · sai de ré (6,8–10)
+    // empilhadeira: chega (0–4,2) · apoia na porta (4,2–5,0) · ré até sair da tela (5,0–8,4) · espera fora
     function quadro(t) {
       let s, re = false;
-      if (t < 3.9) { const u = t / 3.9; s = S_DOCA * (1 - Math.pow(1 - u, 1.8)); }
-      else if (t < 6.0) s = S_DOCA + (S_TOT - S_DOCA) * suave(lin(3.9, 6.0, t));
-      else if (t < 6.8) s = S_TOT;
-      else { const u = lin(6.8, 10, t); s = S_TOT - S_TOT * 0.92 * Math.pow(u, 1.55); re = true; }
-      // altura do topo dos garfos (m) e inclinação da torre
+      if (t < 4.2) { const u = t / 4.2; s = S_TOT * (1 - Math.pow(1 - u, 1.8)); }
+      else if (t < 5.0) s = S_TOT;
+      else if (t < 8.4) { s = S_TOT * (1 - Math.pow(lin(5.0, 8.4, t), 1.55)); re = true; }
+      else s = 0;
       let garfo = 0.3, incl = 0.06;
-      if (t >= 6.0 && t < 6.8) { const u = suave(lin(6.0, 6.8, t)); garfo = 0.3 - (0.3 - 0.095) * u; incl = 0.06 * (1 - u); }
-      else if (t >= 6.8) { garfo = 0.095 + 0.1 * suave(lin(8.2, 8.9, t)); incl = 0.04 * suave(lin(8.2, 8.9, t)); }
-      const solto = t >= 6.8 || (t >= 6.0 && garfo <= VAO + 0.0005);
+      if (t >= 4.2 && t < 5.0) { const u = suave(lin(4.2, 5.0, t)); garfo = 0.3 - (0.3 - 0.095) * u; incl = 0.06 * (1 - u); }
+      else if (t >= 5.0) { garfo = 0.095 + 0.1 * suave(lin(6.0, 6.6, t)); incl = 0.04 * suave(lin(6.0, 6.6, t)); }
+      const solto = t >= 5.0 || (t >= 4.2 && garfo <= VAO + 0.0005);
       return { s, re, garfo, incl, solto };
     }
+    // armação (plano de contato com a carga) e motorista: espera ao lado da porta, encosta na
+    // carga, empurra o pallet até o fundo do baú e volta de costas para o lugar de espera
+    const FACE = 0.75;                                       // do centro do pallet até a armação
+    const PJ = { W: [1.15, -2.2], A: [PALLET_PORTA + FACE, 0], F: [PALLET_FUNDO + FACE, 0] };
+    const PJ_TL = [[0, 6.2, 'W', 'W'], [6.2, 8.0, 'W', 'A'], [8.0, 8.3, 'A', 'A'], [8.3, 11.2, 'A', 'F'], [11.2, 11.6, 'F', 'F'], [11.6, 15.4, 'F', 'W'], [15.4, 16.01, 'W', 'W']];
+    function posPJ(t) {
+      for (const [a, b, de, para] of PJ_TL) if (t >= a && t < b) { const u = suave(lin(a, b, t)); return [PJ[de][0] + (PJ[para][0] - PJ[de][0]) * u, PJ[de][1] + (PJ[para][1] - PJ[de][1]) * u]; }
+      return PJ.W.slice();
+    }
+    function quadroPJ(t) {
+      const [x, z] = posPJ(t);
+      let inclina = 0.05;
+      if (t >= 8.0 && t < 11.2) inclina = 0.05 + 0.22 * suave(lin(8.0, 8.4, t));   // empurrando
+      else if (t >= 11.6 && t < 15.4) inclina = -0.03;                               // volta de costas
+      return { x, z, ox: -0.56, inclina, ergue: (t >= 8.0 && t < 11.2) ? 0 : 0.04 };
+    }
+    // passo do motorista: distância andada (com sinal: para frente / de costas), tabelada para o ciclo fechar igual
+    const PASSO = []; {
+      let acc = 0, ant = null;
+      for (let i = 0; i <= 1600; i++) { const t = i * CICLO / 1600, q = quadroPJ(t), wx = q.x - q.ox, wz = q.z;
+        if (ant) { const dx = wx - ant[0], dz = wz - ant[1], d = Math.hypot(dx, dz); acc += d * (dx <= 0.0001 ? 1 : -1); PASSO.push([acc, d / (CICLO / 1600)]); } else PASSO.push([0, 0]);
+        ant = [wx, wz]; }
+    }
+    const passo = (t) => PASSO[Math.max(0, Math.min(PASSO.length - 1, Math.round(t / CICLO * 1600)))];
 
-    // pallet solto: fica no fundo da carreta até o próximo ciclo
+    // pallet solto: na porta, sendo empurrado ou no fundo do baú
     const palletSolto = new THREE.Group(); cena.add(palletSolto);
 
     // ═════════════ ANIMAÇÃO ═════════════
-    let ultimoS = null, giroRodas = 0, esterco = 0, cabecaY = 0;
-    const _m = new THREE.Matrix4(), _p = new THREE.Vector3(), _q = new THREE.Quaternion(), _e = new THREE.Vector3();
+    let ultimoS = null, giroRodas = 0, esterco = 0, cabecaY = 0, velAnt = 0;
     function posicionar(t) {
       const f = quadro(t);
       const pt = noTrajeto(f.s);
@@ -850,23 +957,28 @@
       volante.rotation.x = -esterco * 3.2;
       // torre, carro e garfos
       torre.rotation.z = f.incl;
-      const elev = f.garfo;                                 // topo do garfo acima do piso
-      carro.position.y = elev - torre.position.y + 0.0 - 0.0;
-      interna.position.y = Math.max(0, elev - 1.1) * 0.5;
+      carro.position.y = f.garfo - torre.position.y;
+      interna.position.y = Math.max(0, f.garfo - 1.1) * 0.5;
       (torre.userData.corr || []).forEach(c => { const topo = 2.07 + interna.position.y, base = carro.position.y + 0.48; c.scale.y = Math.max(0.05, topo - base); c.position.y = (topo + base) / 2; });
-      // pallet: nos garfos até apoiar; depois fica parado no fundo da carreta
+      // armação e motorista
+      const q = quadroPJ(t), [dist, vel] = passo(t);
+      pj.position.set(q.x, PISO, q.z); pj.rotation.y = Math.PI;
+      arm.position.y = q.ergue;
+      poseMotorista(q.ox, q.inclina + 0.015 * Math.sin(t * 2.1), dist / 0.62 * Math.PI, Math.min(1, vel / 0.7));
+      cabM.rotation.y = (t < 6.0 || t > 15.4) ? -0.5 + 0.15 * Math.sin(t * 0.7) : 0;   // na espera, acompanha a empilhadeira
+      // pallet: nos garfos da empilhadeira → na porta → na paleteira → no fundo do baú
       if (!f.solto) {
-        if (pallet.parent !== carro) { carro.add(pallet); }
+        if (pallet.parent !== carro) carro.add(pallet);
         pallet.position.set(PALLET_X, -VAO, 0); pallet.rotation.set(0, 0, 0);
-        palletSolto.visible = false;
-      } else if (pallet.parent === carro) {
-        pallet.updateMatrixWorld(true);
-        pallet.matrixWorld.decompose(_p, _q, _e);
-        palletSolto.add(pallet); palletSolto.visible = true;
-        pallet.position.set(_p.x, PISO, _p.z); pallet.quaternion.setFromAxisAngle(_up, fk.rotation.y);
+      } else {
+        if (pallet.parent !== palletSolto) palletSolto.add(pallet);
+        let px = PALLET_PORTA; const py = 0;
+        if (t >= 8.3 && t < 11.6) px = Math.min(PALLET_PORTA, q.x - FACE);
+        else if (t >= 11.6) px = PALLET_FUNDO;
+        pallet.position.set(px, PISO + py, 0); pallet.rotation.set(0, Math.PI, 0);
       }
-      // operador: olha para trás na ré; mãos acompanham o volante
-      const alvoCab = f.re ? 1.9 : (t > 3.0 && t < 6.2 ? -0.15 : 0);
+      // operador: olha para trás na ré
+      const alvoCab = f.re ? 1.9 : (t > 3.0 && t < 5.0 ? -0.15 : 0);
       cabecaY += (alvoCab - cabecaY) * 0.12;
       cabeca.rotation.y = cabecaY * 0.75; tronco.rotation.y = cabecaY * 0.07;
       cabeca.rotation.x = f.re ? -0.08 : 0;
