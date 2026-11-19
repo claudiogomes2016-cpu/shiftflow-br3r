@@ -1141,7 +1141,8 @@ body.tv-on { overflow:hidden; }
     }
     // lacre de segurança nas travas das portas (aparece depois de colocado)
     const lacre = new THREE.Group(); lacre.userData.manter = true; car1.add(lacre); lacre.visible = false;
-    { add(caixa(0.012, 0.09, 0.035), std({ color: 0xf2c200, roughness: 0.5 }), lacre, 0, -0.06, 0, false); add(cil(0.004, 0.004, 0.08, 6), MT.cromo, lacre, 0, 0.0, 0, false); add(caixa(0.014, 0.02, 0.03), std({ color: 0xc8202a, roughness: 0.5 }), lacre, 0, -0.115, 0, false); }
+    { const anel = add(new THREE.TorusGeometry(0.03, 0.005, 6, 16), std({ color: 0xf2c200, roughness: 0.5 }), lacre, 0, 0.03, 0, false); anel.rotation.y = Math.PI / 2;
+      add(caixa(0.012, 0.09, 0.035), std({ color: 0xf2c200, roughness: 0.5 }), lacre, 0, -0.06, 0, false); add(cil(0.004, 0.004, 0.08, 6), MT.cromo, lacre, 0, 0.0, 0, false); add(caixa(0.014, 0.02, 0.03), std({ color: 0xc8202a, roughness: 0.5 }), lacre, 0, -0.115, 0, false); }
     lacre.position.set(0.075, 0.42, 0.0);
     // mangueira de ar comprimido (refeita só enquanto alguém a segura) e bico
     const SAIDA_ENROLADOR = new THREE.Vector3(0.56, 2.12, 1.55), BICO_DESCANSO = new THREE.Vector3(0.56, 1.5, 1.62);
@@ -1445,7 +1446,7 @@ body.tv-on { overflow:hidden; }
     }
 
     // ═════════════ FINALIZAÇÃO DO CARREGAMENTO (linha do tempo, ~65 s) ═════════════
-    const FIM = 87.0, PI = Math.PI;
+    const FIM = 87.6, PI = Math.PI;
     function trilha(keys) {                       // [t, x, y, z, rumo parado, 're' = anda de costas]
       const pos = (t) => {
         if (t <= keys[0][0]) return keys[0];
@@ -1475,15 +1476,15 @@ body.tv-on { overflow:hidden; }
       [59.0, -21.75, -0.3, 1.3, PI / 2], [60.2, -21.75, -1.25, 1.85, 0], [61.4, -19.9, -1.25, 1.95, 0],
       [61.4, -5.9, -1.25, 2.1, 0], [62.8, -5.13, -1.25, 1.635, 0],
       [65.4, -3.05, -1.25, 0.105, PI], [66.4, -2.3, -1.25, -1.0, PI], [67.4, -3.2, -1.25, -2.2, PI], [68.4, -5.13, -1.25, -1.635, 0],
-      [71.0, -3.05, -1.25, -0.105, PI], [71.4, -2.95, -1.25, 0.0, PI], [72.4, -2.95, -1.25, 0.0, PI],
-      [73.2, -2.75, -1.25, 1.9, PI / 2], [74.4, -5.0, -1.25, 2.0, PI],
-      [74.4, -20.0, -1.25, 1.95, PI], [75.8, -21.75, -1.25, 1.85, PI / 2], [77.2, -21.75, -0.3, 1.3, PI / 2]]);
+      [71.0, -3.05, -1.25, -0.105, PI], [71.4, -2.98, -1.25, 0.6, PI], [73.0, -2.98, -1.25, 0.6, PI],
+      [73.8, -2.75, -1.25, 1.9, PI / 2], [75.0, -5.0, -1.25, 2.0, PI],
+      [75.0, -20.0, -1.25, 1.95, PI], [76.4, -21.75, -1.25, 1.85, PI / 2], [77.8, -21.75, -0.3, 1.3, PI / 2]]);
     // conferente: vai ao claviculário e volta ao balcão
     const tConf = trilha([[0, 5.0, 0, -5.1, -PI / 2], [28.4, 5.0, 0, -5.1, -PI / 2], [29.1, 5.25, 0, -5.85, PI / 2], [29.6, 5.25, 0, -5.85, PI / 2], [30.3, 5.0, 0, -5.1, -PI / 2]]);
     const ETAPAS = [[0, '1/7', 'Escada com guarda-corpo posicionada na porta do baú'], [7.6, '2/7', 'Big bag inflado entre o teto e os pallets · motorista na faixa'],
       [13.8, '3/7', 'Escada retirada e porta rápida da doca fechada'], [24.6, '4/7', 'Nota fiscal e chave do claviculário com o conferente'],
       [32.0, '5/7', 'Motorista retira o trava-rodas e vai para a cabine'], [56.0, '6/7', 'Caminhão um pouco à frente: portas do baú fechadas e lacradas'],
-      [77.2, '7/7', 'Carregamento finalizado · caminhão liberado']];
+      [77.8, '7/7', 'Carregamento finalizado · caminhão liberado']];
     const TOMADAS = [
       [0, () => [6.8, 2.4, 5.6], () => [0.2, 1.3, 0.2]],
       [7.6, () => [3.4, 2.6, 3.4], () => [-0.2, 2.0, -0.1]],
@@ -1494,11 +1495,13 @@ body.tv-on { overflow:hidden; }
       [45.8, (d) => [d[0] + 2.6, d[1] + 1.6, d[2] + 5.2], (d) => [d[0] - 1.2, d[1] + 0.8, d[2] - 0.6]],
       [54.4, () => [-27.0, 0.8, 8.5], (d, cx) => [cx, 0.7, 0.5]],
       [61.4, () => [-0.9, 1.3, 10.2], () => [-3.6, 0.15, -0.1], true],        // corte para a traseira
-      [74.4, () => [-27.0, 0.8, 8.5], (d, cx) => [cx, 0.7, 0.5], true],       // corte de volta para a cabine
+      [71.0, () => [-2.3, 0.8, -2.3], () => [-3.38, 0.32, 0.2]],            // close no lacre
+      [73.6, () => [-0.9, 1.3, 10.2], () => [-3.6, 0.15, -0.1]],
+      [75.0, () => [-27.0, 0.8, 8.5], (d, cx) => [cx, 0.7, 0.5], true],       // corte de volta para a cabine
     ];
     const _w1 = new THREE.Vector3(), _w2 = new THREE.Vector3(), _w3 = new THREE.Vector3(), _w4 = new THREE.Vector3();
     let etapaAtual = '';
-    function deslocCaminhao(tf) { return tf < 56 ? 0 : tf < 59 ? 3.5 * suave(lin(56, 59, tf)) : tf < 78 ? 3.5 : 3.5 + 0.45 * (tf - 78) * (tf - 78); }
+    function deslocCaminhao(tf) { return tf < 56 ? 0 : tf < 59 ? 3.5 * suave(lin(56, 59, tf)) : tf < 78.6 ? 3.5 : 3.5 + 0.45 * (tf - 78.6) * (tf - 78.6); }
     // porta do baú: fase 1 = sai de encostada na lateral até apontar para trás; fase 2 = fecha
     function portaBau(o, u1, u2) {
       const sg = o.s, phi = sg > 0 ? -2 * PI + PI * u1 + PI / 2 * u2 : 2 * PI - PI * u1 - PI / 2 * u2;
@@ -1524,6 +1527,7 @@ body.tv-on { overflow:hidden; }
     }
     function posicionarFinal(tf) {
       posicionar(0);
+      car1.position.x = cavalo.position.x = -deslocCaminhao(tf);
       fk.visible = false; mot.visible = false; pallet.visible = false;
       cargaFundo.visible = false; cargaCheia.visible = true; bigbag.visible = valvula.visible = true;
       // big bag inflando (7,9 a 11,8 s)
@@ -1554,7 +1558,7 @@ body.tv-on { overflow:hidden; }
       pj.position.set(pjx, PISO, pjz); arm.position.y = 0.04 + 0.32 * suave(lin(23.7, 24.3, tf));
       // motorista
       let m = tMot(tf);
-      MOT2.g.visible = tf < 54.4 || (tf >= 59.0 && tf < 77.2);
+      MOT2.g.visible = tf < 54.4 || (tf >= 59.0 && tf < 77.8);
       // portas do baú: posição de cada uma e o motorista acompanhando a ponta da porta
       let maosPorta = null;
       for (const o of car1.userData.portas) {
@@ -1581,10 +1585,10 @@ body.tv-on { overflow:hidden; }
           else { MOT2.g.updateMatrixWorld(true); const fr = MOT2.g.localToWorld(_w4.set(0.36, 0.55 + 0.25 * (1 - ag), 0)); maosM = [_w1.copy(fr).add(_w3.set(0, 0, 0.12)), _w2.copy(fr).add(_w3.set(0, 0, -0.12))]; } }
       }
       if (tf >= 53.0 && tf < 54.4) maosM = [_w1.set(-18.0, 1.2, 1.28), _w2.set(-18.4, 1.45, 1.28)];
-      if ((tf >= 59.0 && tf < 60.2) || tf >= 75.8) maosM = [_w1.set(-21.5, 1.2, 1.28), _w2.set(-21.9, 1.45, 1.28)];
+      if ((tf >= 59.0 && tf < 60.2) || tf >= 76.4) maosM = [_w1.set(-21.5, 1.2, 1.28), _w2.set(-21.9, 1.45, 1.28)];
       if (maosPorta) maosM = maosPorta;
-      if (tf >= 71.4 && tf < 72.4) maosM = [_w1.set(car1.position.x + 0.07, 0.38, 0.05), _w2.set(car1.position.x + 0.07, 0.42, -0.05)];
-      lacre.visible = tf >= 72.1;
+      if (tf >= 71.4 && tf < 72.6) maosM = [null, _w2.set(car1.position.x + 0.09, 0.42, 0.02)];
+      lacre.visible = tf >= 72.3;
       vestir(MOT2, m, { maosMundo: maosM, agacha: ag, inclina: tf < 24.3 ? 0.1 : 0.05 });
       MOT2.cab.rotation.y = tf < 21.8 ? -0.4 : 0;
       // trava-rodas: no pneu → nas mãos → no chão ao lado
@@ -1603,7 +1607,7 @@ body.tv-on { overflow:hidden; }
       const dx = deslocCaminhao(tf);
       car1.position.x = -dx; cavalo.position.x = -dx;
       car1.userData.rodas.forEach(r => r.rotation.z = dx / 0.53); cavalo.userData.rodas.forEach(r => r.rotation.z = dx / 0.52);
-      const tFum = tf >= 77.0 ? 77.4 : 54.6;
+      const tFum = tf >= 77.6 ? 78.0 : 54.6;
       fumaca.forEach((f, i) => { const u = lin(tFum + i * 0.3, tFum + 1.8 + i * 0.3, tf); f.visible = u > 0 && u < 1; if (f.visible) { f.position.set(-16.25 + 0.2 * u, CHAO + 4.25 + 1.1 * u, 1.05 + 0.15 * Math.sin(i)); f.scale.setScalar(0.5 + 2.2 * u); f.material.opacity = 0.45 * (1 - u); } });
       // selo da etapa
       let e = ETAPAS[0]; for (const x of ETAPAS) if (tf >= x[0]) e = x;
