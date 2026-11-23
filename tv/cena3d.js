@@ -76,6 +76,8 @@
     { t: 10.2, obj: 'mundo', pos: [2.7, 1.6, 1.25], alvo: [-1.2, 1.1, 0], ico: '🧤', tit: 'EPIs completos na doca', txt: 'Colete, óculos, luvas e calçado de segurança. Empurre a carga <b>sempre com a armação</b>.' },
     { t: 0.5, obj: 'mundo', pos: [5.4, 2.3, -6.6], alvo: [1.6, 0.3, -2.2], ico: '🎈', tit: 'Fixação com big bag inflável', txt: 'O motorista aguarda <b>fora do caminhão</b>, na faixa de demarcação, no <b>campo visual</b> do auxiliar, até a liberação.' },
   ];
+  // ícones de linha (Lucide, ISC) desenhados no círculo amarelo
+  const ICONES = {"🛑": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" /></svg>", "📋": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" /></svg>", "🦺": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"m9 12 2 2 4-4\" /></svg>", "📦": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <path d=\"m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7\" /> <path d=\"m7.5 4.27 9 5.15\" /></svg>", "🚧": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"2\" y=\"6\" width=\"20\" height=\"8\" rx=\"1\" /> <path d=\"M17 14v7\" /> <path d=\"M7 14v7\" /> <path d=\"M17 3v3\" /> <path d=\"M7 3v3\" /> <path d=\"M10 14 2.3 6.3\" /> <path d=\"m14 6 7.7 7.7\" /> <path d=\"m8 6 8 8\" /></svg>", "👀": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /></svg>", "📣": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m3 11 18-5v12L3 14v-3z\" /> <path d=\"M11.6 16.8a3 3 0 1 1-5.8-1.6\" /></svg>", "⚠️": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" /></svg>", "✋": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2\" /> <path d=\"M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2\" /> <path d=\"M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8\" /> <path d=\"M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15\" /></svg>", "🔑": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z\" /> <circle cx=\"16.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" /></svg>", "🅿️": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" /> <path d=\"M9 17V7h4a3 3 0 0 1 0 6H9\" /></svg>", "🧤": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5\" /> <path d=\"M14 6a6 6 0 0 1 6 6v3\" /> <path d=\"M4 15v-3a6 6 0 0 1 6-6\" /> <rect x=\"2\" y=\"15\" width=\"20\" height=\"4\" rx=\"1\" /></svg>", "🎈": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12.8 19.6A2 2 0 1 0 14 16H2\" /> <path d=\"M17.5 8a2.5 2.5 0 1 1 2 4H2\" /> <path d=\"M9.8 4.4A2 2 0 1 1 11 8H2\" /></svg>"};
   window.Cena3D.momentos = MOMENTOS;
   if (!document.getElementById('c3d-css')) {
     const st = document.createElement('style'); st.id = 'c3d-css';
@@ -85,8 +87,9 @@
   opacity:0; transform:translateY(12%); transition:opacity .6s ease, transform .6s ease; pointer-events:none; z-index:2; }
 .c3d-msg.on { opacity:1; transform:none; }
 .c3d-msg .ico { flex:none; width:calc(var(--c3du, 5px) * 8.6); height:calc(var(--c3du, 5px) * 8.6); border-radius:50%; display:grid; place-items:center; font-size:calc(var(--c3du, 5px) * 4.6);
-  background:radial-gradient(circle at 35% 30%, #FFD54A, #E0A800); box-shadow:0 0 0 calc(var(--c3du, 5px) * .5) rgba(255,194,26,.25); }
-.c3d-msg small { display:block; font-family:'Barlow Semi Condensed', 'Barlow', sans-serif; font-weight:800; letter-spacing:.14em; font-size:calc(var(--c3du, 5px) * 2.2); color:#FFC21A; }
+  background:#E5A50A; }
+.c3d-msg .ico svg { width:56%; height:56%; fill:none; stroke:#1b1400; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+.c3d-msg small { display:block; font-family:'Barlow Semi Condensed', 'Barlow', sans-serif; font-weight:800; letter-spacing:.04em; font-size:calc(var(--c3du, 5px) * 2.2); color:#E5A50A; }
 .c3d-msg strong { display:block; font-family:'Barlow Semi Condensed', 'Barlow', sans-serif; font-weight:800; font-size:calc(var(--c3du, 5px) * 4.3); line-height:1.05; margin:calc(var(--c3du, 5px) * .3) 0 calc(var(--c3du, 5px) * .5); }
 .c3d-msg p { margin:0; font-size:calc(var(--c3du, 5px) * 2.75); line-height:1.25; color:#DDE6F7; }
 .c3d-msg p b { color:#FFC21A; font-weight:700; }
@@ -110,11 +113,11 @@
     const canvas = document.createElement('canvas');
     host.appendChild(canvas);
     const msg = document.createElement('div'); msg.className = 'c3d-msg';
-    msg.innerHTML = '<span class="ico"></span><div><small>MOMENTO SEGURANÇA</small><strong></strong><p></p></div>';
+    msg.innerHTML = '<span class="ico"></span><div><small>Momento Segurança</small><strong></strong><p></p></div>';
     host.appendChild(msg);
     const etapa = document.createElement('div'); etapa.className = 'c3d-etapa'; etapa.innerHTML = '<small>FINALIZAÇÃO</small><span></span>'; host.appendChild(etapa);
     const fade = document.createElement('div'); fade.className = 'c3d-fade'; fade.innerHTML = '<div><small></small><b></b></div>'; host.appendChild(fade);
-    function mostrarMsg(m) { msg.querySelector('.ico').textContent = m.ico; msg.querySelector('strong').textContent = m.tit; msg.querySelector('p').innerHTML = m.txt; }
+    function mostrarMsg(m) { msg.querySelector('.ico').innerHTML = ICONES[m.ico] || ''; msg.querySelector('strong').textContent = m.tit; msg.querySelector('p').innerHTML = m.txt; }
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
