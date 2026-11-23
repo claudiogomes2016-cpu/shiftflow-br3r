@@ -1584,10 +1584,56 @@ body.oo-open { overflow:hidden; }
 .seg-abas button { height:36px; padding:0 16px; border:0; border-radius:8px; background:transparent; color:var(--text2); font:500 14px var(--font); cursor:pointer; white-space:nowrap; transition:background-color .15s var(--ease), color .15s var(--ease); }
 .seg-abas button.on { background:var(--card-bg); color:var(--text); box-shadow:var(--shadow-sm); }
 
+
+/* ── GESTÃO (fase 3): abas, período em uma linha, histórico paginado ── */
+#sc-dash .pg-sub { display:flex; flex-wrap:wrap; align-items:center; gap:4px 12px; }
+.vivo { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--text3); }
+.vivo i { width:6px; height:6px; border-radius:50%; background:var(--green); }
+#dash-periodo-btns { flex-wrap:nowrap !important; overflow-x:auto; scrollbar-width:none; padding-bottom:2px; }
+#dash-periodo-btns::-webkit-scrollbar { display:none; }
+#dash-periodo-btns > * { flex:none; }
+.dash-abas { display:flex !important; margin:4px 0 20px; overflow-x:auto; scrollbar-width:none; }
+.dash-abas button { flex:none; }
+body:not(.is-gestor) .dash-abas button.gestor-only { display:none !important; }
+.dash-aba { display:none; }
+.dash-aba.on { display:block; }
+.hist-acoes { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.btn-sec { display:inline-flex; align-items:center; justify-content:center; height:40px; padding:0 16px; border:1px solid var(--border2); border-radius:10px; background:var(--bg4); color:var(--text); font:500 14px var(--font); cursor:pointer; transition:background-color .15s var(--ease), border-color .15s var(--ease); }
+.btn-sec:hover { border-color:var(--text3); }
+.btn-sec:active { transform:scale(.98); }
+.hist-mais { width:100%; margin-top:12px; }
+.hist-cont { margin:0 0 8px; font-size:13px; color:var(--text3); font-variant-numeric:tabular-nums; }
+.hist-perigo { margin-top:32px; padding-top:16px; border-top:1px solid var(--border); }
+.btn-perigo { display:inline-flex; align-items:center; height:36px; padding:0 12px; border:0; border-radius:8px; background:none; color:var(--red); font:500 14px var(--font); cursor:pointer; }
+.btn-perigo:hover { background:var(--red-dim); }
+.hi-rel { margin:4px 0 12px; font-size:14px; line-height:1.5; color:var(--text2); }
+.hi-tags { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+.hi-vol { font-size:13px; color:var(--text3); font-variant-numeric:tabular-nums; }
+
+/* fase 3 · detalhes: cartões de número quietos, botões de compartilhar neutros, abas que cabem */
+.dash-abas { width:100%; }
+.dash-abas button, .seg-abas button { display:flex; align-items:center; justify-content:center; }
+.dash-abas button { flex:1 1 0; padding:0 8px; }
+#sc-dash .kc::before { display:none; }
+#sc-dash .kc { border-color:var(--border); padding:16px; }
+#sc-dash .kc > div:first-child { margin-bottom:12px !important; }
+#sc-dash .kc > div:first-child > div { width:32px !important; height:32px !important; border-radius:8px !important; background:var(--bg4) !important; }
+#sc-dash .kc > div:first-child svg { stroke:var(--text3) !important; width:16px; height:16px; }
+#sc-dash .kc-v { font-size:40px; }
+#sc-dash .kc:hover, #sc-dash .ops:hover { border-color:var(--border2); }
+#sc-dash .ops { border-color:var(--border); }
+#sc-dash .ops.bad { border-color:rgba(229,72,77,.45); }
+.placar-btn { display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:12px; row-gap:2px; padding:12px 16px; border:1px solid var(--border2); border-radius:12px; background:var(--card-bg); color:var(--text); font:600 16px var(--f-display); text-align:left; cursor:pointer; box-shadow:none; transition:border-color .15s var(--ease), background-color .15s var(--ease); }
+.placar-btn > .ic { grid-row:1 / 3; width:20px; height:20px; margin:0; color:var(--text2); }
+.placar-btn small { grid-column:2; font:400 13px var(--font); color:var(--text3); }
+.placar-btn:hover { border-color:var(--text3); }
+.rk-shares .rk-share { padding:12px; font-size:15px; }
+.periodo-btn.pb-ult { border-color:var(--border2); }
+.periodo-btn.pb-ult.on { background:var(--text); border-color:var(--text); color:var(--bg); }
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><!-- ícones: Lucide (ISC) --><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol><symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2" /> <line x1="12" x2="15" y1="14" y2="11" /> <circle cx="12" cy="14" r="8" /></symbol><symbol id="i-skip-back" viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20" /> <line x1="5" x2="5" y1="19" y2="5" /></symbol><symbol id="i-award" viewBox="0 0 24 24"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" /> <circle cx="12" cy="8" r="6" /></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><path d="M8 2v4" /> <path d="M16 2v4" /> <rect width="18" height="18" x="3" y="4" rx="2" /> <path d="M3 10h18" /></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /> <circle cx="12" cy="13" r="3" /></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /></symbol><symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="m9 12 2 2 4-4" /></symbol><symbol id="i-circle-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /> <path d="M12 17h.01" /></symbol><symbol id="i-clipboard-list" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /> <path d="M12 11h4" /> <path d="M12 16h4" /> <path d="M8 11h.01" /> <path d="M8 16h.01" /></symbol><symbol id="i-file-pen-line" viewBox="0 0 24 24"><path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" /> <path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /> <path d="M8 18h1" /></symbol><symbol id="i-forklift" viewBox="0 0 24 24"><path d="M12 12H5a2 2 0 0 0-2 2v5" /> <circle cx="13" cy="19" r="2" /> <circle cx="5" cy="19" r="2" /> <path d="M8 19h3m5-17v17h6M6 12V7c0-1.1.9-2 2-2h3l5 5" /></symbol><symbol id="i-hard-hat" viewBox="0 0 24 24"><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5" /> <path d="M14 6a6 6 0 0 1 6 6v3" /> <path d="M4 15v-3a6 6 0 0 1 6-6" /> <rect x="2" y="15" width="20" height="4" rx="1" /></symbol><symbol id="i-inbox" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12" /> <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /></symbol><symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" /> <path d="M19 10v2a7 7 0 0 1-14 0v-2" /> <line x1="12" x2="12" y1="19" y2="22" /></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></symbol><symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7" /> <path d="m7.5 4.27 9 5.15" /></symbol><symbol id="i-pen-line" viewBox="0 0 24 24"><path d="M12 20h9" /> <path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z" /></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /> <path d="m15 5 4 4" /></symbol><symbol id="i-printer" viewBox="0 0 24 24"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /> <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" /> <rect x="6" y="14" width="12" height="8" rx="1" /></symbol><symbol id="i-repeat-2" viewBox="0 0 24 24"><path d="m2 9 3-3 3 3" /> <path d="M13 18H7a2 2 0 0 1-2-2V6" /> <path d="m22 15-3 3-3-3" /> <path d="M11 6h6a2 2 0 0 1 2 2v10" /></symbol><symbol id="i-save" viewBox="0 0 24 24"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /> <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" /> <path d="M7 3v4a1 1 0 0 0 1 1h7" /></symbol><symbol id="i-scale" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" /> <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" /> <path d="M7 21h10" /> <path d="M12 3v18" /> <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" /></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /> <path d="m21 21-4.3-4.3" /></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /> <circle cx="12" cy="12" r="3" /></symbol><symbol id="i-share-2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3" /> <circle cx="6" cy="12" r="3" /> <circle cx="18" cy="19" r="3" /> <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" /> <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" /></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></symbol><symbol id="i-siren" viewBox="0 0 24 24"><path d="M7 18v-6a5 5 0 1 1 10 0v6" /> <path d="M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z" /> <path d="M21 12h1" /> <path d="M18.5 4.5 18 5" /> <path d="M2 12h1" /> <path d="M12 2v1" /> <path d="m4.929 4.929.707.707" /> <path d="M12 12v6" /></symbol><symbol id="i-square" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" /></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /> <path d="M12 2v2" /> <path d="M12 20v2" /> <path d="m4.93 4.93 1.41 1.41" /> <path d="m17.66 17.66 1.41 1.41" /> <path d="M2 12h2" /> <path d="M20 12h2" /> <path d="m6.34 17.66-1.41 1.41" /> <path d="m19.07 4.93-1.41 1.41" /></symbol><symbol id="i-trash-2" viewBox="0 0 24 24"><path d="M3 6h18" /> <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /> <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /> <line x1="10" x2="10" y1="11" y2="17" /> <line x1="14" x2="14" y1="11" y2="17" /></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7" /> <polyline points="16 17 22 17 22 11" /></symbol><symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /> <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /> <path d="M4 22h16" /> <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /> <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /> <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" /></symbol><symbol id="i-truck" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" /> <path d="M15 18H9" /> <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" /> <circle cx="17" cy="18" r="2" /> <circle cx="7" cy="18" r="2" /></symbol><symbol id="i-tv" viewBox="0 0 24 24"><rect width="20" height="15" x="2" y="7" rx="2" ry="2" /> <polyline points="17 2 12 7 7 2" /></symbol><symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /> <circle cx="12" cy="7" r="4" /></symbol><symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" /></symbol><symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" /></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><!-- ícones: Lucide (ISC) --><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <polyline points="7 10 12 15 17 10" /> <line x1="12" x2="12" y1="15" y2="3" /></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol><symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2" /> <line x1="12" x2="15" y1="14" y2="11" /> <circle cx="12" cy="14" r="8" /></symbol><symbol id="i-skip-back" viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20" /> <line x1="5" x2="5" y1="19" y2="5" /></symbol><symbol id="i-award" viewBox="0 0 24 24"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" /> <circle cx="12" cy="8" r="6" /></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><path d="M8 2v4" /> <path d="M16 2v4" /> <rect width="18" height="18" x="3" y="4" rx="2" /> <path d="M3 10h18" /></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /> <circle cx="12" cy="13" r="3" /></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /></symbol><symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="m9 12 2 2 4-4" /></symbol><symbol id="i-circle-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /> <path d="M12 17h.01" /></symbol><symbol id="i-clipboard-list" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /> <path d="M12 11h4" /> <path d="M12 16h4" /> <path d="M8 11h.01" /> <path d="M8 16h.01" /></symbol><symbol id="i-file-pen-line" viewBox="0 0 24 24"><path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" /> <path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /> <path d="M8 18h1" /></symbol><symbol id="i-forklift" viewBox="0 0 24 24"><path d="M12 12H5a2 2 0 0 0-2 2v5" /> <circle cx="13" cy="19" r="2" /> <circle cx="5" cy="19" r="2" /> <path d="M8 19h3m5-17v17h6M6 12V7c0-1.1.9-2 2-2h3l5 5" /></symbol><symbol id="i-hard-hat" viewBox="0 0 24 24"><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5" /> <path d="M14 6a6 6 0 0 1 6 6v3" /> <path d="M4 15v-3a6 6 0 0 1 6-6" /> <rect x="2" y="15" width="20" height="4" rx="1" /></symbol><symbol id="i-inbox" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12" /> <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /></symbol><symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" /> <path d="M19 10v2a7 7 0 0 1-14 0v-2" /> <line x1="12" x2="12" y1="19" y2="22" /></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></symbol><symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7" /> <path d="m7.5 4.27 9 5.15" /></symbol><symbol id="i-pen-line" viewBox="0 0 24 24"><path d="M12 20h9" /> <path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z" /></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /> <path d="m15 5 4 4" /></symbol><symbol id="i-printer" viewBox="0 0 24 24"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /> <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" /> <rect x="6" y="14" width="12" height="8" rx="1" /></symbol><symbol id="i-repeat-2" viewBox="0 0 24 24"><path d="m2 9 3-3 3 3" /> <path d="M13 18H7a2 2 0 0 1-2-2V6" /> <path d="m22 15-3 3-3-3" /> <path d="M11 6h6a2 2 0 0 1 2 2v10" /></symbol><symbol id="i-save" viewBox="0 0 24 24"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /> <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" /> <path d="M7 3v4a1 1 0 0 0 1 1h7" /></symbol><symbol id="i-scale" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" /> <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" /> <path d="M7 21h10" /> <path d="M12 3v18" /> <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" /></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /> <path d="m21 21-4.3-4.3" /></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /> <circle cx="12" cy="12" r="3" /></symbol><symbol id="i-share-2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3" /> <circle cx="6" cy="12" r="3" /> <circle cx="18" cy="19" r="3" /> <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" /> <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" /></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></symbol><symbol id="i-siren" viewBox="0 0 24 24"><path d="M7 18v-6a5 5 0 1 1 10 0v6" /> <path d="M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z" /> <path d="M21 12h1" /> <path d="M18.5 4.5 18 5" /> <path d="M2 12h1" /> <path d="M12 2v1" /> <path d="m4.929 4.929.707.707" /> <path d="M12 12v6" /></symbol><symbol id="i-square" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" /></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /> <path d="M12 2v2" /> <path d="M12 20v2" /> <path d="m4.93 4.93 1.41 1.41" /> <path d="m17.66 17.66 1.41 1.41" /> <path d="M2 12h2" /> <path d="M20 12h2" /> <path d="m6.34 17.66-1.41 1.41" /> <path d="m19.07 4.93-1.41 1.41" /></symbol><symbol id="i-trash-2" viewBox="0 0 24 24"><path d="M3 6h18" /> <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /> <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /> <line x1="10" x2="10" y1="11" y2="17" /> <line x1="14" x2="14" y1="11" y2="17" /></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7" /> <polyline points="16 17 22 17 22 11" /></symbol><symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /> <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /> <path d="M4 22h16" /> <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /> <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /> <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" /></symbol><symbol id="i-truck" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" /> <path d="M15 18H9" /> <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" /> <circle cx="17" cy="18" r="2" /> <circle cx="7" cy="18" r="2" /></symbol><symbol id="i-tv" viewBox="0 0 24 24"><rect width="20" height="15" x="2" y="7" rx="2" ry="2" /> <polyline points="17 2 12 7 7 2" /></symbol><symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /> <circle cx="12" cy="7" r="4" /></symbol><symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" /></symbol><symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" /></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol></svg>
 <!-- LOADING -->
 <div class="loading-overlay" id="loading">
   <div class="spin"></div>
@@ -1931,28 +1977,29 @@ body.oo-open { overflow:hidden; }
 <div id="sc-dash" class="screen app-wrap">
 <div class="wrap-dash">
 
-  <!-- Dashboard Header -->
   <div class="pg-head">
     <div>
-      <div class="pg-eyebrow">Painel de Indicadores</div>
-      <h2 class="pg-title">BI Gestão <span>BR3R</span></h2>
-      <div class="pg-sub" id="dash-per">Carregando dados...</div>
+      <h2 class="pg-title">Gestão</h2>
+      <div class="pg-sub"><span id="dash-per">Carregando dados...</span> <span class="vivo"><i></i>atualiza sozinho</span></div>
     </div>
-    <div class="rt-badge"><div class="rt-dot"></div>Tempo Real</div>
   </div>
 
-  <!-- Filtro de Período — gerado dinamicamente por JS -->
   <div id="dash-periodo-btns" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap"></div>
   <div class="conf-bar" data-scope="dash"></div>
-  <button class="placar-btn" onclick="app.abrirPlacar()"><svg class=ic aria-hidden=true><use href=#i-camera></use></svg>Placar para o grupo <small>última rodada · descargas e carregamentos de cada conferente</small></button>
+  <div class="seg-abas dash-abas" role="tablist" aria-label="Gestão">
+    <button role="tab" data-aba="geral" class="on" onclick="app.dashAba('geral')">Visão geral</button>
+    <button role="tab" data-aba="turmas" onclick="app.dashAba('turmas')">Turmas</button>
+    <button role="tab" data-aba="conf" onclick="app.dashAba('conf')">Conferentes</button>
+    <button role="tab" data-aba="hist" class="gestor-only" onclick="app.dashAba('hist')">Histórico</button>
+  </div>
 
+  <section class="dash-aba on" data-aba="geral">
   <div class="kpi-g">
     <div class="kc">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
         <div style="width:40px;height:40px;border-radius:12px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/></svg>
         </div>
-        <span style="font-size:15px;font-weight:600;color:var(--green);display:flex;align-items:center;gap:3px">↑ <span id="k-planta-trend">0</span></span>
       </div>
       <div class="kc-v cb" id="k-planta">0</div>
       <div class="kc-l" style="margin-top:8px;text-transform:none;letter-spacing:0;font-size:15px;font-weight:500;color:var(--text2)">Volume Planta</div>
@@ -1963,7 +2010,6 @@ body.oo-open { overflow:hidden; }
         <div style="width:40px;height:40px;border-radius:12px;background:rgba(17,64,254,0.12);display:flex;align-items:center;justify-content:center">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </div>
-        <span style="font-size:15px;font-weight:600;color:var(--text3);display:flex;align-items:center;gap:3px">↑ <span id="k-nsa-trend">0</span></span>
       </div>
       <div class="kc-v" style="color:var(--blue)" id="k-nsa">0</div>
       <div class="kc-l" style="margin-top:8px;text-transform:none;letter-spacing:0;font-size:15px;font-weight:500;color:var(--text2)">Volume NSA</div>
@@ -1991,33 +2037,18 @@ body.oo-open { overflow:hidden; }
     </div>
   </div>
 
-  <!-- KPIs operacionais extras -->
-  <!-- Movimentação e material de embalagem (o que é lançado na tela de Registro) -->
   <div class="cw" id="me-card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px">
       <div>
-        <div style="font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.3px">Movimentação e Material de Embalagem</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.3px">Movimentação e material de embalagem</div>
         <div style="font-size:13px;color:var(--text3);margin-top:2px" id="me-sub">Lançado na passagem de turno</div>
       </div>
       
     </div>
     <div id="me-body"></div>
   </div>
-
-  <div class="shd">Indicadores Operacionais</div>
+  <div class="shd">Indicadores operacionais</div>
   <div class="ops-g" id="ops-kpis"></div>
-
-  <div class="cw">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div>
-        <div style="font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.3px">Produtividade por Turma</div>
-        <div style="font-size:14px;color:var(--text3);margin-top:2px">Carregados · Descarga ME · NSA</div>
-      </div>
-      <div class="rt-badge"><div class="rt-dot"></div>Ao vivo</div>
-    </div>
-    <div class="chart-container" style="position:relative;height:320px"><canvas id="chart-prod"></canvas></div>
-  </div>
-
   <div class="g2">
     <div class="cw" style="padding:20px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
@@ -2034,20 +2065,34 @@ body.oo-open { overflow:hidden; }
       <div id="card-qual"><div style="text-align:center;color:var(--text3);font-size:14px;padding:20px 0">Nenhum registro ainda</div></div>
     </div>
   </div>
+  </section>
 
+  <section class="dash-aba" data-aba="turmas">
   <div class="cw">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.3px">Ranking por Turma</div>
+      <div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.3px">Produtividade por turma</div>
+        <div style="font-size:14px;color:var(--text3);margin-top:2px">Carregados · Descarga ME · NSA</div>
+      </div>
+    </div>
+    <div class="chart-container" style="position:relative;height:340px"><canvas id="chart-prod"></canvas></div>
+  </div>
+  <div class="cw">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.3px">Ranking por turma</div>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
     </div>
     <div id="ranking-list"><p style="text-align:center;color:var(--text3);font-size:15px;padding:20px">Nenhum dado ainda.</p></div>
   </div>
+  </section>
 
+  <section class="dash-aba" data-aba="conf">
+  <button class="placar-btn" onclick="app.abrirPlacar()"><svg class=ic aria-hidden=true><use href=#i-camera></use></svg>Placar para o grupo <small>última rodada · descargas e carregamentos de cada conferente</small></button>
   <!-- Destaques / ranking dos conferentes -->
   <div class="cw" id="rk-conf-card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px">
       <div>
-        <div style="font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.3px">Destaques dos Conferentes</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.3px">Destaques dos conferentes</div>
         <div style="font-size:13px;color:var(--text3);margin-top:2px" id="rk-conf-sub">Quem mais se destacou no período</div>
       </div>
       
@@ -2058,26 +2103,28 @@ body.oo-open { overflow:hidden; }
     </div>
     <div class="rkc-g" id="rk-conf"></div>
   </div>
+  </section>
 
+  <section class="dash-aba" data-aba="hist">
   <!-- GESTOR -->
   <div id="gestor-area" class="hidden">
     <div class="gw">
-      <div style="font-family:var(--font);font-size:15px;font-weight:600;color:var(--blue);letter-spacing:0;margin-bottom:16px">Área do Gestor</div>
-      <div class="eg mb12">
-        <button class="eb ec" onclick="app.exportCSV()"><svg class=ic aria-hidden=true><use href=#i-chart-column></use></svg>Exportar CSV</button>
-        <button class="eb ep2" onclick="window.print()"><svg class=ic aria-hidden=true><use href=#i-printer></use></svg>Imprimir PDF</button>
-        <button class="eb ecl" onclick="app.clearData()"><svg class=ic aria-hidden=true><use href=#i-trash-2></use></svg>Limpar Histórico</button>
+      <div class="hist-acoes">
+        <button class="btn-sec" onclick="app.exportCSV()"><svg class=ic aria-hidden=true><use href=#i-download></use></svg>Exportar CSV</button>
+        <button class="btn-sec" onclick="window.print()"><svg class=ic aria-hidden=true><use href=#i-printer></use></svg>Imprimir</button>
       </div>
-      <span class="lbl lb">Plano de Ação</span>
+      <span class="lbl lb">Plano de ação</span>
       <textarea id="plano-acao" class="inp ta mb16" style="min-height:100px" placeholder="Ações corretivas e planos..." oninput="app.savePlano()"></textarea>
-      <div class="shd mt16">Histórico Completo — Tempo Real</div>
+      <div class="shd mt16">Passagens de turno</div>
       <div class="sr">
         <input type="text" id="hist-search" class="si2" placeholder="Buscar por conferente..." oninput="app.renderHist()">
         <select id="hist-filter" class="sf" onchange="app.renderHist()"><option value="">Todos</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="ADM">ADM</option></select>
       </div>
       <div id="hist-list"></div>
+      <div class="hist-perigo"><button class="btn-perigo" onclick="app.clearData()"><svg class=ic aria-hidden=true><use href=#i-trash-2></use></svg>Apagar todo o histórico</button></div>
     </div>
   </div>
+  </section>
 
 </div></div>
 
@@ -2593,8 +2640,20 @@ const app = {
 
   goHist(f) {
     this.histFiltro = f || '';
+    this._histLim = 20;
     this.goTab('dash');
-    setTimeout(() => document.getElementById('hist-list')?.scrollIntoView({ behavior:'smooth', block:'start' }), 900);
+    this.dashAba(this.isGestor() ? 'hist' : 'geral');
+  },
+
+  // Abas da Gestão (a escolha fica guardada neste aparelho)
+  dashAba(a) {
+    if(a === 'hist' && !this.isGestor()) a = 'geral';
+    this._dashAba = a;
+    try { localStorage.setItem('sf_dash_aba', a); } catch(e) {}
+    document.querySelectorAll('#sc-dash .dash-aba').forEach(x => x.classList.toggle('on', x.dataset.aba === a));
+    document.querySelectorAll('#sc-dash .dash-abas button').forEach(x => x.classList.toggle('on', x.dataset.aba === a));
+    if(a === 'turmas' && this.charts.prod) requestAnimationFrame(() => this.charts.prod.resize());
+    if(a === 'hist') this.renderHist();
   },
 
   isGestor() { return this.user?.role === 'gestor'; },
@@ -3001,7 +3060,7 @@ const app = {
     document.querySelectorAll('.drw-nav button').forEach(b => b.classList.toggle('on', (b.getAttribute('onclick') || '').includes("'" + name + "'") || (name === 'home' && (b.getAttribute('onclick') || '').includes('goHome'))));
     window.scrollTo(0, 0);
     if(name === 'home') { this.updateHome(); this.loadHomeOcorr(); }
-    if(name === 'dash') { this.renderPeriodoBtns(); this.updateDash(); }
+    if(name === 'dash') { this.renderPeriodoBtns(); this.updateDash(); let a = this._dashAba; if(!a) { try { a = localStorage.getItem('sf_dash_aba'); } catch(e) {} } this.dashAba(a || 'geral'); }
     if(name === 'ocorr') { this.renderOcorrPeriodoBtns(); this.loadOcorrencias(); }
     if(name === 'disc') { this.renderDiscPeriodoBtns(); this.loadDisc(); }
   },
@@ -5129,7 +5188,10 @@ const app = {
     if(filter) items = items.filter(r => r.turma_sai === filter);
     if(!items.length) { document.getElementById('hist-list').innerHTML = banner + '<p style="text-align:center;color:var(--text3);font-size:14px;padding:20px">Nenhum registro encontrado.</p>'; return; }
     const isGestor = this.user?.role === 'gestor';
-    document.getElementById('hist-list').innerHTML = banner + items.map(r => `
+    const total = items.length, lim = this._histLim || 20;
+    const mais = total > lim ? `<button class="btn-sec hist-mais" onclick="app._histLim = (app._histLim || 20) + 20; app.renderHist()">Mostrar mais ${Math.min(20, total - lim)} de ${total - lim} restantes</button>` : '';
+    items = items.slice(0, lim);
+    document.getElementById('hist-list').innerHTML = banner + `<div class="hist-cont">${total} passage${total === 1 ? 'm' : 'ns'} de turno</div>` + items.map(r => `
       <div class="hi">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px">
           <div>
@@ -5138,16 +5200,16 @@ const app = {
           </div>
           ${isGestor ? `<button class="he" onclick="app.openModal('${r.id}')"><svg class=ic aria-hidden=true><use href=#i-pencil></use></svg>Editar</button>` : ''}
         </div>
-        <div style="font-size:14px;color:var(--text2);line-height:1.6;margin:8px 0;font-style:italic">"${r.relato||''}"</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px">
-          <span class="badge ${r.seg==='sim'?'br2':'bg2'}"><svg class=ic aria-hidden=true><use href=#i-shield></use></svg>${r.seg==='sim'?'Incidente':'OK'}</span>
-          <span class="badge ${r.qual==='sim'?'by2':'bg2'}"><svg class=ic aria-hidden=true><use href=#i-package></use></svg>${r.qual==='sim'?'Bloqueio':'OK'}</span>
-          <span class="badge ${r.s_falta==='Sim'?'bp2':'bg2'}"><svg class=ic aria-hidden=true><use href=#i-hard-hat></use></svg>Sodexo ${r.s_falta}</span>
-          <span class="badge bb"><svg class=ic aria-hidden=true><use href=#i-chart-column></use></svg>${(r.p_t||0)+(r.n_t||0)} vol.</span>
+        <div class="hi-rel">${r.relato||''}</div>
+        <div class="hi-tags">
+          <span class="hi-vol">${(r.p_t||0)+(r.n_t||0)} volumes</span>
+          ${r.seg==='sim'?'<span class="badge br2"><svg class=ic aria-hidden=true><use href=#i-shield></use></svg>Incidente</span>':''}
+          ${r.qual==='sim'?'<span class="badge by2"><svg class=ic aria-hidden=true><use href=#i-package></use></svg>Bloqueio</span>':''}
+          ${r.s_falta==='Sim'?'<span class="badge bp2"><svg class=ic aria-hidden=true><use href=#i-hard-hat></use></svg>Falta Sodexo</span>':''}
           ${r.tampa_recebeu==='Sim'?`<span class="badge bb"><svg class=ic aria-hidden=true><use href=#i-square></use></svg>Tampa ${r.tampa_tipo||''} ${r.tampa_qtd||''}ct.</span>`:''}
           ${r.devolucao_recebeu==='Sim'?`<span class="badge by2"><svg class=ic aria-hidden=true><use href=#i-repeat-2></use></svg>Dev. ${r.devolucao_qtd||''}ct.</span>`:''}
         </div>
-      </div>`).join('');
+      </div>`).join('') + mais;
   },
 
   openModal(id) {
@@ -5321,7 +5383,8 @@ const app = {
   },
 
   async clearData() {
-    if(!confirm('Apagar TODO o histórico do banco?\nEsta ação não pode ser desfeita.')) return;
+    const resp = prompt('Isso apaga TODAS as passagens de turno do banco e não pode ser desfeito.\n\nPara confirmar, digite APAGAR:');
+    if((resp || '').trim().toUpperCase() !== 'APAGAR') return;
     this.showLoading('Apagando...');
     await db.from('turnos').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     this.hideLoading();
