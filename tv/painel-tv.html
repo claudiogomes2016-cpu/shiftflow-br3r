@@ -181,6 +181,16 @@ body.tv-on { overflow:hidden; }
 @media(max-aspect-ratio:1/1){ .tv-3d { flex:none; aspect-ratio:2.4 / 1; } }
 
 
+/* ícones de linha e posições do painel (sem emojis) */
+.tvi { width:1em; height:1em; flex:none; vertical-align:-0.14em; margin-right:.35em; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; color:#A9AFBA; }
+.tvc h2 .tvi { color:#E5A50A; }
+.tvc h2 { justify-content:flex-start !important; }
+.tvc h2 > span { margin-left:auto; }
+.tvm-safe .ico .tvi { margin:0; color:#4CC38A; }
+.tv-rt .pos b { font-family:var(--f-display); font-weight:600; }
+.tv-rt .pos .m1 { color:#E5A50A; } .tv-rt .pos .m2 { color:#C9CDD3; } .tv-rt .pos .m3 { color:#C98A5B; }
+
+
 .tvm-exit { display:none; }
 </style>
 </head>
@@ -277,6 +287,8 @@ body.tv-on { overflow:hidden; }
     { t: 10.2, obj: 'mundo', pos: [2.7, 1.6, 1.25], alvo: [-1.2, 1.1, 0], ico: '🧤', tit: 'EPIs completos na doca', txt: 'Colete, óculos, luvas e calçado de segurança. Empurre a carga <b>sempre com a armação</b>.' },
     { t: 0.5, obj: 'mundo', pos: [5.4, 2.3, -6.6], alvo: [1.6, 0.3, -2.2], ico: '🎈', tit: 'Fixação com big bag inflável', txt: 'O motorista aguarda <b>fora do caminhão</b>, na faixa de demarcação, no <b>campo visual</b> do auxiliar, até a liberação.' },
   ];
+  // ícones de linha (Lucide, ISC) desenhados no círculo amarelo
+  const ICONES = {"🛑": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" /></svg>", "📋": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" /></svg>", "🦺": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"m9 12 2 2 4-4\" /></svg>", "📦": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <path d=\"m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7\" /> <path d=\"m7.5 4.27 9 5.15\" /></svg>", "🚧": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"2\" y=\"6\" width=\"20\" height=\"8\" rx=\"1\" /> <path d=\"M17 14v7\" /> <path d=\"M7 14v7\" /> <path d=\"M17 3v3\" /> <path d=\"M7 3v3\" /> <path d=\"M10 14 2.3 6.3\" /> <path d=\"m14 6 7.7 7.7\" /> <path d=\"m8 6 8 8\" /></svg>", "👀": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /></svg>", "📣": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m3 11 18-5v12L3 14v-3z\" /> <path d=\"M11.6 16.8a3 3 0 1 1-5.8-1.6\" /></svg>", "⚠️": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" /></svg>", "✋": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2\" /> <path d=\"M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2\" /> <path d=\"M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8\" /> <path d=\"M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15\" /></svg>", "🔑": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z\" /> <circle cx=\"16.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" /></svg>", "🅿️": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" /> <path d=\"M9 17V7h4a3 3 0 0 1 0 6H9\" /></svg>", "🧤": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5\" /> <path d=\"M14 6a6 6 0 0 1 6 6v3\" /> <path d=\"M4 15v-3a6 6 0 0 1 6-6\" /> <rect x=\"2\" y=\"15\" width=\"20\" height=\"4\" rx=\"1\" /></svg>", "🎈": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12.8 19.6A2 2 0 1 0 14 16H2\" /> <path d=\"M17.5 8a2.5 2.5 0 1 1 2 4H2\" /> <path d=\"M9.8 4.4A2 2 0 1 1 11 8H2\" /></svg>"};
   window.Cena3D.momentos = MOMENTOS;
   if (!document.getElementById('c3d-css')) {
     const st = document.createElement('style'); st.id = 'c3d-css';
@@ -286,8 +298,9 @@ body.tv-on { overflow:hidden; }
   opacity:0; transform:translateY(12%); transition:opacity .6s ease, transform .6s ease; pointer-events:none; z-index:2; }
 .c3d-msg.on { opacity:1; transform:none; }
 .c3d-msg .ico { flex:none; width:calc(var(--c3du, 5px) * 8.6); height:calc(var(--c3du, 5px) * 8.6); border-radius:50%; display:grid; place-items:center; font-size:calc(var(--c3du, 5px) * 4.6);
-  background:radial-gradient(circle at 35% 30%, #FFD54A, #E0A800); box-shadow:0 0 0 calc(var(--c3du, 5px) * .5) rgba(255,194,26,.25); }
-.c3d-msg small { display:block; font-family:'Barlow Semi Condensed', 'Barlow', sans-serif; font-weight:800; letter-spacing:.14em; font-size:calc(var(--c3du, 5px) * 2.2); color:#FFC21A; }
+  background:#E5A50A; }
+.c3d-msg .ico svg { width:56%; height:56%; fill:none; stroke:#1b1400; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+.c3d-msg small { display:block; font-family:'Barlow Semi Condensed', 'Barlow', sans-serif; font-weight:800; letter-spacing:.04em; font-size:calc(var(--c3du, 5px) * 2.2); color:#E5A50A; }
 .c3d-msg strong { display:block; font-family:'Barlow Semi Condensed', 'Barlow', sans-serif; font-weight:800; font-size:calc(var(--c3du, 5px) * 4.3); line-height:1.05; margin:calc(var(--c3du, 5px) * .3) 0 calc(var(--c3du, 5px) * .5); }
 .c3d-msg p { margin:0; font-size:calc(var(--c3du, 5px) * 2.75); line-height:1.25; color:#DDE6F7; }
 .c3d-msg p b { color:#FFC21A; font-weight:700; }
@@ -311,11 +324,11 @@ body.tv-on { overflow:hidden; }
     const canvas = document.createElement('canvas');
     host.appendChild(canvas);
     const msg = document.createElement('div'); msg.className = 'c3d-msg';
-    msg.innerHTML = '<span class="ico"></span><div><small>MOMENTO SEGURANÇA</small><strong></strong><p></p></div>';
+    msg.innerHTML = '<span class="ico"></span><div><small>Momento Segurança</small><strong></strong><p></p></div>';
     host.appendChild(msg);
     const etapa = document.createElement('div'); etapa.className = 'c3d-etapa'; etapa.innerHTML = '<small>FINALIZAÇÃO</small><span></span>'; host.appendChild(etapa);
     const fade = document.createElement('div'); fade.className = 'c3d-fade'; fade.innerHTML = '<div><small></small><b></b></div>'; host.appendChild(fade);
-    function mostrarMsg(m) { msg.querySelector('.ico').textContent = m.ico; msg.querySelector('strong').textContent = m.tit; msg.querySelector('p').innerHTML = m.txt; }
+    function mostrarMsg(m) { msg.querySelector('.ico').innerHTML = ICONES[m.ico] || ''; msg.querySelector('strong').textContent = m.tit; msg.querySelector('p').innerHTML = m.txt; }
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1884,7 +1897,7 @@ function render() {
 
   const ultInc = regs.find(r => r.seg === 'sim');
   const dsi = ultInc ? Math.floor((Date.now() - new Date(ultInc.data_registro)) / 86400000) : null;
-  $('tvm-safe').innerHTML = `<span class="ico">🛡️</span><b class="${dsi === null || dsi >= 7 ? 'ok' : 'warn'}">${dsi === null ? '—' : dsi}</b><span>dia${dsi === 1 ? '' : 's'} sem<br>incidente</span>`;
+  $('tvm-safe').innerHTML = `<span class="ico"><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\' /> <path d=\'m9 12 2 2 4-4\' /></svg></span><b class="${dsi === null || dsi >= 7 ? 'ok' : 'warn'}">${dsi === null ? '—' : dsi}</b><span>dia${dsi === 1 ? '' : 's'} sem<br>incidente</span>`;
 
   // último turno
   const r = regs[0], o = nums([r]);
@@ -1894,7 +1907,7 @@ function render() {
   const cmp = (v, med) => v > med * 1.05 ? 'up' : v < med * 0.95 ? 'dn' : 'eq';
   const turno = `
     <section class="tvc tv-turno">
-      <h2>🕘 Último turno</h2>
+      <h2><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\'12\' cy=\'12\' r=\'10\' /> <polyline points=\'12 6 12 12 16 14\' /></svg>Último turno</h2>
       <div class="tv-who"><b>${nome(r.conferente)}</b><span>Turma ${r.turma_sai || '?'} → ${r.turma_rec || '?'} · ${fd(new Date(r.data_registro))} às ${fh(new Date(r.data_registro))}${horas < 48 ? ' · há ' + horas + ' h' : ''}</span></div>
       <div class="tv-me ${o.me ? '' : 'zero'}"><b>${fmt(o.me)}</b><span>${car(o.me)} de <strong>ME</strong> descarregadas<small>folha · quadro de topo · palete</small></span></div>
       <div class="tv-g2">
@@ -1904,7 +1917,7 @@ function render() {
         <div class="tv-t v"><b>${fmt(o.dev)}</b><span><strong>Devolução</strong></span></div>
       </div>
       ${doMes.length ? `<div class="tv-mes">
-        <div class="tv-sub">📊 ${MESES[agora.getMonth()]} até agora · média por turno</div>
+        <div class="tv-sub"><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M3 3v16a2 2 0 0 0 2 2h16\' /> <path d=\'M18 17V9\' /> <path d=\'M13 17V5\' /> <path d=\'M8 17v-3\' /></svg>${MESES[agora.getMonth()]} até agora · média por turno</div>
         <div class="tv-mes-g">
           <div><span>ME</span><b class="g">${fmt(qm.me)}</b><em class="${cmp(o.me, qm.me / nm)}">${fmt1(qm.me / nm)}/turno</em></div>
           <div><span>Planta</span><b>${fmt(qm.pc)}</b><em class="${cmp(o.pc, qm.pc / nm)}">${fmt1(qm.pc / nm)}/turno</em></div>
@@ -1946,7 +1959,7 @@ function render() {
   // última rodada
   const gs = rodadas(regs);
   const idx = Math.max(0, gs.findIndex(g => g.completa)), g = gs[idx];
-  let rodada = '<section class="tvc"><h2>🔄 Última rodada</h2><div class="tvm-load">Sem rodada completa.</div></section>';
+  let rodada = '<section class="tvc"><h2><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'m2 9 3-3 3 3\' /> <path d=\'M13 18H7a2 2 0 0 1-2-2V6\' /> <path d=\'m22 15-3 3-3-3\' /> <path d=\'M11 6h6a2 2 0 0 1 2 2v10\' /></svg>Última rodada</h2><div class="tvm-load">Sem rodada completa.</div></section>';
   if(g) {
     const porK = {}; g.regs.forEach(x => (porK[norm(x.conferente)] = porK[norm(x.conferente)] || []).push(x));
     const pessoas = nomesRodada(g).filter(k => porK[k]).map(k => Object.assign({ k, n: porK[k][0].conferente }, nums(porK[k])));
@@ -1956,7 +1969,7 @@ function render() {
     const prev = gs[idx + 1], pv = prev ? nums(prev.regs) : null;
     rodada = `
     <section class="tvc tv-rod">
-      <h2>🔄 Última rodada <span>${fd(new Date(g.ini))}${g.fim !== g.ini ? ' a ' + fd(new Date(g.fim)) : ''} · ${g.dias} dias · ${g.regs.length} turnos</span></h2>
+      <h2><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'m2 9 3-3 3 3\' /> <path d=\'M13 18H7a2 2 0 0 1-2-2V6\' /> <path d=\'m22 15-3 3-3-3\' /> <path d=\'M11 6h6a2 2 0 0 1 2 2v10\' /></svg>Última rodada <span>${fd(new Date(g.ini))}${g.fim !== g.ini ? ' a ' + fd(new Date(g.fim)) : ''} · ${g.dias} dias · ${g.regs.length} turnos</span></h2>
       <div class="tv-duo">
         ${pessoas.map(p => `<div class="tv-p ${p.me ? '' : 'zero'}">
           <div class="tv-p-n">${nome(p.n)}</div>
@@ -1965,7 +1978,7 @@ function render() {
           <div class="tv-p-l c"><span>Planta <b>${fmt(p.pc)}</b></span><span>NSA <b>${fmt(p.nsa)}</b></span></div>
         </div>`).join('')}
       </div>
-      <div class="tv-sub">📦 ME turno a turno</div>
+      <div class="tv-sub"><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\' /> <path d=\'M12 22V12\' /> <path d=\'m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7\' /> <path d=\'m7.5 4.27 9 5.15\' /></svg>ME turno a turno</div>
       <div class="tv-bars">${linhas.map(x => `<div class="tv-b"><b class="${x.p_d ? '' : 'zero'}">${fmt(x.p_d || 0)}</b><i style="height:${(x.p_d || 0) / mx * 100}%"></i><span>${String(nome(x.conferente)).split(' ')[0].slice(0, 8)}<br>${fd(new Date(x.data_registro))}</span></div>`).join('')}</div>
       <div class="tv-tot">Total da rodada: <b class="g">ME ${fmt(tot.me)}</b> · Planta ${fmt(tot.pc)} · NSA ${fmt(tot.nsa)} · Tampa ${fmt(tot.tampa)} · Devol. ${fmt(tot.dev)}</div>
       ${prev ? `<div class="tv-prev">⏮ Rodada anterior (${fd(new Date(prev.ini))} a ${fd(new Date(prev.fim))} · ${nomesRodada(prev).map(k => String(nome(k)).split(' ')[0]).join(' e ')}): <b class="g">ME ${fmt(pv.me)}</b> · Planta ${fmt(pv.pc)} · NSA ${fmt(pv.nsa)}</div>` : ''}
@@ -1980,10 +1993,10 @@ function render() {
   const top = (x, c) => lin.length > 1 && max[c] > 0 && x[c] === max[c] ? ' top' : '';
   const ranking = `
     <section class="tvc tv-rank">
-      <h2>🏆 Ranking de ${MESES[agora.getMonth()]} <span>${doMes.length} passagens · parcial</span></h2>
+      <h2><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M6 9H4.5a2.5 2.5 0 0 1 0-5H6\' /> <path d=\'M18 9h1.5a2.5 2.5 0 0 0 0-5H18\' /> <path d=\'M4 22h16\' /> <path d=\'M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22\' /> <path d=\'M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22\' /> <path d=\'M18 2H6v7a6 6 0 0 0 12 0V2Z\' /></svg>Ranking de ${MESES[agora.getMonth()]} <span>${doMes.length} passagens · parcial</span></h2>
       <div class="tv-rt tv-rh"><span></span><span>Conferente</span><span class="me">ME</span><span>Planta</span><span>NSA</span><span>Turnos</span></div>
       ${lin.map((x, i) => `<div class="tv-rt${i === 0 ? ' lead' : ''}">
-        <span class="pos">${['🥇','🥈','🥉'][i] || (i + 1) + 'º'}</span>
+        <span class="pos">${['<b class="m1">1º</b>','<b class="m2">2º</b>','<b class="m3">3º</b>'][i] || (i + 1) + 'º'}</span>
         <span class="nm">${curto(x.n)}<small>${fmt1(x.me / Math.max(1, x.turnos))} ME/turno</small></span>
         <span class="me${top(x, 'me')}">${fmt(x.me)}</span><span class="${top(x, 'pc')}">${fmt(x.pc)}</span><span class="${top(x, 'nsa')}">${fmt(x.nsa)}</span><span class="${top(x, 'turnos')}">${fmt(x.turnos)}</span>
       </div>`).join('') || '<div class="tvm-load">Sem registros no mês.</div>'}
@@ -2012,23 +2025,23 @@ const tvProximaHTML = (d) => {
     const wp = v => Math.min(100, v / Math.max(1, d.ult.pc, d.seu.pc) * 100);
     return `
     <section class="tvc tv-atual tv-prox">
-      <h2>🎯 Nova rodada <span>começa hoje · ${prev} turnos pela frente</span></h2>
+      <h2><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\'12\' cy=\'12\' r=\'10\' /> <circle cx=\'12\' cy=\'12\' r=\'6\' /> <circle cx=\'12\' cy=\'12\' r=\'2\' /></svg>Nova rodada <span>começa hoje · ${prev} turnos pela frente</span></h2>
       <div class="tv-prox-n"><small>É a vez de vocês!</small><b>${d.nomes.join(' e ')}</b></div>
-      <div class="tv-sub">📦 Descarga de ME: rodada passada</div>
+      <div class="tv-sub"><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\' /> <path d=\'M12 22V12\' /> <path d=\'m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7\' /> <path d=\'m7.5 4.27 9 5.15\' /></svg>Descarga de ME: rodada passada</div>
       <div class="tv-race">
         <div class="tv-rr ref"><span class="l">Vocês<small>${fd(d.seuIni)} a ${fd(d.seuFim)}</small></span><div class="tr"><i style="width:${w(d.seu.me)}%"></i></div><b>${fmt(d.seu.me)}</b></div>
         <div class="tv-rr now"><span class="l">${d.ultNomes}<small>${fd(d.ultIni)} a ${fd(d.ultFim)} · acabou agora</small></span><div class="tr"><i style="width:${w(d.ult.me)}%"></i></div><b>${fmt(d.ult.me)}</b></div>
       </div>
       <div class="tv-proj tv-meta">
-        <div>${lidera ? `🏆 <b class="g">Vocês estão na frente!</b> Para continuar na frente de ${d.ultNomes}:` : `🔥 Para passar ${d.ultNomes}:`}</div>
+        <div>${lidera ? `<svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M6 9H4.5a2.5 2.5 0 0 1 0-5H6\' /> <path d=\'M18 9h1.5a2.5 2.5 0 0 0 0-5H18\' /> <path d=\'M4 22h16\' /> <path d=\'M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22\' /> <path d=\'M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22\' /> <path d=\'M18 2H6v7a6 6 0 0 0 12 0V2Z\' /></svg><b class="g">Vocês estão na frente!</b> Para continuar na frente de ${d.ultNomes}:` : `<svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z\' /></svg>Para passar ${d.ultNomes}:`}</div>
         <div class="tv-meta-n"><b class="y">${fmt(meta)}</b><span>carretas de ME ou mais<br>nos ${prev} turnos · ≈ <b class="y">${fmt1(meta / prev)}</b> por turno</span></div>
       </div>
       <div class="tv-race tv-race2">
-        <div class="tv-sub2">🚛 Carregamento na planta · rodada passada</div>
+        <div class="tv-sub2"><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\' /> <path d=\'M15 18H9\' /> <path d=\'M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\' /> <circle cx=\'17\' cy=\'18\' r=\'2\' /> <circle cx=\'7\' cy=\'18\' r=\'2\' /></svg>Carregamento na planta · rodada passada</div>
         <div class="tv-rr ref"><span class="l">Vocês</span><div class="tr"><i style="width:${wp(d.seu.pc)}%"></i></div><b>${fmt(d.seu.pc)}</b></div>
         <div class="tv-rr now"><span class="l">Eles</span><div class="tr"><i style="width:${wp(d.ult.pc)}%"></i></div><b>${fmt(d.ult.pc)}</b></div>
       </div>
-      <div class="tv-last">🕘 Último registro: <b>${d.ultimo.nome}</b> · Turma ${d.ultimo.turma} · ${fd(d.ultimo.quando)} ${fh(d.ultimo.quando)} · ME ${fmt(d.ultimo.me)} · Planta ${fmt(d.ultimo.pc)} · NSA ${fmt(d.ultimo.nsa)}</div>
+      <div class="tv-last"><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\'12\' cy=\'12\' r=\'10\' /> <polyline points=\'12 6 12 12 16 14\' /></svg>Último registro: <b>${d.ultimo.nome}</b> · Turma ${d.ultimo.turma} · ${fd(d.ultimo.quando)} ${fh(d.ultimo.quando)} · ME ${fmt(d.ultimo.me)} · Planta ${fmt(d.ultimo.pc)} · NSA ${fmt(d.ultimo.nsa)}</div>
     </section>`;
   };
 
@@ -2048,12 +2061,12 @@ const tvAtualHTML = (d) => {
     const w = v => Math.min(100, v / Math.max(1, meta, d.qa.me, proj) * 100);
     const diaN = Math.min(d.diasPrev, Math.max(1, d.dias));
     let msg;
-    if(passou) msg = `<b class="g">🔥 Já passaram a última rodada!</b> ${fmt(d.qa.me)} contra ${fmt(meta)} de ME`;
+    if(passou) msg = `<b class="g"><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z\' /></svg>Já passaram a última rodada!</b> ${fmt(d.qa.me)} contra ${fmt(meta)} de ME`;
     else if(!falta) msg = `Faltaram <b>${fmt(precisa)}</b> de ME para passar a última rodada`;
     else msg = `Para passar ${d.nomesRef} (<b>${fmt(meta)}</b>): faltam <b class="y">${fmt(precisa)}</b> de ME em ${falta} turno${falta === 1 ? '' : 's'} · ≈ <b class="y">${fmt1(porTurno)}</b> por turno`;
     return `
     <section class="tvc tv-atual">
-      <h2>🔥 Rodada atual <span>começou ${fd(d.ini)} · dia ${diaN} de ${d.diasPrev} · ${feitos} de ${prev} turnos</span></h2>
+      <h2><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z\' /></svg>Rodada atual <span>começou ${fd(d.ini)} · dia ${diaN} de ${d.diasPrev} · ${feitos} de ${prev} turnos</span></h2>
       <div class="tv-duo">
         ${d.pessoas.map(p => `<div class="tv-p ${p.me ? '' : 'zero'}">
           <div class="tv-p-n">${p.nome}</div>
@@ -2062,26 +2075,26 @@ const tvAtualHTML = (d) => {
           <div class="tv-p-l c"><span>Planta <b>${fmt(p.pc)}</b></span><span>NSA <b>${fmt(p.nsa)}</b></span></div>
         </div>`).join('')}
       </div>
-      <div class="tv-sub">📦 Corrida da descarga de ME</div>
+      <div class="tv-sub"><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\' /> <path d=\'M12 22V12\' /> <path d=\'m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7\' /> <path d=\'m7.5 4.27 9 5.15\' /></svg>Corrida da descarga de ME</div>
       <div class="tv-race">
         <div class="tv-rr now"><span class="l">Rodada atual<small>${d.nomesAtual}</small></span><div class="tr"><i style="width:${w(d.qa.me)}%"></i>${proj > d.qa.me && !passou && falta ? `<i class="proj" style="width:${w(proj)}%"></i>` : ''}</div><b>${fmt(d.qa.me)}</b></div>
         <div class="tv-rr ref"><span class="l">Última rodada<small>${d.nomesRef}</small></span><div class="tr"><i style="width:${w(meta)}%"></i></div><b>${fmt(meta)}</b></div>
       </div>
       <div class="tv-proj">
-        ${falta && feitos ? `<div>📈 No ritmo atual (<b>${fmt1(ritmo)}</b> de ME por turno), fecham a rodada com <b>≈ ${fmt(proj)}</b> de ME</div>` : ''}
+        ${falta && feitos ? `<div><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><polyline points=\'22 7 13.5 15.5 8.5 10.5 2 17\' /> <polyline points=\'16 7 22 7 22 13\' /></svg>No ritmo atual (<b>${fmt1(ritmo)}</b> de ME por turno), fecham a rodada com <b>≈ ${fmt(proj)}</b> de ME</div>` : ''}
         <div>${msg}</div>
       </div>
       ${(() => {
         const pp = Math.round(feitos ? d.qa.pc / feitos * prev : 0), mp = d.qr.pc;
         const wp = v => Math.min(100, v / Math.max(1, mp, d.qa.pc, pp) * 100);
         return `<div class="tv-race tv-race2">
-          <div class="tv-sub2">🚛 Carregamento na planta</div>
+          <div class="tv-sub2"><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\'M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\' /> <path d=\'M15 18H9\' /> <path d=\'M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\' /> <circle cx=\'17\' cy=\'18\' r=\'2\' /> <circle cx=\'7\' cy=\'18\' r=\'2\' /></svg>Carregamento na planta</div>
           <div class="tv-rr now"><span class="l">Atual</span><div class="tr"><i style="width:${wp(d.qa.pc)}%"></i>${falta && pp > d.qa.pc ? `<i class="proj" style="width:${wp(pp)}%"></i>` : ''}</div><b>${fmt(d.qa.pc)}</b></div>
           <div class="tv-rr ref"><span class="l">Última</span><div class="tr"><i style="width:${wp(mp)}%"></i></div><b>${fmt(mp)}</b></div>
           ${falta && feitos ? `<div class="tv-p2">no ritmo atual (${fmt1(d.qa.pc / feitos)} por turno) fecham com ≈ <b>${fmt(pp)}</b></div>` : ''}
         </div>`;
       })()}
-      <div class="tv-last">🕘 Último registro: <b>${d.ultimo.nome}</b> · Turma ${d.ultimo.turma} · ${fd(d.ultimo.quando)} ${fh(d.ultimo.quando)} · ME ${fmt(d.ultimo.me)} · Planta ${fmt(d.ultimo.pc)} · NSA ${fmt(d.ultimo.nsa)}</div>
+      <div class="tv-last"><svg class=\"tvi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\'12\' cy=\'12\' r=\'10\' /> <polyline points=\'12 6 12 12 16 14\' /></svg>Último registro: <b>${d.ultimo.nome}</b> · Turma ${d.ultimo.turma} · ${fd(d.ultimo.quando)} ${fh(d.ultimo.quando)} · ME ${fmt(d.ultimo.me)} · Planta ${fmt(d.ultimo.pc)} · NSA ${fmt(d.ultimo.nsa)}</div>
     </section>`;
   };
 
